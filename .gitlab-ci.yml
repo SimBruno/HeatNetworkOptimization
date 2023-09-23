@@ -1,0 +1,4 @@
+include:
+  - project: 'ipese-it/gitlabci-templates'
+    file: 'QuartoNoPDF.gitlab-ci-templates.yml'
+

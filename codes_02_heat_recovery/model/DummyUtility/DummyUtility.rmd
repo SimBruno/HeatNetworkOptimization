@@ -1,0 +1,72 @@
+---
+title: "Utility Unit"
+author: "IPESE group"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+    html_document:
+        theme: simplex
+        toc_depth: 3
+        toc: true
+        toc_float: true
+        collapse: true
+        smooth_scroll: true
+        dev: svg
+        code_folding: hide
+        keep_md: true
+        number_sections: true
+        mathjax: default
+    pdf_document:
+        dev: pdf
+    always_allow_html: yes
+---
+
+
+This dummy unit could be used for debugging purposes and never should be used as an actual process
+
+# Hot Utility {-}
+
+```{rosmose hu_params}
+: OSMOSE UNIT_PARAM hu
+
+|cost1  |cost2  |cinv1  |cinv2  |imp1   |imp2   |fmin   |fmax   |
+|:------|:------|:------|:------|:------|:------|:------|:------|
+|0      |0      |0      |0      |0      |0      |0      |10000  |
+```
+
+**Hot Utility Streams**
+
+Heat Streams
+
+```{rosmose hu}
+: OSMOSE HEAT_STREAMS hu
+
+|name       |Tin   |Tout   |Hin    |Hout   |DT min/2|alpha|
+|:----------|:-----|:------|:------|:------|:-------|:----|
+|hotutility |200   |200    |1000   |0      |2.5     |1    |
+```
+
+
+
+
+
+# Cold Utility {-}
+
+```{rosmose cu_params}
+: OSMOSE UNIT_PARAM cu
+
+|cost1  |cost2  |cinv1  |cinv2  |imp1   |imp2   |fmin   |fmax   |
+|:------|:------|:------|:------|:------|:------|:------|:------|
+|0      |0      |0      |0      |0      |0      |0      |10000  |
+```
+
+**Cold Utility Streams**
+
+Heat Streams
+
+```{rosmose cu_hs}
+: OSMOSE HEAT_STREAMS cu
+
+|name        |Tin   |Tout  |Hin    |Hout   |DT min/2|alpha|
+|:-----------|:-----|:-----|:------|:------|:-------|:----|
+|coldutility |-30   |-30   |0      |5000   |2.5     |1    |
+```

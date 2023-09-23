@@ -1,0 +1,33 @@
+# Energy and exergy analysis
+
+Upon completing the process description and analysis for each section, you will gain insights into the current operational status and energy/exergy efficiency of the dairy factory. This analysis comprises two main components:
+
+- Exergy analysis of both pasteurisation and evaporation section
+- Energy bills of the whole dairy factory under different scenarios
+
+
+## Exergy analysis
+
+In the exergy analysis, it's essential to outline the exergy inputs, exergy outputs, and exergy destruction specifically for the Pasteurization and Evaporation sections. To achieve this, you should provide both the theoretical background of exergy calculation and the step-by-step process of your analysis.
+
+Furthermore, we highly encourage the use of a Sankey diagram to succinctly summarize your findings. We have provided an example of how to create an interactive Sankey diagram in R using the Plotly library. You can access the necessary function in the file `./sankey_ipese.R`. The following code chunk demonstrates how to utilize this function:
+
+```{r sankey-function, echo = T, eval = T, warning = F, message=F}
+source("./sankey_ipese.R") # introduce the sankey function from the source file
+df = read.csv('atom_balance.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
+sankey_ipese(df = df, unit = 'kmol/h', title = 'Example of an interactive Sankey diagram') # replace the unit and title here
+```
+
+## Energy bill
+
+In this section, your objective is to transform the energy demand you previously calculated into utility consumption. This transformation involves the following energy vectors:
+
+- Natural gas
+- Electricity
+- Water
+
+To execute this conversion, you must explicitly state the assumptions you make during the process. For example, if you are aware of the refrigeration duty within the factory and understand that the refrigeration system operates on electricity, you will pre-determine the coefficient of performance (COP) for your refrigeration cycle. This assumption will enable you to calculate the actual electricity consumption for your processes.
+
+You can refer to the "Brewery example" in the Suivival Guide for comprehensive guidance and relevant information to facilitate this conversion process.
+
+Once you have established the energy utility demand within the dairy factory, you can proceed to calculate the energy bill. This calculation will be based on assumptions regarding energy prices in different countries or regions.

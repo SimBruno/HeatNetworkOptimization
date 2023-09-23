@@ -1,0 +1,11 @@
+# Introduction {#intro}
+
+In the introduction, consider addressing the following questions relevant to your project:
+
+- What is the background and motivation behind your project? Why do you wish to undertake process integration and optimization for the dairy factory?
+- What are the primary challenges and issues you aim to tackle in this study? Is it focused on heat exchanger network design and/or utility integration?
+- Is there existing work similar to yours in this domain? If so, what are the contributions and limitations of their research?
+- What contributions do you intend to make through your project?
+- How have you organized your project report to effectively convey your findings and insights?
+
+You do not need to answer all of these questions explicitly, but ensure that your introduction provides a clear and comprehensive understanding of the problem and its context.

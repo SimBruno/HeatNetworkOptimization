@@ -1,0 +1,129 @@
+# Pinch analysis
+
+Starting from this chapter, you will embark on optimizing the energy efficiency of the dairy factory. This section is divided into two parts:
+
+- Optimization of the minimum temperature difference ($\Delta$T) in heat exchangers.
+- Determining the minimum energy requirement of the factory through the application of pinch analysis.
+
+## Optimization of $\Delta$T minimum
+
+This section corresponds to Task 4 of your [project](https://ipese-lectures.epfl.ch/advanced-energetics/project-description/project-5.html#industrial-round-table-4). In this segment, you are required to include the following elements:
+
+- Theoretical Background: Provide a thorough theoretical foundation for your optimization problem. Explain concepts such as how to calculate heat exchanger area and how to estimate heat exchanger investment. Offer insights into the underlying principles and equations involved.
+- Assumptions: Clearly outline the assumptions you have made regarding the parameters and variables within your optimization formulas. This includes assumptions related to heat exchanger characteristics, costs, and other relevant factors.
+- Optimization Results: Present your optimization outcomes using graphical representations or tables. If possible, consider leveraging R and Python libraries to create figures and visualizations, as this may enhance your presentation. **You will receive bonus points if you meet to do so.**
+
+## Minimum energy requirement
+
+The minimum energy requirement, including both heat and cooling demand, can be determined through the application of pinch analysis. In the Survival Guide, you can find an example of using QRosmose to conduct pinch analysis for a brewery plant. For your project, you are expected to employ the same methodology to analyze the dairy factory. While more detailed tutorials will be provided during the semester, the TA team will also be available to assist you as needed.
+
+In your report, we would like to see the following:
+
+- Brief Introduction to Pinch Analysis: Provide a **short** introduction to pinch analysis and explain how it is used to calculate the minimum energy requirement.
+- Analysis Results: Present the outcomes of your analysis, including any assumptions you have made. An essential question to address is: How do you determine the minimum temperature difference for the entire system? This question has not been adequately answered by previous students in this course.
+
+Furthermore, feel free to utilize R and Python code chunks to generate visually appealing graphs and tables. You can refer to the examples provided below or in the Survival Guide.
+
+```{r}
+library(jsonlite)
+pfilename<-"codes_02_heat_recovery/result/brewery-1.json"
+data <- fromJSON(pfilename, flatten=FALSE)
+totex<-data$results$KPIs$totalcost
+capex<-data$results$KPIs$capex
+opex<-data$results$KPIs$opex
+
+costs<-data.frame(totex, opex, capex)
+```
+
+```{r costs-tab, tidy=T}
+knitr::kable(
+  costs, caption = 'Here is a nice table',
+  booktabs = TRUE
+)
+```
+
+```{python, echo = T, eval = T, fig.cap='Here is a nice graph'}
+import matplotlib.pyplot as plt
+import json
+import numpy as np
+
+plt.switch_backend('agg')
+
+# read json for heat integration data
+file_name = open('codes_02_heat_recovery/result/brewery-1.json')
+integ = json.loads(file_name.read())
+
+# we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
+hotcc = integ["results"]["graph"][0][0][1]["data"][0]["curve"]
+coldcc = integ["results"]["graph"][0][0][1]["data"][1]["curve"]
+
+# extract the temperature (T in Kelvin) and heat (Q in kW)
+T_hc = [i["T"] for i in hotcc]
+Q_hc = [i["Q"] for i in hotcc]
+T_cc = [i["T"] for i in coldcc]
+Q_cc = [i["Q"] for i in coldcc]
+
+# compute the shifted carnot factor (1 - T0/T) and Treference = 298.15K
+Tref = 298.15 
+ca_hc = [(1-Tref/i) for i in T_hc]
+ca_cc = [(1-Tref/i) for i in T_cc]
+
+# compute back the original carnot factors given a deltaT_min
+deltaT_min = 40
+T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
+T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
+ca_hc_ori = [(1-298.15/i) for i in T_hc_ori]
+ca_cc_ori = [(1-298.15/i) for i in T_cc_ori]
+
+# prepare the second y-axis for plotting
+# the minim carnot value is extracted from the original cooling. Round it to the lowest .0
+# the maximum carnot carnot value is extracted from the original heating. Round it to the highest .0
+ca_min = round(min(ca_cc_ori) - 0.05, 1)
+ca_max = round(max(ca_hc_ori) + 0.05, 1)
+# generate an array with the carnot list from min to max
+ca_values = np.arange(ca_min, ca_max, 0.2)
+# compute the corresponding temperature values in celcius
+Tref_ce = 298.15
+T_ce = [int(Tref_ce/(1-i) - 273.15) for i in ca_values]
+
+# plot the composite curves
+figure, ax = plt.subplots(figsize = (8,6))
+
+# both cold curves (blue): dashed --> shifted, solid --> original
+ax.plot(Q_cc, ca_cc, "--b")
+ax.plot(Q_cc, ca_cc_ori, "-b")
+# both hot curves (red): dashed --> shifted, solid --> original
+ax.plot(Q_hc, ca_hc, "--r")
+ax.plot(Q_hc, ca_hc_ori, "-r")
+# fill the area between the original and shifted curves
+ax.fill_between(Q_cc, ca_cc_ori, ca_cc, color="blue", alpha=0.25)
+ax.fill_between(Q_hc, ca_hc, ca_hc_ori, color="red", alpha=0.25)
+
+# add the lables and title
+ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
+ax.set_ylabel('$Carnot \ Factor \ (1 - T_{0}/T)$')
+ax.set_title('$System \ Heat \ Integration$')
+ax.legend(["Corrected Cold Composite Curve", "Cold Composite Curve", "Corrected Hot Composite Curve", "Hot Composite Curve"])
+ax.set_ybound(ca_min, ca_max)
+
+# secondary axis. In this case we don't plot anything, we simply set the secondary axis ticks
+ax2 =ax.twinx()
+ax2.set_yticks(np.arange(0, len(T_ce), 1), T_ce)
+ax2.set_ylabel('$Temperature \ (\u00b0C)$', labelpad=10)
+
+plt.show()
+
+# save the plot as a png
+figure.savefig("composite_curves.png", format="png", dpi=600)
+```
+
+
+
+
+
+
+
+
+
+
+

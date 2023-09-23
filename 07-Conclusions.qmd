@@ -1,0 +1,30 @@
+# Conclusions
+
+As we reach the conclusion of your report, it's important to note that a standard conclusion typically comprises the following components:
+
+- Summary of main findings, highlighting the core findings and takeaways from your study.
+- Significance and contribution of the study 
+- Future reasearch directions
+- Limitations and prospects for improvement
+
+We also encourage you to share your overall impressions of this course. Did you find the project interesting? How about the workload – was it manageable or particularly challenging? Were the instructions and guidance provided helpful throughout the course?
+
+We greatly appreciate your feedback, as it will be valuable in enhancing the learning experience for upcoming cohorts. Thank you for taking the time to share your thoughts and suggestions.
+
+> **Example of a good conclusion**
+>
+> The presented carbon intensity supply curve can provide quantitative insights into China’s crude-oil supply by modelling the heterogeneity of oil resources in planning climate-informed strategies for the future of mobility. The data-driven analysis used here would allow improved information for producers, consumers and regulators about the energy returns and carbon intensities of oil to this critical global economy. The presented analysis would also allow an economically informed consequential LCA of China's climate policy. This however requires substantial future work on developing a micro-founded econometric model of oil supply. 
+>
+> This study underlies a China-specific crude well-to-wheel LCA that can be utilized for China’a transportation studies; for example, they will be incorporated into the China GREET model to estimate GHG emissions of petroleum fuels from wells to wheels28. Furthermore, the presented bottom-up approach and the results in this paper can inform long-term climate and integrated assessment models by better modelling the heterogeneity in global oilfields. 
+>
+> The results presented in this work are limited by lack of access to reliable public data. Despite the enormous effort devoted to collect data in this work, access to more publicly available reliable data is crucial to perform a more comprehensive assessment in the future. Expanding the study to include more global oils is necessary to compare greater volumes of crudes. Better climate information about emerging oil resources is needed to increase market efficiency, expand choices, leverage opportunities and address climate challenges.
+>
+> -- @masnadi2018well
+
+
+
+
+# References {-}
+
+::: {#refs}
+:::

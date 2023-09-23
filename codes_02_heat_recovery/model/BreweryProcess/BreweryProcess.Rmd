@@ -1,0 +1,496 @@
+---
+title: "Brewery Process"
+output: html_document
+venv: ../venv
+---
+
+# Brewery Process {-}
+
+
+<!--   -- Co2 generation during wort fermentation 15g per pint where 1 pint (500 mL) -->
+<!--   -- https://www.theguardian.com/environment/green-living-blog/2010/jun/04/carbon-footprint-beer -->
+<!--   -- https://www.mdpi.com/2071-1050/10/11/4191 -->
+<!--   -- https://www.pureairemonitoring.com/brewers-safely-capture-and-reuse-carbon-dioxide/ -->
+<!--   -- https://craftpeak-cooler-uploads.s3.amazonaws.com/deya-brewing-company/2020-CO2e-Analysis-Report.pdf -->
+<!--   -- https://www.ikegger.com/blogs/ikeggerworld/how-much-co2-is-produced-during-fermentation -->
+<!--   -- Fermentation yields 3x CO2 than actually needed (including brewing, canning, and bottling) -->
+<!--   -- Carbonation level between 2.5 and 4 volumes (5–8 g/l). Most bottled beers on the market to the higher carbonation, 3 volumes is on the high end for most styles -->
+<!--   --https://lifefermented.wordpress.com/2014/01/22/how-much-co2-is-produced-from-brewing, https://beerandbrewing.com/dictionary/iKSxvCoDdk/ -->
+
+
+<!-- Carbonation level between 2.5 and 4 volumes (5–8 g/l). Most bottled beers on the market at the higher carbonation < 3 volumes REF https://lifefermented.wordpress.com/2014/01/22/how-much-co2-is-produced-from-brewing, https://beerandbrewing.com/dictionary/iKSxvCoDdk/ -->
+
+
+```{rosmose breweryprocess}
+! OSMOSE ET breweryprocess
+```
+
+
+
+
+```{rosmose} 
+beer_massflow_ref = 19.0793 [kg/s] # Nominal capacity for sizing multiplier definition  
+beer_massflow_act = 30 [kg/s] # Actual capacity for sizing multiplier definition  https://www.the-top-twenty.com/the-top-20-biggest-brewery-companies-in-the-world/
+maltflow_ref  = 2.5969 [kg/s] # Malt https://www.mdpi.com/2071-1050/10/11/4191
+cornflow_ref  = 0.2197 [kg/s] # Corn
+waterflow_ref  = 19.6276 [kg/s] # Water
+sodaflow_ref  = 0.3816 [kg/s] # Soda
+huskflow_ref  = 0.7583 [kg/s] #  Almost dry spent grain to the biodigestion process
+CO2_from_ferm  = 0.0373 [kg_CO2ferm/kg_beer] # 0.0185 kg/0.5 L = 0.0373 kg/L = 30 kg/m3
+CO2_excess_factor = 0.667 [kg_CO2_excess/kg_CO2ferm] # Fermentation yields 3x CO2 than actually needed (including brewing, canning, and bottling)
+beer_density = 1060 [kg/m3] # Beer density http://brewwiki.com/index.php/Specific_gravity
+water_density =  1000 [kg/m3] #
+CO2_density = 0.0019 [kg/m3] #
+ethanol_density = 790 [kg/m3] #
+dt_min  = 2 [K] #
+n = 40.0 [yr] #lifetime of a plant
+i = 0.06 [-] #interest rate
+CEPCI_2020 = 596.2 [-] # actual CEPCI
+CEPCI_2020 = 596.2 [-] # CEPCI 2008
+```
+
+The calculated parameters are defined as follows:
+
+
+```{rosmose} 
+mult_brew   = %beer_massflow_act%/%beer_massflow_ref% [-] # Sizing multiplier
+beer_volflow  = %beer_massflow_ref%/%beer_density%*3600 [m3/h] # referece beer volumetric flow
+maltflow  = %maltflow_ref%*3600 [kg/h] # Malt
+cornflow  = %cornflow_ref%*3600 [kg/h] # Corn
+water_volflow = %waterflow_ref%/%water_density%*3600 [m3/h] # Water
+sodaflow  = %sodaflow_ref%*3600 [kg/h] # Soda
+husk_waste = %huskflow_ref%*3600 [kg/h] # Husk spent grain to the biodigestion process
+CO2_excess = %CO2_from_ferm%*%CO2_excess_factor%*%beer_massflow_ref%*3600 [kg/h]
+```
+
+
+**Brewery Process ET Layers**
+
+```{rosmose}
+: OSMOSE LAYERS breweryprocess
+
+|Layer      |Display name   |shortname  |Unit       |Color  |
+|:----------|:--------------|:----------|:----------|:------|
+|ELEC       |Electricity    |elec       |kW         |yellow |
+|NATGAS     |Gas            |ng         |kW         |green  |
+|BEER       |Beer           |beer       |m3/h       |white  |
+|HUSK       |Husk           |husk       |kg/h       |black  |  
+|MALT       |Malt           |malt       |kg/h       |grey   |
+|SODA       |Soda           |soda       |kg/h       |black  |
+|CORN       |Corn           |corn       |kg/h       |green  |  
+|WATER      |Water          |water      |m3/h       |blue   |
+|CO2        |CO2            |co2        |kg/h       |red    |  
+```
+
+## Brewery Process Units {-}
+
+The brewery process contains the following units
+
+```{rosmose}
+: OSMOSE UNIT breweryprocess
+
+|unit name      |type   |
+|:--------------|:------|
+|HotPart_Batch1 |Process|
+|HotPart_Batch2 |Process|
+|HotPart_Batch3 |Process|
+|ColdPart_Batch1|Process|
+|ColdPart_Batch2|Process|
+|ColdPart_Batch3|Process|
+|ColdPart_Batch4|Process|
+|Bottle_Clean   |Process|
+|MassBrewery    |Process| 
+```
+
+
+
+
+
+
+
+
+
+
+## Hot part Batch 1 {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM HotPart_Batch1
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Hot part Batch 1 Streams**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS HotPart_Batch1 -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS HotPart_Batch1
+
+|name         |Tin   |Tout   |Hin    |Hout   |DT min/2|alpha|
+|:------------|:-----|:------|:------|:------|:-------|:----|
+|Water_MAK1   |15.00 |51.50  |0      |369.90 |2       |1    |
+|MAK_Heating1 |48.00 |65.00  |0      |188.60 |2       |1    |
+|Water_MAT2   |15.00 |54.50  |0      |823.60 |2       |1    |
+|MAT_Heating2 |48.00 |65.00  |0      |420.10 |2       |1    |
+```
+
+
+
+
+
+
+
+
+
+
+## Hot part Batch 2 {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM HotPart_Batch2
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Hot part Batch 2 Streams**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS HotPart_Batch2 -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS HotPart_Batch2
+
+|name                |Tin    |Tout  |Hin   |Hout    |DT min/2 |alpha|
+|:-------------------|:------|:-----|:-----|:-------|:--------|:----|
+|MAT_and_MAK         |65.00	 |75.00 |0.00  |368.40  |2        |1    |
+|Water_Filter_and_CIP|15.00  |80.00 |0.00  |1608.9  |2        |1    |
+|WOK_Boiling         |78.00  |105.00|0.00  |1662.90 |2        |1    |   
+|WOK_Evaporation     |105.00 |105.00|0.00  |3319.80 |2        |1    |
+|Vapour_Cond1        |105.00 |100.00|17.2  |0.00    |1        |1    |
+|Vapour_Cond2        |100.00 |100.00|3487.9|0.00    |2        |1    |  
+|Vapour_Cond3        |100.00 |25.00 |482.8 |0.00    |2        |1    |  
+```
+
+
+
+
+
+## Hot part Batch 3 {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM HotPart_Batch3
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Hot part Batch 3 Streams**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS HotPart_Batch3 -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS HotPart_Batch3
+
+|name        |Tin   |Tout |Hin    |Hout    |DT min/2 |alpha|
+|:-----------|:-----|:----|:------|:-------|:--------|:----|
+|Centrifuge  |5     |80.00|0.00   |857.90  |2        |1    |
+|Wort_Cooling|102.50|10.00|5434.60|0.00    |2        |1    | 
+```
+
+
+
+
+
+
+
+
+## Cold part Batch 1 {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM ColdPart_Batch1
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Cold part Batch 1 Streams**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch1 -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS ColdPart_Batch1
+
+|name        |Tin  |Tout |Hin    |Hout    |DT min/2 |alpha|
+|:-----------|:----|:----|:------|:-------|:--------|:----|
+|Fermentation|10.00|10.00|534.80 |0.00    |2        |1    |
+```
+
+
+
+
+
+
+
+
+
+
+
+## Cold part Batch 2 {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM ColdPart_Batch2
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Cold part Batch 2 Streams**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch2 -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS ColdPart_Batch2
+
+|name     |Tin  |Tout |Hin   |Hout |DT min/2 |alpha|
+|:--------|:----|:----|:-----|:----|:--------|:----|
+|Cooling  |10.00|6.00 |233.80|0.00 |2        |1    |
+|Maturing |6.00 |6.00 |425.50|0.00 |2        |1    | 
+```
+
+
+
+
+
+
+
+
+## Cold part Batch 3 {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM ColdPart_Batch3
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Cold part Batch 3 Streams**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch3 -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS ColdPart_Batch3
+
+|name    |Tin |Tout|Hin   |Hout  |DT min/2 |alpha|
+|:-------|:---|:---|:-----|:-----|:--------|:----|
+|Chilling|6.00|1.00|714.50|0.00  |2        |1    |
+|Chillage|1.00|1.00|427.70|0.00  |2        |1    |
+
+
+
+```
+
+
+
+
+
+## Cold part Batch 4 {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM ColdPart_Batch4
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Cold part Batch 4 Streams**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch4 -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS ColdPart_Batch4
+
+|name          |Tin   |Tout |Hin    |Hout    |DT min/2 |alpha|
+|:-------------|:-----|:----|:------|:-------|:--------|:----|
+|Beer_preheat  |1.00  |15.00|0.00   |822.05  |2        |1    |
+|Pasteurization|15.00 |80.00|0.00   |4854.05 |2        |1    | 
+|ColdBath      |70.00 |5.00 |4858.40|0.00    |2        |1    | 
+```
+
+
+
+
+
+## Bottle Cleaning {-}
+
+
+```{rosmose}
+: OSMOSE UNIT_PARAM Bottle_Clean
+
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Cold part Bottle Cleaning**
+
+<!-- The mass streams are: -->
+
+<!-- ```{rosmose} -->
+<!-- : OSMOSE RESOURCE_STREAMS Bottle_Clean -->
+
+<!-- |layer      |direction|value                | -->
+<!-- |:----------|:--------|:--------------------| -->
+<!-- ``` -->
+
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS Bottle_Clean
+
+|name             |Tin  |Tout |Hin   |Hout    |DT min/2 |alpha|
+|:----------------|:----|:----|:-----|:-------|:--------|:----|
+|BathRinse        |65.00|85.00|0.00  |251.90  |2        |1    | 
+|PreRinse         |40.00|60.00|0.00  |472.80  |2        |1    |
+|Soda_Bath        |15.00|85.00|0.00  |39.80   |2        |1    |
+|Water_Bath       |15.00|85.00|0.00  |1287.10 |2        |1    |
+|Vapour_Pre_rinse |15.00|60.00|0.00  |29.30   |2        |1    |
+|Water_Final_rinse|35.00|60.00|0.00  |399.34  |2        |1    |
+|BathRinse_Out    |85.00|60.00|472.70|0.00    |2        |1    | 
+|PreRinse_Out     |40.00|20.00|713.70|0.00    |2        |1    |  
+|CIP              |15.00|80.00|0.00  |1841.1  |2        |1    |  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

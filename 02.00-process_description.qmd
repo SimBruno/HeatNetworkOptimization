@@ -1,0 +1,61 @@
+# Process description and analysis
+
+To provide practical solutions to our industrial partner, the dairy factory, our first task is to show that we truly grasp the problem. To a business manager, industrial processes may seem mysterious and complex, like "black boxes." However, as engineers, we need to dig into the details, using mathematics and physics to analyze and design these industrial processes.
+
+In this section, your task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The data collected here will be instrumental in calculating exergy efficiency and energy bills in the following section. To facilitate your work, we have provided an illustrative example for the Pasteurization section below:
+
+## Pasteurisation section
+
+In your analysis, it is essential to incorporate the following elements:
+
+- Description of the Pasteurisation section
+
+    - Provide an overview of the Pasteurization section, including its functionality, overall mass balance, and key processes.
+    - Briefly introduce the flows within this process, highlighting their significance in the overall operation.
+    - Clearly state any important assumptions made during your analysis.
+
+- Calculation of the state of each stream (= define temperature, pressure, enthalpy, mass flow, etc...)
+    
+    - Theoretical basis or your calculation.
+    - Utilize the methods illustrated in the example provided in the **Survival Guide** to calculate the thermodynamic properties of each stream. You can employ tools like `Python` and `CoolProp` for this purpose.
+    - You do not need to include the detailed calculation process in the final report. It's advisable to create separate files for each section (e.g., qmd files) to perform the calculations.
+    - Summarize all your results in a comprehensive table for easy reference.
+
+- Summarzing all the energy/heat streams in the section. 
+
+By following these guidelines, you can ensure a thorough and well-structured analysis of the Pasteurization section and other sections of the dairy factory.
+
+> Please keep in mind that you have the option to include `R` and `Python` code chunks in your report. Be sure to reference the examples provided in the Survival Guide.
+
+```{python coolprop, echo = T, eval = T}
+from CoolProp.CoolProp import PropsSI
+rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
+```
+
+
+```{python state-function, echo = T, eval = T}
+from pyxosmose.state import State
+# First, define the thermodynamic point,
+Point1 = State(pair='TP', fluid='Water', temperature=340, pressure=31000)
+# Then calculate the state using the State class method StateCalc
+Point1.StateCalc()
+# And print the dictionary for revision
+State1 = Point1.__dict__ # Whole dictionary with properties
+h1 = Point1.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
+```
+
+```{r render-table, echo = T}
+# a way to pass the value from python to r is to through json file
+library(reticulate)
+x = 42
+```
+
+
+## Evaporation section
+
+...
+
+## Process 3
+
+...
+
