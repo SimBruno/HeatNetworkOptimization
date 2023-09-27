@@ -1,0 +1,26 @@
+---
+title: "ELEC & GAS Tariff"
+format: html
+---
+
+Here are reported the electricity and gas tariff for Switzerland between 09-2023 for electricity and 01-2019 and 02-2023 for gas and 01-2017.
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data_elec = pd.read_csv("ogd106_preise_strom_boerse.csv")
+data_gas = pd.read_csv("ogd106_preise_gas_boerse.csv")
+
+plt.scatter(data_elec["Datum"], data_elec["Baseload_EUR_MWh"])
+plt.xlabel("Datum")
+plt.ylabel("Baseload_EUR_MWh")
+plt.title("Scatter Plot of Baseload_EUR_MWh between 01-2017 and 09-2023")
+
+plt.scatter(data_gas["Datum"], data_gas["Preis_Boerse_indexiert"])
+plt.xlabel("Datum")
+plt.ylabel("Baseload_EUR_MWh")
+plt.title("Scatter Plot of Preis_Boerse_indexiert between 01-2019 and 02-2023")
+
+```
