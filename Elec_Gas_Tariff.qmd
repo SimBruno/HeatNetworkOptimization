@@ -3,7 +3,7 @@ title: "ELEC & GAS Tariff"
 format: html
 ---
 
-Here are reported the electricity and gas tariff for Switzerland between 09-2023 for electricity and 01-2019 and 02-2023 for gas and 01-2017.
+Here are reported the electricity and gas tariff for Switzerland between 09-2023 for electricity and 01-2019 and 02-2023 for gas and 01-2017 from SOURCE.
 
 ```{python}
 

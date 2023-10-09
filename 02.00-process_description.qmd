@@ -32,16 +32,23 @@ from CoolProp.CoolProp import PropsSI
 rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
 ```
 
+```{python state-function, echo = T, eval = T}
+from codes_01_energy_bill.coolprop_functions import mixture
+
+State2=mixture(T=343, P=25000, frac_water=0.7889, frac_fat=0.2111) # this is a dictionary!!
+print(State2)
+```
 
 ```{python state-function, echo = T, eval = T}
 from pyxosmose.state import State
 # First, define the thermodynamic point,
-Point1 = State(pair='TP', fluid='Water', temperature=340, pressure=31000)
+Point1 = State(pair='TP', fluid='water', temperature=338, pressure=25000)
 # Then calculate the state using the State class method StateCalc
 Point1.StateCalc()
 # And print the dictionary for revision
 State1 = Point1.__dict__ # Whole dictionary with properties
 h1 = Point1.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
+print(State1)
 ```
 
 ```{r render-table, echo = T}
@@ -53,7 +60,60 @@ x = 42
 
 ## Evaporation section
 
-...
+
+```{python state-function, echo = T, eval = T}
+from codes_01_energy_bill.coolprop_functions import mixture
+
+State_e8=mixture(T=343, P=25000, frac_water=0.7889, frac_fat=0.2111) # this is a dictionary!!
+print(State_e8)
+State_e9=mixture(T=343, P=25000, frac_water=0.7889, frac_fat=0.2111) # this is a dictionary!!
+print(State_e9)
+
+```
+
+```{python state-function, echo = T, eval = T}
+from pyxosmose.state import State
+# First, define the thermodynamic point,
+Point1 = State(pair='TP', fluid='water', temperature=338, pressure=25000)
+# Then calculate the state using the State class method StateCalc
+Point1.StateCalc()
+# And print the dictionary for revision
+State1 = Point1.__dict__ # Whole dictionary with properties
+h1 = Point1.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
+print(State1)
+
+Point_e15 = State(pair='TP', fluid='water', temperature=338, pressure=25000)
+# Then calculate the state using the State class method StateCalc
+Point_e15.StateCalc()
+# And print the dictionary for revision
+State_e15 = Point_e15.__dict__ # Whole dictionary with properties
+h_e15 = Point_e15.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
+print(State_e15)
+
+Point_e17 = State(pair='TP', fluid='water', temperature=338, pressure=25000)
+# Then calculate the state using the State class method StateCalc
+Point_e17.StateCalc()
+# And print the dictionary for revision
+State_e17 = Point_e17.__dict__ # Whole dictionary with properties
+h_e17 = Point_e17.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
+print(State_e17)
+```
+
+```{python state-function, echo = T, eval = T}
+
+m8=3.6
+m15=1.28
+m9=2.32
+deltaT=5
+cp8=State_e8.cpmass
+h8=State_e8.enthalpy
+h15=Point_e15.enthalpy
+h9=State_e9.enthalpy
+
+Q_evap2 = -m8*cp8*deltaT - m8*h8 +m15*h15+m9h9
+
+```
+
 
 ## Process 3
 
