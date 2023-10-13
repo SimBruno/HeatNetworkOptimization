@@ -175,15 +175,11 @@ from codes_01_energy_bill.coolprop_functions import mixture
 
 p8=25000
 p9=p8
-p10=20000
-p11=p10
 p15=25000
 p17=p14
 
 T8=338
 T9=T8
-T10=333
-T11=T10
 T15=338
 T17=T14
 
@@ -222,118 +218,59 @@ print(Q_evap2)
 print(m_w2)
 ```
 
-```{python state-function, echo = T, eval = T}
 
+```{python state-function, echo = T, eval = T}
 #Evaporator 3
+
+from codes_01_energy_bill.coolprop_functions import mixture
+
+
+p10=20000
+p11=p10
+p15=25000
+p18=p15
+p16=20000
+
+
+T10=333
+T11=T10
+T15=338
+T18=T15
+T16=333
+
 State_e10=mixture(T=T10, P=p10, frac_water=p_water_out2, frac_fat=p_fat_out2) # this is a dictionary!!
 print(State_e10)
-h11=State_e10["enthalpy"]
+h10=State_e10["enthalpy"]
+cp10=State_e10["cpmass"]
 
 State_e11=mixture(T=T11, P=p11, frac_water=p_water_out3, frac_fat=p_fat_out3) # this is a dictionary!!
 print(State_e11)
 h11=State_e11["enthalpy"]
-```
 
-```{python state-function, echo = T, eval = T}
-from pyxosmose.state import State
-# First, define the thermodynamic point,
-Point1 = State(pair='TP', fluid='water', temperature=338, pressure=25000)
+Point_e16 = State(pair='TP', fluid='water', temperature=T16, pressure=p16)
 # Then calculate the state using the State class method StateCalc
-Point1.StateCalc()
+Point_e16.StateCalc()
 # And print the dictionary for revision
-State1 = Point1.__dict__ # Whole dictionary with properties
-h1 = Point1.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
-print(State1)
+State_e16 = Point_e16.__dict__ # Whole dictionary with properties
+h16=State_e16["enthalpy"]
+print(h16)
 
-Point_e15 = State(pair='TP', fluid='water', temperature=338, pressure=25000)
-# Then calculate the state using the State class method StateCalc
-Point_e15.StateCalc()
-# And print the dictionary for revision
-State_e15 = Point_e15.__dict__ # Whole dictionary with properties
-h_e15 = Point_e15.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
-print(State_e15)
-
-#e24
-p24=200000
-T24=343
-Point_e24 = State(pair='TP', fluid='water', temperature=T24, pressure=p24)
-# Then calculate the state using the State class method StateCalc
-Point_e24.StateCalc()
-# And print the dictionary for revision
-State_e24 = Point_e24.__dict__ # Whole dictionary with properties
-print(State_e24)
-
-#e17
-p17=31000
-T17=338
-Point_e17 = State(pair='TP', fluid='water', temperature=T17, pressure=p17)
-# Then calculate the state using the State class method StateCalc
-Point_e17.StateCalc()
-# And print the dictionary for revision
-State_e17 = Point_e17.__dict__ # Whole dictionary with properties
-h_e17 = Point_e17.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
-print(State_e17)
-
-#e18
-p18=25000
-T18=333
 Point_e18 = State(pair='TP', fluid='water', temperature=T18, pressure=p18)
 # Then calculate the state using the State class method StateCalc
 Point_e18.StateCalc()
 # And print the dictionary for revision
 State_e18 = Point_e18.__dict__ # Whole dictionary with properties
-print(State_e18)
-```
-
-```{python state-function, echo = T, eval = T}
-hfg1=State_e24["enthalpy"]
-hfg2=State_e17["enthalpy"]
 hfg3=State_e18["enthalpy"]
-```
+print(hfg3)
 
-```{python state-function, echo = T, eval = T}
-
-m2=m1
-m3=m1
-m4=m1
-m5=m1
-m7=m14-m6
-m8=m7
-m9=m15-m8
 m10=m9
-m11=m11
-m12=m11
-m13=m11
-#m17=m_w2
-#m18=m_w3
-#m19=m14-m17
-#m20=m15-m18
-
-m23=1.0
-#m24=m_w1
-```
-
-
-
-```{python state-function, echo = T, eval = T}
+m11=m10-m16
 deltaT=5
-def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg):
-    Q_evap = -m_in*cp_in*deltaT - m_in*h_in + m_out1*h_out1 + m_out2*h_out2
-    m_w = (Q_evap)/(hfg)
-    return Q_evap, m_w
-Q_evap1, m_w1 = evaporator_fct(m6,m14,m7,h6,h14,h7,cp6,deltaT,hfg1)
-#Q_evap2, m_w2 = evaporator_fct(m8,m15,m9,h8,h15,h9,cp8,deltaT,hfg2)
-#Q_evap3, m_w3 = evaporator_fct(m10,m16,m11,h10,h16,h11,cp10,deltaT,hfg3)
 
-print(Q_evap1)
-print(m_w1)
-#print(Q_evap2)
-#print(m_w2)
-#print(Q_evap3)
-#print(m_w3)
-```
+Q_evap3, m_w3 = evaporator_fct(m10,m16,m11,h10,h16,h11,cp10,deltaT,hfg3)
 
-```{python state-function, echo = T, eval = T}
+print(Q_evap3)
+print(m_w3)
 ```
 
 ```{python state-function, echo = T, eval = T}
