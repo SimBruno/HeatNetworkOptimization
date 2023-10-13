@@ -32,12 +32,6 @@ from CoolProp.CoolProp import PropsSI
 rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
 ```
 
-```{python state-function, echo = T, eval = T}
-from codes_01_energy_bill.coolprop_functions import mixture
-
-State2=mixture(T=343, P=25000, frac_water=0.7889, frac_fat=0.2111) # this is a dictionary!!
-print(State2)
-```
 
 ```{python state-function, echo = T, eval = T}
 from pyxosmose.state import State
@@ -67,7 +61,7 @@ import numpy as np
 
 m1=5.0
 m6=m1
-m14=1.4
+m14=1.6
 m15=1.28
 m16=0.8
 
@@ -119,13 +113,21 @@ print(df)
 ```{python state-function, echo = T, eval = T}
 #Evaporator 1
 from codes_01_energy_bill.coolprop_functions import mixture
+from pyxosmose.state import State
+def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg):
+    Q_evap = m_in*cp_in*deltaT - m_in*h_in + m_out1*h_out1 + m_out2*h_out2
+    m_w = (Q_evap)/(hfg)
+    return Q_evap, m_w
 #Fixed Parameters 
 p6=31000
 p7=p6
-p24=200000
+p14=p6
+p24=100000
+
 T6=343
 T7=T6
-T24=343
+T14=343
+T24=373 #can be changed if needed to reduce cost instead of having a high pressure
 
 #Dependent Parameters
 State_e6=mixture(T=T6, P=p6, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
@@ -136,7 +138,16 @@ cp6=State_e6["cpmass"]
 
 State_e7=mixture(T=T7, P=p7, frac_water=p_water_out1, frac_fat=p_fat_out1) # this is a dictionary!!
 print(State_e7)
-h8=State_e7["enthalpy"]
+h7=State_e7["enthalpy"]
+
+Point_e14 = State(pair='TP', fluid='water', temperature=T14, pressure=p14)
+# Then calculate the state using the State class method StateCalc
+Point_e14.StateCalc()
+# And print the dictionary for revision
+State_e14 = Point_e14.__dict__ # Whole dictionary with properties
+h14=State_e14["enthalpy"]
+print(h14)
+
 
 Point_e24 = State(pair='TP', fluid='water', temperature=T24, pressure=p24)
 # Then calculate the state using the State class method StateCalc
@@ -144,55 +155,76 @@ Point_e24.StateCalc()
 # And print the dictionary for revision
 State_e24 = Point_e24.__dict__ # Whole dictionary with properties
 hfg1=State_e24["enthalpy"]
+print(hfg1)
+
 
 #Evap 1 calculation of heat 
-m7=m14-m6
+m7=m6-m14
 deltaT=5
-def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg):
-    Q_evap = -m_in*cp_in*deltaT - m_in*h_in + m_out1*h_out1 + m_out2*h_out2
-    m_w = (Q_evap)/(hfg)
-    return Q_evap, m_w
+
 Q_evap1, m_w1 = evaporator_fct(m6,m14,m7,h6,h14,h7,cp6,deltaT,hfg1)
+
 print(Q_evap1)
 print(m_w1)
 ```
 
 ```{python state-function, echo = T, eval = T}
-
+#Evaporator 2
 
 from codes_01_energy_bill.coolprop_functions import mixture
 
-p6=31000
-p7=p6
 p8=25000
 p9=p8
 p10=20000
 p11=p10
+p15=25000
+p17=p14
 
-T6=343
-T7=T6
 T8=338
 T9=T8
 T10=333
 T11=T10
+T15=338
+T17=T14
 
-State_e6=mixture(T=T6, P=p6, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
-print(State_e6)
-h6=State_e6["enthalpy"]
-cp6=State_e6["cpmass"]
-
-State_e7=mixture(T=T7, P=p7, frac_water=p_water_out1, frac_fat=p_fat_out1) # this is a dictionary!!
-print(State_e7)
-h8=State_e7["enthalpy"]
-
-State_e8=mixture(T=T8, P=p8, frac_water=p_water_out1, frac_fat=p_fat_out1) # this is a dictionary!!
+State_e8=mixture(T=T8, P=p8, frac_water=p_water_out2, frac_fat=p_fat_out2) # this is a dictionary!!
 print(State_e8)
 h8=State_e8["enthalpy"]
+cp8=State_e8["cpmass"]
 
 State_e9=mixture(T=T9, P=p9, frac_water=p_water_out2, frac_fat=p_fat_out2) # this is a dictionary!!
 print(State_e9)
 h9=State_e9["enthalpy"]
 
+Point_e15 = State(pair='TP', fluid='water', temperature=T15, pressure=p15)
+# Then calculate the state using the State class method StateCalc
+Point_e15.StateCalc()
+# And print the dictionary for revision
+State_e15 = Point_e15.__dict__ # Whole dictionary with properties
+h15=State_e15["enthalpy"]
+print(h15)
+
+Point_e17 = State(pair='TP', fluid='water', temperature=T17, pressure=p17)
+# Then calculate the state using the State class method StateCalc
+Point_e17.StateCalc()
+# And print the dictionary for revision
+State_e17 = Point_e17.__dict__ # Whole dictionary with properties
+hfg2=State_e17["enthalpy"]
+print(hfg2)
+
+m8=m7
+m9=m8-m15
+deltaT=5
+
+Q_evap2, m_w2 = evaporator_fct(m8,m15,m9,h8,h15,h9,cp8,deltaT,hfg2)
+
+print(Q_evap2)
+print(m_w2)
+```
+
+```{python state-function, echo = T, eval = T}
+
+#Evaporator 3
 State_e10=mixture(T=T10, P=p10, frac_water=p_water_out2, frac_fat=p_fat_out2) # this is a dictionary!!
 print(State_e10)
 h11=State_e10["enthalpy"]
@@ -200,10 +232,7 @@ h11=State_e10["enthalpy"]
 State_e11=mixture(T=T11, P=p11, frac_water=p_water_out3, frac_fat=p_fat_out3) # this is a dictionary!!
 print(State_e11)
 h11=State_e11["enthalpy"]
-
-
 ```
-
 
 ```{python state-function, echo = T, eval = T}
 from pyxosmose.state import State
