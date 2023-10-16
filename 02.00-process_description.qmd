@@ -6,27 +6,66 @@ In this section, your task is to compute the thermodynamic properties of all the
 
 ## Pasteurisation section
 
-In your analysis, it is essential to incorporate the following elements:
+![Pasteurisation](Figures/pasteurisation.svg)
 
-- Description of the Pasteurisation section
+In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and and milk from fresh milk with the intergation of a thickener at some point. 
 
-    - Provide an overview of the Pasteurization section, including its functionality, overall mass balance, and key processes.
-    - Briefly introduce the flows within this process, highlighting their significance in the overall operation.
-    - Clearly state any important assumptions made during your analysis.
+### Mass Flows 
 
-- Calculation of the state of each stream (= define temperature, pressure, enthalpy, mass flow, etc...)
-    
-    - Theoretical basis or your calculation.
-    - Utilize the methods illustrated in the example provided in the **Survival Guide** to calculate the thermodynamic properties of each stream. You can employ tools like `Python` and `CoolProp` for this purpose.
-    - You do not need to include the detailed calculation process in the final report. It's advisable to create separate files for each section (e.g., qmd files) to perform the calculations.
-    - Summarize all your results in a comprehensive table for easy reference.
+Because of the mass flow conservation, we have:
 
-- Summarzing all the energy/heat streams in the section. 
+\begin{cases}
+\dot m_{Mixure~Out} = \dot m_{Past{\_}Cent} = \dot m_{Fresh~Milk} = 8~kg/s \\
 
-By following these guidelines, you can ensure a thorough and well-structured analysis of the Pasteurization section and other sections of the dairy factory.
+\dot m_{Milk{\_}0} = \dot m_{Past{\_}a} = \dot m_{Past{\_}b} = \dot m_{Past{\_}c} =  \dot m_{Past{\_}d} = \dot m_{Milk} = 7.52~kg/s \\
 
-> Please keep in mind that you have the option to include `R` and `Python` code chunks in your report. Be sure to reference the examples provided in the Survival Guide.
+\dot m_{cream{\_}0} = \dot m_{crpast{\_}a} = \dot m_{Past{\_}cent} - \dot m_{Milk{\_}0} =  \dot m_{Fresh~Milk} - \dot m_{Milk} = 8 - 7.52 = 0.48~kg/s ~~ (centrifuge) \\
 
+\dot m_{crpast{\_}x} = \dot m_{crpast{\_}b} = \dot m_{crpast{\_}c} = \dot m_{Cream} =  0.55~kg/s \\
+
+\dot m_{thickener} = 0.07~kg/s \\
+
+\end{cases}
+
+Consequently, all mass flows are defined.
+
+### Heat Capacity
+
+Are already provided the following heat capacity data:
+
+- $c_{p,Raw~Milk} = 3.8 kJ/(kgK)$ (milk after centrifuge)
+
+- $c_{p,Cream~ac} = 3.4 kJ/(kgK)$ (cream after centrifuge)
+
+From Litterature [add reference] we chose:
+
+- $c_{p,thickener} = c_{p,albaline} = 0.07 kJ/(kgK)$
+
+Assuming that the mixer provides an ideal mix, we have:
+
+\begin{align*}
+    c_{p,cream} &= \frac{\dot m_{cream{\_}0}}{\dot m_{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener} }{\dot m_{Cream}}.c_{p,thickener} \\
+    \\
+    c_{p,cream} &= \frac{0.48}{0.55}.3400 + \frac{0.07}{0.55}.4175 
+\end{align*}
+
+Finally:
+
+- $c_{p,cream} = 3.5~kJ/(kgK)$
+
+
+
+### Equations of operations 
+
+#### Refrigeration
+
+$\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out})$
+
+#### PAST1
+
+$\dot Q_{past~1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
+
+#### TO CONTINUE
 ```{python coolprop, echo = T, eval = T}
 from CoolProp.CoolProp import PropsSI
 rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
@@ -53,7 +92,6 @@ x = 42
 
 ## Evaporation section
 
-...
 
 ## Process 3
 
