@@ -72,17 +72,7 @@ rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
 ```
 
 
-```{python state-function, echo = T, eval = T}
-from pyxosmose.state import State
-# First, define the thermodynamic point,
-Point1 = State(pair='TP', fluid='water', temperature=338, pressure=25000)
-# Then calculate the state using the State class method StateCalc
-Point1.StateCalc()
-# And print the dictionary for revision
-State1 = Point1.__dict__ # Whole dictionary with properties
-h1 = Point1.enthalpy # Point.enthalpy is equivalent to State1["enthalpy"]
-print(State1)
-```
+
 
 ```{r render-table, echo = T}
 # a way to pass the value from python to r is to through json file
@@ -93,7 +83,7 @@ x = 42
 
 ## Evaporation section
 
-```{python state-function, echo = T, eval = T}
+```{python fatincreasedef, echo = T, eval = T}
 
 import pandas as pd
 import numpy as np
@@ -138,7 +128,7 @@ m11, p_fat_out0, p_fat_out1, p_fat_out2, p_fat_out3, p_water_out0, p_water_out1,
 
 ```
 
-```{python state-function, echo = T, eval = T}
+```{python fatincreaseprint, echo = T, eval = T}
 
 data = {'Point': ['6', '7&8', '9&10', '11'],
         'Fat content (%)': [p_fat_out0*100, p_fat_out1*100, p_fat_out2*100, p_fat_out3*100],
@@ -149,7 +139,7 @@ df = df.round(2)
 print(df)
 ```
 
-```{python state-function, echo = T, eval = T}
+```{python evap1, echo = T, eval = T}
 #Evaporator 1
 from codes_01_energy_bill.coolprop_functions import mixture
 from pyxosmose.state import State
@@ -207,7 +197,7 @@ print(Q_evap1)
 print(m_w1)
 ```
 
-```{python state-function, echo = T, eval = T}
+```{python evap2, echo = T, eval = T}
 #Evaporator 2
 
 from codes_01_energy_bill.coolprop_functions import mixture
@@ -258,7 +248,7 @@ print(m_w2)
 ```
 
 
-```{python state-function, echo = T, eval = T}
+```{python evap3, echo = T, eval = T}
 #Evaporator 3
 
 from codes_01_energy_bill.coolprop_functions import mixture
@@ -312,21 +302,6 @@ print(Q_evap3)
 print(m_w3)
 ```
 
-```{python state-function, echo = T, eval = T}
-
-
-```
-
-```{python state-function, echo = T, eval = T}
-```
-
-```{python state-function, echo = T, eval = T}
-```
-
-```{python state-function, echo = T, eval = T}
-
-
-```
 
 
 ## Process 3
