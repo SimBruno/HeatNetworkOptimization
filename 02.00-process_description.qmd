@@ -9,7 +9,7 @@ In this section, your task is to compute the thermodynamic properties of all the
 ![Pasteurisation](Figures/pasteurisation.svg)
 
 In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and and milk from fresh milk with the intergation of a thickener at some point. 
-
+TEST
 ### Mass Flows 
 
 Because of the mass flow conservation, we have:
