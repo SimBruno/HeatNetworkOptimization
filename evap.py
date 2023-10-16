@@ -1,96 +1,10 @@
-# Process description and analysis
-
-To provide practical solutions to our industrial partner, the dairy factory, our first task is to show that we truly grasp the problem. To a business manager, industrial processes may seem mysterious and complex, like "black boxes." However, as engineers, we need to dig into the details, using mathematics and physics to analyze and design these industrial processes.
-
-In this section, your task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The data collected here will be instrumental in calculating exergy efficiency and energy bills in the following section. To facilitate your work, we have provided an illustrative example for the Pasteurization section below:
-
-## Pasteurisation section
-
-![Pasteurisation](Figures/pasteurisation.svg)
-
-In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and and milk from fresh milk with the intergation of a thickener at some point. 
-
-### Mass Flows 
-
-Because of the mass flow conservation, we have:
-
-\begin{cases}
-\dot m_{Mixure~Out} = \dot m_{Past{\_}Cent} = \dot m_{Fresh~Milk} = 8~kg/s \\
-
-\dot m_{Milk{\_}0} = \dot m_{Past{\_}a} = \dot m_{Past{\_}b} = \dot m_{Past{\_}c} =  \dot m_{Past{\_}d} = \dot m_{Milk} = 7.52~kg/s \\
-
-\dot m_{cream{\_}0} = \dot m_{crpast{\_}a} = \dot m_{Past{\_}cent} - \dot m_{Milk{\_}0} =  \dot m_{Fresh~Milk} - \dot m_{Milk} = 8 - 7.52 = 0.48~kg/s ~~ (centrifuge) \\
-
-\dot m_{crpast{\_}x} = \dot m_{crpast{\_}b} = \dot m_{crpast{\_}c} = \dot m_{Cream} =  0.55~kg/s \\
-
-\dot m_{thickener} = 0.07~kg/s \\
-
-\end{cases}
-
-Consequently, all mass flows are defined.
-
-### Heat Capacity
-
-Are already provided the following heat capacity data:
-
-- $c_{p,Raw~Milk} = 3.8 kJ/(kgK)$ (milk after centrifuge)
-
-- $c_{p,Cream~ac} = 3.4 kJ/(kgK)$ (cream after centrifuge)
-
-From Litterature [add reference] we chose:
-
-- $c_{p,thickener} = c_{p,albaline} = 0.07 kJ/(kgK)$
-
-Assuming that the mixer provides an ideal mix, we have:
-
-\begin{align*}
-    c_{p,cream} &= \frac{\dot m_{cream{\_}0}}{\dot m_{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener} }{\dot m_{Cream}}.c_{p,thickener} \\
-    \\
-    c_{p,cream} &= \frac{0.48}{0.55}.3400 + \frac{0.07}{0.55}.4175 
-\end{align*}
-
-Finally:
-
-- $c_{p,cream} = 3.5~kJ/(kgK)$
-
-
-
-### Equations of operations 
-
-#### Refrigeration
-
-$\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out})$
-
-#### PAST1
-
-$\dot Q_{past~1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
-
-#### TO CONTINUE
-```{python coolprop, echo = T, eval = T}
-from CoolProp.CoolProp import PropsSI
-rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
-```
-
-
-
-
-```{r render-table, echo = T}
-# a way to pass the value from python to r is to through json file
-library(reticulate)
-x = 42
-```
-
-
-## Evaporation section
-
-```{python fatincreasedef, echo = T, eval = T}
 
 import pandas as pd
 import numpy as np
 
 m1=5.0
 m6=m1
-m14=1.5
+m14=1.45
 m15=1.28
 m16=0.8
 
@@ -126,10 +40,6 @@ def fat_increase(m_int1, m_int2, m_int3, m_in = 5.0, p_fat_out3 = 0.50):
 m11, p_fat_out0, p_fat_out1, p_fat_out2, p_fat_out3, p_water_out0, p_water_out1, p_water_out2, p_water_out3 = fat_increase(m_int1=m14, m_int2=m15, m_int3=m16, m_in = m6, p_fat_out3 = 0.50)
 
 
-```
-
-```{python fatincreaseprint, echo = T, eval = T}
-
 data = {'Point': ['6', '7&8', '9&10', '11'],
         'Fat content (%)': [p_fat_out0*100, p_fat_out1*100, p_fat_out2*100, p_fat_out3*100],
         'Water content (%)': [p_water_out0*100, p_water_out1*100, p_water_out2*100, p_water_out3*100]}
@@ -137,9 +47,7 @@ df = pd.DataFrame(data)
 df = df.set_index('Point')
 df = df.round(2)
 print(df)
-```
 
-```{python evap1, echo = T, eval = T}
 #Evaporator 1
 from codes_01_energy_bill.coolprop_functions import mixture
 from pyxosmose.state import State
@@ -195,9 +103,7 @@ Q_evap1, m_w1 = evaporator_fct(m6,m14,m7,h6,h14,h7,cp6,deltaT,hfg1)
 
 print(Q_evap1)
 print(m_w1)
-```
 
-```{python evap2, echo = T, eval = T}
 #Evaporator 2
 
 from codes_01_energy_bill.coolprop_functions import mixture
@@ -245,10 +151,7 @@ Q_evap2, m_w2 = evaporator_fct(m8,m15,m9,h8,h15,h9,cp8,deltaT,hfg2)
 
 print(Q_evap2)
 print(m_w2)
-```
 
-
-```{python evap3, echo = T, eval = T}
 #Evaporator 3
 
 from codes_01_energy_bill.coolprop_functions import mixture
@@ -300,21 +203,10 @@ Q_evap3, m_w3 = evaporator_fct(m10,m16,m11,h10,h16,h11,cp10,deltaT,hfg3)
 
 print(Q_evap3)
 print(m_w3)
-```
 
-```{python mass, echo = T, eval = T}
 m19=m14-m_w2
 m20=m15-m_w3
-print(m19)
-print(m20)
-print(m16)
-print(m11)
-```
 
-```{python HX1, echo = T, eval = T}
-```
-
-```{python HX4, echo = T, eval = T}
 
 #Heat Exchanger 4
 def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
@@ -345,14 +237,13 @@ State_e19 = Point_e19.__dict__ # Whole dictionary with properties
 h19=State_e19["enthalpy"]
 cp19=State_e19["cpmass"]
 
-print(m19)
+
 Q4, Thot4 = HeatExchanger(m5, cp4, T4, T5, T19, cp19, m19, h19)
 print(Q4)
+print(T5)
 print(Thot4)
 
-```
 
-```{python HX3, echo = T, eval = T}
 
 #Heat Exchanger 3
 T3=321
@@ -372,15 +263,11 @@ State_e20 = Point_e20.__dict__ # Whole dictionary with properties
 h20=State_e20["enthalpy"]
 cp20=State_e20["cpmass"]
 
-print(m20)
-
 Q3, Thot3 = HeatExchanger(m4, cp3, T3, T4, T20, cp20, m20, h20)
 print(Q3)
 print(T4)
 print(Thot3)
-```
 
-```{python HX2, echo = T, eval = T}
 
 #Heat Exchanger 2
 T2=309
@@ -389,14 +276,12 @@ p2=p6
 State_e2=mixture(T=T2, P=p2, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
 cp2=State_e2["cpmass"]
 cp16=State_e16["cpmass"]
-print(m3, cp6, T2, T3, T16, cp16, m16, h16)
+
 Q2, Thot2 = HeatExchanger(m3, cp2, T2, T3, T16, cp16, m16, h16)
 print(Q2)
 print(T3)
 print(Thot2)
-```
 
-```{python HX1, echo = T, eval = T}
 
 #Heat Exchanger 1
 T1=300
@@ -405,14 +290,13 @@ State_e1=mixture(T=T1, P=p1, frac_water=p_water_out0, frac_fat=p_fat_out0) # thi
 cp1=State_e1["cpmass"]
 cp11=State_e11["cpmass"]
 h11=State_e11["enthalpy"]
-print(cp11)
-print(T1, T2, T11)
+
 # mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot
 Q1, Thot1 = HeatExchanger(m1, cp1, T1, T2, T11, cp11, m11, h11)
 print(Q1)
 print(T2)
 print(Thot1)
-```
+
 
 
 
