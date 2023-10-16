@@ -1,5 +1,4 @@
 # Pinch analysis
-
 Starting from this chapter, you will embark on optimizing the energy efficiency of the dairy factory. This section is divided into two parts:
 
 - Optimization of the minimum temperature difference ($\Delta$T) in heat exchangers.

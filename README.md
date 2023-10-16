@@ -1,5 +1,5 @@
 ## Local build
-
+lina
 1. Open the terminal in VS code.
 
 2. Input `quarto render` to build you book.
