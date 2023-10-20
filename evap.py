@@ -4,7 +4,7 @@ import numpy as np
 
 m1=5.0
 m6=m1
-m14=1.45
+m14=1.6
 m15=1.28
 m16=0.8
 
@@ -37,7 +37,7 @@ def fat_increase(m_int1, m_int2, m_int3, m_in = 5.0, p_fat_out3 = 0.50):
         print("WARNING: The water content in the final product is too high.")
     return m_out, p_fat_out0, p_fat_out1, p_fat_out2, p_fat_out3, p_water_out0, p_water_out1, p_water_out2, p_water_out3
 
-m11, p_fat_out0, p_fat_out1, p_fat_out2, p_fat_out3, p_water_out0, p_water_out1, p_water_out2, p_water_out3 = fat_increase(m_int1=m14, m_int2=m15, m_int3=m16, m_in = m6, p_fat_out3 = 0.50)
+m11, p_fat_out0, p_fat_out1, p_fat_out2, p_fat_out3, p_water_out0, p_water_out1, p_water_out2, p_water_out3 = fat_increase(m_int1=m14, m_int2=m15, m_int3=m16, m_in = m6, p_fat_out3 = 0.5)
 
 
 data = {'Point': ['6', '7&8', '9&10', '11'],
@@ -211,13 +211,21 @@ m20=m15-m_w3
 #Heat Exchanger 4
 def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
     Q = mcold*cpcold*(Tcoldout-Tcoldin)
-    Qcond = mhot*hhot
+    Qcond = mhot*abs(hhot)
     if Qcond<Q:
         print("Cold stream is completely condensed")
-        Thotout = (-Q+mhot*hhot)/(mhot*cphot) + Thotin
+        Thotout = (-Q+mhot*abs(hhot))/(mhot*cphot) + Thotin
     else:
         print("Cold stream is not completely condensed")
         Thotout = Thotin
+    
+    print('Qcond:',Qcond)
+    print('Q:',Q)
+    print('Tcold_in:',Tcoldin)
+    print('Tcold_out:',Tcoldout)
+    print('Thot_in:',Thotin)
+    print('Thot_out:',Thotout)
+
     return Q, Thotout
 
 T4=337
@@ -239,10 +247,6 @@ cp19=State_e19["cpmass"]
 
 
 Q4, Thot4 = HeatExchanger(m5, cp4, T4, T5, T19, cp19, m19, h19)
-print(Q4)
-print(T5)
-print(Thot4)
-
 
 
 #Heat Exchanger 3
@@ -264,10 +268,6 @@ h20=State_e20["enthalpy"]
 cp20=State_e20["cpmass"]
 
 Q3, Thot3 = HeatExchanger(m4, cp3, T3, T4, T20, cp20, m20, h20)
-print(Q3)
-print(T4)
-print(Thot3)
-
 
 #Heat Exchanger 2
 T2=309
@@ -278,13 +278,9 @@ cp2=State_e2["cpmass"]
 cp16=State_e16["cpmass"]
 
 Q2, Thot2 = HeatExchanger(m3, cp2, T2, T3, T16, cp16, m16, h16)
-print(Q2)
-print(T3)
-print(Thot2)
-
 
 #Heat Exchanger 1
-T1=300
+T1=282.5
 p1=p6
 State_e1=mixture(T=T1, P=p1, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
 cp1=State_e1["cpmass"]
@@ -293,10 +289,6 @@ h11=State_e11["enthalpy"]
 
 # mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot
 Q1, Thot1 = HeatExchanger(m1, cp1, T1, T2, T11, cp11, m11, h11)
-print(Q1)
-print(T2)
-print(Thot1)
-
 
 
 
