@@ -54,6 +54,8 @@ from pyxosmose.state import State
 def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg):
     Q_evap = m_in*cp_in*deltaT - m_in*h_in + m_out1*h_out1 + m_out2*h_out2
     m_w = (Q_evap)/(hfg)
+    print('Qevap:',Q_evap)
+    print('mw:',m_w)
     return Q_evap, m_w
 #Fixed Parameters 
 p6=31000
@@ -291,10 +293,31 @@ h11=State_e11["enthalpy"]
 Q1, Thot1 = HeatExchanger(m1, cp1, T1, T2, T11, cp11, m11, h11)
 
 
+print('m19',m19)
+print('m20',m20)
+print('m16',m16)
+print('m11',m11)
 
 
+#Heat Exchanger Glycolic water
 
-## Process 3
+p12=p11
+T12=Thot1
+T13=277
+m12=m11
+State_e12=mixture(T=T12, P=p11, frac_water=p_water_out0, frac_fat=p_fat_out0)
+cp12=State_e12["cpmass"]
+print('cp12', cp12)
+
+Tinglycol=270
+Toutglycol=277
+pglycol=10000
+cpglycol=2294
+
+Qglycol = m12*cp12*(T12-T13)
+mglycol = m12*(cp12/cpglycol)*(T12-T13)/(Toutglycol-Tinglycol)
+print('Qglycol:',Qglycol)
+print('mglycol:',mglycol)
 
 ...
 
