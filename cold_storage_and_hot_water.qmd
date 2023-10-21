@@ -1,0 +1,37 @@
+---
+title: "Cold Storage and Hot Water Gp6"
+output: html_document
+date: "21-10-2023"
+---
+Here are reported calculation of air mass flow required to remove 500kW of heat from a cold storage and the heat required to heat 1kg/s of water from 15°C to 55°C.
+
+
+```{python Hot Water, echo=False}
+
+from pyxosmose.state import State
+
+water_in = State(pair='TP',fluid='Water',temperature=288,pressure=100000)
+water_in.StateCalc()
+water_out = State(pair='TP',fluid='Water',temperature=328,pressure=100000)
+water_out.StateCalc()
+
+
+h_in=water_in.enthalpy 
+m_water=1
+h_out=water_out.enthalpy 
+Q_hot=m_water*(h_out-h_in)
+Q_hot
+```
+
+```{python Cold Storage}
+T_in=273
+T_out=268
+Q_fridge=500000
+Cp_air=1000
+m_air=Q_fridge/(Cp_air*(T_in-T_out))
+m_air
+```
+
+The heat required to heat 1kg/s of water from 15°C to 55°C is `Q_hot` W. 
+The air mass flow required to remove 500kW of heat from a cold storage is `m_air` kg/s.
+```

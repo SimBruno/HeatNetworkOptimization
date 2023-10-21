@@ -311,7 +311,6 @@ print('cp12', cp12)
 
 Tinglycol=270
 Toutglycol=277
-pglycol=10000
 cpglycol=2294
 
 Qglycol = m12*cp12*(T12-T13)

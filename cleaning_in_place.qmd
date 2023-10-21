@@ -18,7 +18,7 @@ For this part of the process, the following data are used:
    $\dot{m}_2 = 4kg/s$
 - Specific Heats
   - $c_{p,water} = 4.184\,kJ/kgK$ (Specific heat of liquid water)
-  - $C_{p,glass} = 0.84\,kJ/kgK$ (Specific heat of glass: from http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/sphtt.html#c1)
+  - $C_{p,glass} = 0.840\,kJ/kgK$ (Specific heat of glass: from http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/sphtt.html#c1)
   - $h_{fg, steam} = 2257\,kJ/kg$ (Latent heat of steam at $100^\circ C$)
 - Temperatures
   - $T_1 = 25°C = 298K$ 
