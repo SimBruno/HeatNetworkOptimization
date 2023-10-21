@@ -1,0 +1,88 @@
+# Process description and analysis
+
+To provide practical solutions to our industrial partner, the dairy factory, our first task is to show that we truly grasp the problem. To a business manager, industrial processes may seem mysterious and complex, like "black boxes." However, as engineers, we need to dig into the details, using mathematics and physics to analyze and design these industrial processes.
+
+In this section, your task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The data collected here will be instrumental in calculating exergy efficiency and energy bills in the following section. To facilitate your work, we have provided an illustrative example for the Pasteurization section below:
+
+## Pasteurisation section
+
+![Pasteurisation](Figures/pasteurisation.svg)
+
+In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and and milk from fresh milk with the intergation of a thickener at some point. 
+TEST
+### Mass Flows 
+
+Because of the mass flow conservation, we have:
+
+\begin{cases}
+\dot m_{Mixure~Out} = \dot m_{Past{\_}Cent} = \dot m_{Fresh~Milk} = 8~kg/s \\
+
+\dot m_{Milk{\_}0} = \dot m_{Past{\_}a} = \dot m_{Past{\_}b} = \dot m_{Past{\_}c} =  \dot m_{Past{\_}d} = \dot m_{Milk} = 7.52~kg/s \\
+
+\dot m_{cream{\_}0} = \dot m_{crpast{\_}a} = \dot m_{Past{\_}cent} - \dot m_{Milk{\_}0} =  \dot m_{Fresh~Milk} - \dot m_{Milk} = 8 - 7.52 = 0.48~kg/s ~~ (centrifuge) \\
+
+\dot m_{crpast{\_}x} = \dot m_{crpast{\_}b} = \dot m_{crpast{\_}c} = \dot m_{Cream} =  0.55~kg/s \\
+
+\dot m_{thickener} = 0.07~kg/s \\
+
+\end{cases}
+
+Consequently, all mass flows are defined.
+
+### Heat Capacity
+
+Are already provided the following heat capacity data:
+
+- $c_{p,Raw~Milk} = 3.8 kJ/(kgK)$ (milk after centrifuge)
+
+- $c_{p,Cream~ac} = 3.4 kJ/(kgK)$ (cream after centrifuge)
+
+From Litterature [add reference] we chose:
+
+- $c_{p,thickener} = c_{p,albaline} = 0.07 kJ/(kgK)$
+
+Assuming that the mixer provides an ideal mix, we have:
+
+\begin{align*}
+    c_{p,cream} &= \frac{\dot m_{cream{\_}0}}{\dot m_{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener} }{\dot m_{Cream}}.c_{p,thickener} \\
+    \\
+    c_{p,cream} &= \frac{0.48}{0.55}.3400 + \frac{0.07}{0.55}.4175 
+\end{align*}
+
+Finally:
+
+- $c_{p,cream} = 3.5~kJ/(kgK)$
+
+
+
+### Equations of operations 
+
+#### Refrigeration
+
+$\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out})$
+
+#### PAST1
+
+$\dot Q_{past~1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
+
+#### TO CONTINUE
+
+# Evaporation Section
+
+## Part 1: Useful Constants and Main Assumptions
+
+In this section, we define the key constants and assumptions for our evaporation process.
+
+```{python Useful Constants and Main Assumptions}
+import pandas as pd
+import numpy as np
+
+m1 = 5.0          # Initial mass
+m6 = m1           # Mass at a later point
+m14 = 1.6         # Mass input at stage 1
+m15 = 1.28        # Mass input at stage 2
+m16 = 0.8         # Mass input at stage 3
+
+```
+
+

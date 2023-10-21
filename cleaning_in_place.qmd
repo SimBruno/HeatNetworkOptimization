@@ -1,0 +1,122 @@
+---
+title: "Cleaning in Place Gp6"
+output: html_document
+date: "21-10-2023"
+---
+
+## Cleaning in Place
+
+Assumptions: 
+
+- For safety purposes the glass needs to contact with water which is at least at 65 . Each glass bottle weights 370g and has 500 mL of capacity. 
+
+
+
+For this part of the process, the following data are used:
+
+- Mass Flows
+   $\dot{m}_2 = 4kg/s$
+- Specific Heats
+  - $c_{p,water} = 4.184\,kJ/kgK$ (Specific heat of liquid water)
+  - $C_{p,glass} = 0.84\,kJ/kgK$ (Specific heat of glass: from http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/sphtt.html#c1)
+  - $h_{fg, steam} = 2257\,kJ/kg$ (Latent heat of steam at $100^\circ C$)
+- Temperatures
+  - $T_1 = 25°C = 298K$ 
+  - $T_2 = 60°C = 333K$
+  - $T_3 = T_{10} = 80°C = 353K$
+  - $T_4 = T_5 = T_6 = T_{12} = 75°C = 348K$
+  - $T_7 = 30°C = 303K$
+  - $T_8 = 25°C = 298K$
+  - $T_{11} = 40°C = 313K$
+  - $T_{steam} = 100°C = 373K$ (Steam pressure is assumed at 1 bar)
+
+```{r Constants Cleaning in Place, echo = F, results='hide'}
+cp_water=4.184
+cp_glass=0.84
+hfg_cipsteam = 2257
+
+m_cip2=4
+
+t_cip1=298
+t_cip2=333
+t_cip3=353
+t_cip4=348
+t_cip5 = t_cip4
+t_cip6 = t_cip4
+t_cip7=303
+t_cip8=298
+t_cip11=313
+t_cip10 = t_cip3
+t_cip12 = t_cip4
+t_cipsteam = 373
+
+```
+
+
+# MIXER
+The first component is an adiabatic mixer (enthalpy stays constant over the mixing). There are three different flows assumed to be water flow (according to pressure and temperature flows). Two in flows and on out flow. We can obtain the mass and energy balance at the mixer as follows:
+$$\dot{m}_{CIP,1}Cp_{water}T_{CIP,1}+\dot{m}_{CIP,5}Cp_{water}T_{CIP,5}=\dot{m}_{CIP,2}Cp_{water}T_{CIP,2}$$
+$$\dot{m}_{CIP,1}+\dot{m}_{CIP,5}=\dot{m}_{CIP,2}$$
+
+```{r Mixer, echo=F}
+m_cip1 = m_cip2*(t_cip2-t_cip5)/(t_cip1-t_cip5) 
+m_cip5 = m_cip2-m_cip1
+```
+Hence, $m_{CIP,1}$ is equal to `r m_cip1` $kg/s$ and $m_{CIP,5}$ is equal to `r m_cip5` $kg/s$.
+
+# HEATER
+The next step is to compute balances of the upper HX (between Steam and point 2 and 3). At this HX, there is mixed water at $60^\circ C$ which is heated to $80^\circ C$. The steam used to heat up the water is assumed to be at 1 bar (costs saving reason). Again we have the following equations to compute the heat exchanged and the mass flow of steam (NB: mass flow of water is constant over the HX).
+$$Q_{CIPHX,steam}=\dot{m}_{CIP,2}Cp_{water}(T_{CIP,3}-T_{CIP,2})$$
+$$Q_{CIPHX,steam}=\dot{m}_{steam}h_{fg,steam}$$
+```{r HX_steam, echo=F} 
+
+q_cipsteam = m_cip2*cp_water*(t_cip3-t_cip2)
+m_cipsteam = q_cipsteam/hfg_cipsteam
+
+# Splitting between CIP-3 and CIP-10 
+p = 0.5 # assumed for ease of calculation
+m_cip3 = m_cip2*p
+m_cip10 = m_cip2*(1-p)
+```
+There is `r q_cipsteam` $kW$ heat exchanged thanks to a `r m_cipsteam` $kg/s$ steam flow. 
+
+
+# SHOWERS
+It has been assume for ease of calculation that both showers received the same exact mass flow of hot water. Thus, $\dot{m}_{3} = \dot{m}_{4} = \dot{m}_{10} = \dot{m}_{12}= \dot{m}_{shower}=\frac{\dot{m}_2}{2}$  Furthermore, it is assumed that there is no heat loss through radiation. It is also assumed the mass of the bottle will stay constant the entire process (from part 8 to part 11) and thus: $\dot{m}_8 = \dot{m}_9 = \dot{m}_{11} = \dot{m}_{glass}$. 
+
+The heat balance for the first shower is as followed:
+$$ \dot{m}_{glass}c_{p,glass}(T_9-T_8)=\dot{m}_{shower}c_{p,water}(T_{3}-T_4)$$
+Then for shower 2:
+$$ \dot{m}_{glass}c_{p,glass}(T_{11}-T_9)=\dot{m}_{shower}c_{p,water}(T_{10}-T_{12})$$
+```{r Showers, echo=F}
+Q_shower=m_cip3*cp_water*(t_cip3-t_cip4) #same w/ m_cip4
+t_cip9=(t_cip11+t_cip8)/2
+m_cipglass = Q_shower/(cp_glass*(t_cip9-t_cip8))
+
+```
+Thus, there is `r Q_shower` $kW$ of heat used at each shower and bottle flow rate is `r m_cipglass` $kg/s$.
+
+# SPLITTER
+```{r Splitter, echo=F}
+m_cip4 = m_cip3
+m_cip6 = 2*m_cip4-m_cip5
+```
+No heat exchanged. Only mass flows such that $$ \dot{m}_{4}+\dot{m}_{12}=\dot{m}_{2}=\dot{m}_{5}+\dot{m}_{6}$$
+This gives $\dot{m}_6$ is equal to `r m_cip6` $kg/s$.
+
+
+
+# COOLER
+
+```{r Cooler, echo=F}
+t_cwater_in = 283
+t_cwater_out = 298
+m_cip7 = m_cip6
+q_cipwater = m_cip6*(t_cip6-t_cip7)*cp_water
+m_cipwater = q_cipwater/((t_cwater_out-t_cwater_in)*cp_water)
+```
+
+The final steps of this cleaning process is with the of a HX as a cooler. hot water will be cooled down to $30^\circ C$. 
+As showed above with calculations for the HX_Steam there is thus  `r round(q_cipwater,2)` $kW$ transferred thanks to a `r m_cipwater` $kg/s$ cooling water flow (which is itself going from $10^\circ C$ to $25^\circ C$).
+
+
