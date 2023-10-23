@@ -15,13 +15,13 @@ TEST
 Because of the mass flow conservation, we have:
 
 \begin{cases}
-\dot m_{Mixure~Out} = \dot m_{Past{\_}Cent} = \dot m_{Fresh~Milk} = 8~kg/s \\
+\dot m_{Mixure~Out} = \dot m_{Past{\}Cent} = \dot m{Fresh~Milk} = 8~kg/s \\
 
-\dot m_{Milk{\_}0} = \dot m_{Past{\_}a} = \dot m_{Past{\_}b} = \dot m_{Past{\_}c} =  \dot m_{Past{\_}d} = \dot m_{Milk} = 7.52~kg/s \\
+\dot m_{Milk{\}0} = \dot m{Past{\}a} = \dot m{Past{\}b} = \dot m{Past{\}c} =  \dot m{Past{\}d} = \dot m{Milk} = 7.52~kg/s \\
 
-\dot m_{cream{\_}0} = \dot m_{crpast{\_}a} = \dot m_{Past{\_}cent} - \dot m_{Milk{\_}0} =  \dot m_{Fresh~Milk} - \dot m_{Milk} = 8 - 7.52 = 0.48~kg/s ~~ (centrifuge) \\
+\dot m_{cream{\}0} = \dot m{crpast{\}a} = \dot m{Past{\}cent} - \dot m{Milk{\}0} =  \dot m{Fresh~Milk} - \dot m_{Milk} = 8 - 7.52 = 0.48~kg/s ~~ (centrifuge) \\
 
-\dot m_{crpast{\_}x} = \dot m_{crpast{\_}b} = \dot m_{crpast{\_}c} = \dot m_{Cream} =  0.55~kg/s \\
+\dot m_{crpast{\}x} = \dot m{crpast{\}b} = \dot m{crpast{\}c} = \dot m{Cream} =  0.55~kg/s \\
 
 \dot m_{thickener} = 0.07~kg/s \\
 
@@ -44,7 +44,7 @@ From Litterature [add reference] we chose:
 Assuming that the mixer provides an ideal mix, we have:
 
 \begin{align*}
-    c_{p,cream} &= \frac{\dot m_{cream{\_}0}}{\dot m_{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener} }{\dot m_{Cream}}.c_{p,thickener} \\
+    c_{p,cream} &= \frac{\dot m_{cream{\}0}}{\dot m{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener} }{\dot m_{Cream}}.c_{p,thickener} \\
     \\
     c_{p,cream} &= \frac{0.48}{0.55}.3400 + \frac{0.07}{0.55}.4175 
 \end{align*}
@@ -63,7 +63,7 @@ $\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Mil
 
 #### PAST1
 
-$\dot Q_{past~1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
+$\dot Q_{past~1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\}cent} - T{Mixure{\}out}) = \dot m{Milk} . c_{p,Raw~Milk} . (T_{Past{\}d} - T{Past{\_}c})$
 
 #### TO CONTINUE
 ```{python coolprop, echo = T, eval = T}
@@ -355,8 +355,8 @@ cp19=State_e19["cpmass"]
 Q4, Thot4 = HeatExchanger(m5, cp4, T4, T5, T19, cp19, m19, h19)
 
 print(Thot4)
-
 ```
+
 
 ```{python HX3, echo = T, eval = T}
 
@@ -597,12 +597,9 @@ print(dfhx)
 dfrecap.to_csv('dfrecap.csv')
 dfevap.to_csv('dfevap.csv')
 dfhx.to_csv('dfhx.csv')
-
 ```
 
 
 
-## Process 3
 
-...
-
+## Process 3
