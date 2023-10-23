@@ -17,7 +17,14 @@ source("./rosmose-setup.R", local = knitr::knit_global())
 ```{r venvconfig, warning = F, results = "hide", message=F, eval=T, echo=F}
 path <- file.path('./venv/Scripts/python.exe')
 library(reticulate)
-use_python(path)
+
+#path <- file.path('./venv/bin/python')
+library(reticulate)
+#use_python(path)
+use_virtualenv('./venv', required=TRUE)
+
+#use_python(path)
+
 ```
 
 # Abstract {-}

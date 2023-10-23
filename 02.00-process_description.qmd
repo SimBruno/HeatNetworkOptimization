@@ -311,8 +311,6 @@ print(m16)
 print(m11)
 ```
 
-```{python HX1, echo = T, eval = T}
-```
 
 ```{python HX4, echo = T, eval = T}
 
