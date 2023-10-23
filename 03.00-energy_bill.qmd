@@ -10,6 +10,68 @@ Upon completing the process description and analysis for each section, you will 
 
 In the exergy analysis, it's essential to outline the exergy inputs, exergy outputs, and exergy destruction specifically for the Pasteurization and Evaporation sections. To achieve this, you should provide both the theoretical background of exergy calculation and the step-by-step process of your analysis.
 
+To evaluate the losses and inefficiencies of the dairy production an exergy analysis is carried out. The ambient temperature is assumed to be $T_0 = 20°C + 273K = 293K$. 
+
+### Pasteurization
+
+#### Refrigeration
+
+$$
+L_{milk-refr} = \dot{m}_{in,m}c_{p,whm}[(T_{in} - T_{mix,o})-T_0\ln(\frac{T_1}{T_2})] \\
+L_{gw-refr}  = \dot{m}_{gw,refr}c_{p,gw}[(T_{in,gw} - T_{out,gw})-T_0\ln(\frac{T_{in,gw}}{T_{out,gw}})] \\
+L_{refr} = L_{milk-refr} + L_{gw-refr}
+$$
+
+#### Past 1, Past 2, Past 5
+
+$$
+L_{past1,1}  = \dot{m}_{in,m}c_{p,whm}[(T_{mix,o} - T_{past,cent})-T_0\ln(\frac{T_{mix,o}}{T_{past,cent}})] \\
+L_{past1,2}  = \dot{m}_{out,m}c_{p,rm}[(T_{past,c} - T_{past,d})-T_0\ln(\frac{T_{past,c}}{T_{past,d}})] \\
+L_{past1} = L_{past1,1} + L_{past1,2}
+$$
+
+#### Past 3, Past 6
+
+$$
+L_{past3,1}  = \dot{m}_{out,m}c_{p,rm}[(T_{past,a} - T_{past,b})-T_0\ln(\frac{T_{past,a}}{T_{past,b}})] \\
+L_{past3,2}  = \dot{m}_{steam,3}[(h_{in,steam}-h_{out,steam})-T_0(s_{in,steam}-s_{out,steam})] \\
+L_{past3}  = L_{past3,1} + L_{past3,2}
+$$ 
+
+#### Mixer
+
+$$
+L_{mixer,1}  = \dot{m}_{cr,o}c_{p,cr}[(T_{crpast,a} - T_{crpast,x})-T_0\ln(\frac{T_{crpast,a}}{T_{crpast,x}})] \\
+L_{mixer,2} = \dot{m}_{th}c_{p,alginate}[(T_{th} - T_{crpast,x})-T_0\ln(\frac{T_{th}}{T_{crpast,x}})] \\
+L_{mixer} = L_{mixer,1} + L_{mixer,2} 
+$$
+
+
+### Evaporation 
+
+#### Heat Exchanger
+
+$$\dot{L}_{HX}=\dot{m}_{water}(h_{fg}-T_{a}s_{fg})-Q_{HX}(1-\frac{T_{a}}{T_{c,lm}})$$
+
+#### Heat Evaporator
+
+$$\dot{L}_{evaporator}=\dot{m}_{milk}(h_{milk,in}-h_{milk,out})-\dot{m}_{milk}T_{a}(s_{milk,in}-s_{milk,out})-\dot{m}_{water}Cp_{water}[T_{out}-$$
+
+#### Splitter
+$$\dot{L}_{splitter}=\dot{m}_{in}(h_{in}-T_{0}s_{in})-\dot{m}_{out}(h_{out}-T_{0}s_{out})$$
+
+
+#### Total
+
+$$\dot{L}_{evaporation}=\Sigma\dot{L}_{HX}+\Sigma\dot{L}_{evaporator}+\Sigma\dot{L}_{splitter}$$
+
+
+
+
+
+
+
+
 Furthermore, we highly encourage the use of a Sankey diagram to succinctly summarize your findings. We have provided an example of how to create an interactive Sankey diagram in R using the Plotly library. You can access the necessary function in the file `./sankey_ipese.R`. The following code chunk demonstrates how to utilize this function:
 
 ```{r sankey-function, echo = T, eval = T, warning = F, message=F}
