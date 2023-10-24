@@ -305,7 +305,7 @@ p12=p11
 T12=Thot1
 T13=277
 m12=m11
-State_e12=mixture(T=T12, P=p11, frac_water=p_water_out0, frac_fat=p_fat_out0)
+State_e12=mixture(T=T12, P=p11, frac_water=p_water_out3, frac_fat=p_fat_out3)
 cp12=State_e12["cpmass"]
 print('cp12', cp12)
 
