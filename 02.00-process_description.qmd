@@ -61,24 +61,93 @@ $\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Mil
 
 #### PAST1
 
-$\dot Q_{past~1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
+$\dot Q_{past1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
 
 
 ```{r compute_pasteurisation, echo = F, eval = T}
 
-#Refrigeration
-Qref = 5
+
+# Mass flows(kg/s)
+
+m_fmilk = 8
+m_milk = 7.52
+m_cream = 0.55
+m_int = m_fmilk - m_milk
+m_thick = 0.07
+
+# Heat capacities (J/(kg.K))
+
+Cp_alboline = 70
+Cp_raw_milk = 3800
+Cp_cream = 3400
+Cp_glywater = 3900 #(Beer pasteurization exercise)
+Cp_steam = 1996 #(Internet)
+Cp_cream_mixed = (m_int/m_cream)*Cp_cream + (m_thick/m_cream)*Cp_alboline
+# Cp_fmilk, computed later
+
+# Temperatures (K)
+
+T_fmilk = 6+273.15
+T_mixure_out = 4+273.15
+T_past_cent = 60+273.15
+T_milk_0 = T_past_cent
+T_cream_0 = T_past_cent
+# T_past_a, computed later
+T_past_b = 75+273.15
+# T_past_c, computed later
+# T_past_d, computed later
+T_milk = 4+273.15
+# T_crpast_a, computed later
+T_thick = 4+273.15
+# T_crpast_x, computed later
+T_crpast_b = 75+273.15
+# T_crpast_c, computed later
+T_cream = 4+273.15
+
+# Thermodynamical equations
+Cp_fmilk = (m_milk/m_fmilk) * Cp_raw_milk * (5/(T_past_cent-T_mixure_out))
+Q_refrigeration = m_fmilk * Cp_fmilk * ( T_fmilk - T_mixure_out )
+Q_past1 = m_fmilk * Cp_fmilk * ( T_past_cent - T_mixure_out )
+T_past_c = 5 + T_past_b
+T_past_a = T_past_c - T_past_b + T_milk_0
+T_past_d = (( m_fmilk / m_milk ) * ( Cp_fmilk / Cp_raw_milk ) * (T_past_cent - T_mixure_out)) + T_past_c
+Q_past2 = m_milk * Cp_raw_milk * 5
+Q_past3 = m_milk * Cp_raw_milk * ( T_past_b - T_past_a)
+Q_past4 = m_milk * Cp_raw_milk * ( T_past_d - T_milk)
+T_crpast_a = (( m_cream / m_int ) * ( Cp_cream_mixed / Cp_cream ) * 5) + T_cream_0
+T_crpast_c = (( m_int / m_cream ) * ( Cp_cream / Cp_cream_mixed ) * (T_crpast_a - T_cream_0)) + T_crpast_b
+Q_past5 =  m_cream * Cp_cream_mixed * 5
+T_crpast_x = ((Cp_alboline*m_thick)*T_thick + (Cp_cream*m_int)*T_crpast_a) / ((Cp_alboline*m_thick)+(Cp_cream*m_int))
+Q_past6 = m_cream * Cp_cream_mixed * ( T_crpast_b - T_crpast_x )
+Q_past7 = m_cream * Cp_cream_mixed * ( - (T_cream - T_crpast_c))
+
+# Computation for steam and glywater
+
+#LATER not required immediatly
 ```
 
 #### Results
+ 
 
-```{=latex}
-\begin{tabular}{|l|l|l|}
-    Variables & Value & Unit \\ 
-    REFRIGERATION \\
-    $Q_{refrigeration}$ &  `r Qref` &   J/s \\
-\end{tabular}
-```
+| Variables | Value | Unit | 
+|--------|---|-|
+| $c_{p,Fresh~Milk}$ | `r Cp_fmilk` | J/(kg.K)|
+| $Q_{refrigeration}$ | `r Q_refrigeration/1000` |kJ/s|
+| $Q_{past1}$ | `r Q_past1/1000` |kJ/s|
+| $T_{pastc}$ | `r T_past_c - 273.15` |°C|
+| $T_{pasta}$ | `r T_past_a - 273.15` |°C|
+| $T_{pastd}$ | `r T_past_d - 273.15` |°C|
+| $Q_{past2}$ | `r Q_past2/1000` |kJ/s|
+| $Q_{past3}$ | `r Q_past3/1000` |kJ/s|
+| $Q_{past4}$ | `r Q_past4/1000` |kJ/s|
+| $T_{crpast\_ a}$ | `r T_crpast_a - 273.15` |°C|
+| $T_{crpast\_ c}$ | `r T_crpast_c - 273.15` |°C|
+| $Q_{past5}$ | `r Q_past5/1000` |kJ/s|
+| $T_{crpast\_ x}$ | `r T_crpast_x - 273.15` |°C|
+| $Q_{past6}$ | `r Q_past6/1000` |kJ/s|
+| $Q_{past7}$ | `r Q_past7/1000` |kJ/s|
+
+
 
 #### TO CONTINUE
 ```{python coolprop, echo = T, eval = T}
