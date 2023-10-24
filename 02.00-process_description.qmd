@@ -53,8 +53,6 @@ Finally:
 
 - $c_{p,cream} = 3.5~kJ/(kgK)$
 
-
-
 ### Equations of operations 
 
 #### Refrigeration
@@ -64,6 +62,23 @@ $\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Mil
 #### PAST1
 
 $\dot Q_{past~1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
+
+
+```{r compute_pasteurisation, echo = F, eval = T}
+
+#Refrigeration
+Qref = 5
+```
+
+#### Results
+
+```{=latex}
+\begin{tabular}{|l|l|l|}
+    Variables & Value & Unit \\ 
+    REFRIGERATION \\
+    $Q_{refrigeration}$ &  `r Qref` &   J/s \\
+\end{tabular}
+```
 
 #### TO CONTINUE
 ```{python coolprop, echo = T, eval = T}
