@@ -8,7 +8,7 @@ In this section, your task is to compute the thermodynamic properties of all the
 
 ![Pasteurisation](Figures/pasteurisation.svg)
 
-In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and and milk from fresh milk with the intergation of a thickener at some point. 
+In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and milk from fresh milk with the intergation of a thickener at some point. 
 TEST
 ### Mass Flows 
 
@@ -167,18 +167,38 @@ x = 42
 
 ## Evaporation section
 
+![Evaporation](Figures/Evaporation.svg)
+
+The evaporator section receives milk from pasteurisation. This milk can be seen as a mixture of water and fat. The aim of this section is to increase the fat proportion from $11.7\% wt.$ to $50\% wt.$ by evaporating water. It is composed of heat-exchanger (HEX), 3 evaporators, 2 splitters and a processing module. 
+
+In order to compute the mass and energy balance at each point, the following method is used:
+
+1. Compute the target mixture at the input and output of each evaporator, and the mass flow associated.
+
+1. Compute the heating demand of each evaporator and the mass flow of steam needed.
+
+1. Derive the mass flow of steam going from the evaporator, through the splitter, to the heat exchanger.
+
+1. Compute the heating capacity of each HEX and find the possible temperature steps according to the HEX requirements.
+
+1. Compute the Glycolic water needed to cool down the milk and the waste water from HEX.
+
+1. Derive the amount of whey that can be extracted from the processing module.
+
+### Mixture at each Evaporator
+
+
 ```{python fatincreasedef, echo = T, eval = T}
 
 import pandas as pd
 import numpy as np
+from IPython.display import display, HTML
 
 m1=5.0
 m6=m1
 m14=1.6
 m15=1.28
 m16=0.8
-
-
 
 def fat_increase(m_int1, m_int2, m_int3, m_in = 5.0, p_fat_out3 = 0.50):
     m_out = m_in - m_int1 - m_int2 - m_int3
@@ -209,28 +229,29 @@ def fat_increase(m_int1, m_int2, m_int3, m_in = 5.0, p_fat_out3 = 0.50):
 
 m11, p_fat_out0, p_fat_out1, p_fat_out2, p_fat_out3, p_water_out0, p_water_out1, p_water_out2, p_water_out3 = fat_increase(m_int1=m14, m_int2=m15, m_int3=m16, m_in = m6, p_fat_out3 = 0.5)
 
-```
-
-```{python fatincreaseprint, echo = T, eval = T}
-
 data = {'Point': ['6', '7&8', '9&10', '11'],
         'Fat content (%)': [p_fat_out0*100, p_fat_out1*100, p_fat_out2*100, p_fat_out3*100],
         'Water content (%)': [p_water_out0*100, p_water_out1*100, p_water_out2*100, p_water_out3*100]}
 df = pd.DataFrame(data)
 df = df.set_index('Point')
 df = df.round(2)
-print(df)
+#print(df)
+HTML(df.to_html())
 ```
 
-```{python evap1, echo = T, eval = T}
+### Heating Demand of Evaporators
+
+NOTE: afficher mass flow, temperature, pression pour les points 6, 7, 8, 9, 10, 11, 14, 15, 16, 17, 18
+
+```{python evap, echo = T, eval = T}
 #Evaporator 1
 from codes_01_energy_bill.coolprop_functions import mixture
 from pyxosmose.state import State
 def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg):
     Q_evap = m_in*cp_in*deltaT - m_in*h_in + m_out1*h_out1 + m_out2*h_out2
     m_w = (Q_evap)/(hfg)
-    print('Qevap:',Q_evap)
-    print('mw:',m_w)
+    #print('Qevap:',Q_evap)
+    #print('mw:',m_w)
     return Q_evap, m_w
 #Fixed Parameters 
 p6=31000
@@ -245,13 +266,12 @@ T24=373 #can be changed if needed to reduce cost instead of having a high pressu
 
 #Dependent Parameters
 State_e6=mixture(T=T6, P=p6, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
-print(State_e6)
+#print(State_e6)
 h6=State_e6["enthalpy"]
 cp6=State_e6["cpmass"]
 
-
 State_e7=mixture(T=T7, P=p7, frac_water=p_water_out1, frac_fat=p_fat_out1) # this is a dictionary!!
-print(State_e7)
+#print(State_e7)
 h7=State_e7["enthalpy"]
 
 Point_e14 = State(pair='TP', fluid='water', temperature=T14, pressure=p14)
@@ -260,8 +280,7 @@ Point_e14.StateCalc()
 # And print the dictionary for revision
 State_e14 = Point_e14.__dict__ # Whole dictionary with properties
 h14=State_e14["enthalpy"]
-print(h14)
-
+#print(h14)
 
 Point_e24 = State(pair='TP', fluid='water', temperature=T24, pressure=p24)
 # Then calculate the state using the State class method StateCalc
@@ -269,8 +288,7 @@ Point_e24.StateCalc()
 # And print the dictionary for revision
 State_e24 = Point_e24.__dict__ # Whole dictionary with properties
 hfg1=State_e24["enthalpy"]
-print(hfg1)
-
+#print(hfg1)
 
 #Evap 1 calculation of heat 
 m7=m6-m14
@@ -278,11 +296,9 @@ deltaT=5
 
 Q_evap1, m_w1 = evaporator_fct(m6,m14,m7,h6,h14,h7,cp6,deltaT,hfg1)
 
-print(Q_evap1)
-print(m_w1)
-```
+#print(Q_evap1)
+#print(m_w1)
 
-```{python evap2, echo = T, eval = T}
 #Evaporator 2
 
 from codes_01_energy_bill.coolprop_functions import mixture
@@ -298,12 +314,12 @@ T15=338
 T17=T14
 
 State_e8=mixture(T=T8, P=p8, frac_water=p_water_out2, frac_fat=p_fat_out2) # this is a dictionary!!
-print(State_e8)
+#print(State_e8)
 h8=State_e8["enthalpy"]
 cp8=State_e8["cpmass"]
 
 State_e9=mixture(T=T9, P=p9, frac_water=p_water_out2, frac_fat=p_fat_out2) # this is a dictionary!!
-print(State_e9)
+#print(State_e9)
 h9=State_e9["enthalpy"]
 
 Point_e15 = State(pair='TP', fluid='water', temperature=T15, pressure=p15)
@@ -312,7 +328,7 @@ Point_e15.StateCalc()
 # And print the dictionary for revision
 State_e15 = Point_e15.__dict__ # Whole dictionary with properties
 h15=State_e15["enthalpy"]
-print(h15)
+#print(h15)
 
 Point_e17 = State(pair='TP', fluid='water', temperature=T17, pressure=p17)
 # Then calculate the state using the State class method StateCalc
@@ -320,7 +336,7 @@ Point_e17.StateCalc()
 # And print the dictionary for revision
 State_e17 = Point_e17.__dict__ # Whole dictionary with properties
 hfg2=State_e17["enthalpy"]
-print(hfg2)
+#print(hfg2)
 
 m8=m7
 m9=m8-m15
@@ -328,23 +344,18 @@ deltaT=5
 
 Q_evap2, m_w2 = evaporator_fct(m8,m15,m9,h8,h15,h9,cp8,deltaT,hfg2)
 
-print(Q_evap2)
-print(m_w2)
-```
+#print(Q_evap2)
+#print(m_w2)
 
-
-```{python evap3, echo = T, eval = T}
 #Evaporator 3
 
 from codes_01_energy_bill.coolprop_functions import mixture
-
 
 p10=20000
 p11=p10
 p15=25000
 p18=p15
 p16=20000
-
 
 T10=333
 T11=T10
@@ -353,12 +364,12 @@ T18=T15
 T16=333
 
 State_e10=mixture(T=T10, P=p10, frac_water=p_water_out2, frac_fat=p_fat_out2) # this is a dictionary!!
-print(State_e10)
+#print(State_e10)
 h10=State_e10["enthalpy"]
 cp10=State_e10["cpmass"]
 
 State_e11=mixture(T=T11, P=p11, frac_water=p_water_out3, frac_fat=p_fat_out3) # this is a dictionary!!
-print(State_e11)
+#print(State_e11)
 h11=State_e11["enthalpy"]
 
 Point_e16 = State(pair='TP', fluid='water', temperature=T16, pressure=p16)
@@ -367,7 +378,7 @@ Point_e16.StateCalc()
 # And print the dictionary for revision
 State_e16 = Point_e16.__dict__ # Whole dictionary with properties
 h16=State_e16["enthalpy"]
-print(h16)
+#print(h16)
 
 Point_e18 = State(pair='TP', fluid='water', temperature=T18, pressure=p18)
 # Then calculate the state using the State class method StateCalc
@@ -375,7 +386,7 @@ Point_e18.StateCalc()
 # And print the dictionary for revision
 State_e18 = Point_e18.__dict__ # Whole dictionary with properties
 hfg3=State_e18["enthalpy"]
-print(hfg3)
+#print(hfg3)
 
 m10=m9
 m11=m10-m16
@@ -383,9 +394,25 @@ deltaT=5
 
 Q_evap3, m_w3 = evaporator_fct(m10,m16,m11,h10,h16,h11,cp10,deltaT,hfg3)
 
-print(Q_evap3)
-print(m_w3)
+m17=m_w2
+m18=m_w3
+
+#print(Q_evap3)
+#print(m_w3)
+# print mass flow, temperature, preasure for the points 6, 7, 8, 9, 10, 11, 14, 15, 16, 17, 18 in a dataframe
+
+data = {'Point': ['6', '7', '8', '9', '10', '11', '14', '15', '16', '17', '18'],
+        'Mass flow (kg/s)': [m6, m7, m8, m9, m10, m11, m14, m15, m16, m17, m18],
+        'Temperature (K)': [T6, T7, T8, T9, T10, T11, T14, T15, T16, T17, T18],
+        'Pressure (Pa)': [p6, p7, p8, p9, p10, p11, p14, p15, p16, p17, p18]}
+df = pd.DataFrame(data)
+df = df.set_index('Point')
+df = df.round(4)
+HTML(df.to_html())
+
 ```
+
+### Steam Flow to HEX
 
 ```{python mass, echo = T, eval = T}
 m19=m14-m_w2
@@ -396,6 +423,7 @@ print(m16)
 print(m11)
 ```
 
+### HEX
 
 ```{python HX4, echo = T, eval = T}
 
@@ -549,19 +577,20 @@ m_22 = m_21 - m_23
 p_water_22 = m_water_22 / m_22
 p_fat_22 = m_fat_22 / m_22
 
-
 # Print in a data frame the percent and mass flow of fat and water for point pasteur, 21, 22 and 23
 data = {'Point': ['Pasteur', '21', '22', '23'],
         'Fat content (%)': [p_fat_pasteur*100, p_fat_21*100, p_fat_22*100, p_fat_23*100],
         'Water content (%)': [p_water_pasteur*100, p_water_21*100, p_water_22*100, p_water_23*100],
         'Mass flow (kg/s)': [m_pasteur, m_21, m_22, m_23]}
-df = pd.DataFrame(data)
-df = df.set_index('Point')
-df = df.round(2)
-print(df)
+dfwhey = pd.DataFrame(data)
+dfwhey = dfwhey.set_index('Point')
+dfwhey = dfwhey.round(2)
+#print(dfwhey)
+HTML(dfwhey.to_html())
 ```
 
-## Recap
+### Summary for the evaporator section
+
 
 ```{python recap, echo = T, eval = T}
 #Entropy
@@ -634,7 +663,6 @@ h21=State_e21["enthalpy"]
 h22=State_e22["enthalpy"]
 h23=State_e23["enthalpy"]
 
-
 m2=m1
 m13=m12
 m17=m_w2
@@ -656,7 +684,7 @@ datarecap = {'Point': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '
 dfrecap = pd.DataFrame(datarecap)
 dfrecap = dfrecap.set_index('Point')
 dfrecap = dfrecap.round(2)
-print(dfrecap)
+HTML(dfrecap.to_html())
 
 #Print in a dataframe: Q for each heat exchanger and evaporator
 dataevap = {'Evaporator': ['1', '2', '3'],
@@ -664,7 +692,7 @@ dataevap = {'Evaporator': ['1', '2', '3'],
 dfevap = pd.DataFrame(dataevap)
 dfevap = dfevap.set_index('Evaporator')
 dfevap = dfevap.round(6)
-print(dfevap)
+HTML(dfevap.to_html())
 
 #Print in a dataframe: Q for each heat exchanger and evaporator
 datahx = {'Heat_Exchanger': ['1', '2', '3', '4', 'Glycolic'],
@@ -672,7 +700,7 @@ datahx = {'Heat_Exchanger': ['1', '2', '3', '4', 'Glycolic'],
 dfhx = pd.DataFrame(datahx)
 dfhx = dfhx.set_index('Heat_Exchanger')
 dfhx = dfhx.round(6)
-print(dfhx)
+HTML(dfhx.to_html())
 ```
 
 ```{python exportation, echo = T, eval = T}
@@ -685,5 +713,6 @@ dfhx.to_csv('dfhx.csv')
 
 
 
-
 ## Process 3
+
+process 3
