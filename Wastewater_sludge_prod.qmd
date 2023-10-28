@@ -1,0 +1,29 @@
+
+For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($$dw_{tot}=dw_{dry}+dw_{liq}$$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% fry matter and 86.7wt% water (Ashekuzzaman).
+From Ashekuzzaman, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
+
+$$WP = WRM \times RM$$
+$$SP = SW \times WP$$
+
+$$SW = \frac{\frac{ES}{RMa}}{WRM}$$
+
+Where $WRM$ is the wastewater to raw milk ratio (-) and $RM$ is the Raw Milk processing volume (m3/s), $SW$  is the sludge to wastewater ratio (kg/m3), $ES$ is the estimated annual sludge produced (kg), $RMa$ is the annual milk production (m3), $WP$ is the wastewater produced (m3/s) and $SP$ is the amount of sludge produced (kg/s).
+
+From the data given we have that RM=8kg/s and Asherruzzaman gives us that $WRM=2.71\pm 0.9$ in average. 
+Thus the produced waste water is 0.021m3/s given a milk density of 1035kg/m3.
+
+Then from 2017 data in Asherruzzaman we have that ES=110000t, RMa=7163000m3 and thus $$SW=\frac{\frac{110000000}{7163000}}{2.71}=5.59kg/m3$$. Thus the produced sludge is $$SP = 5.59 \times 0.021 = 0.1174\text{kg/s}$$.
+
+There is also the assumption that dw3 is only sludge and dw4 only water ($$dw_{tot2}=dw_{tot3}+dw_{tot4}$$)
+In dw3, the quantity of dray matter is again assume to be 13.3wt% and thus the quantity of water is 86.7wt%.
+The total mass entering the system is WP and because of mass balance, the dry quantity exiting at dw3 must be the same that at dw2 and dw1 (because there is no dry matter in dw4).
+Finally, we assume that WP density is around that of water (1000kg/m3).
+Thus, we have the following table to sum up the results:
+
+| Stream | $\dot{m}_{dry}\,(kg/s)$ | $\dot{m}_{liquid}\,(kg/s)$ |$\dot{m}_{total}$  |
+|--------|:-----------------------:|:-------------------------:|:-----------------:|
+| dw1    | 0.0156  | 20.9844 |21|
+| dw2    |0.0156 |20.9844  |21|
+| dw3    |0.01561  |0.1018 |0.1174|
+| dw4    |0  |20.8826  |20.8826|
+Table:Discharge water and sludge production streams mass composition
