@@ -175,7 +175,10 @@ L_past3_1=m_milk*Cp_raw_milk*(T_pasta-T_pastb)-T_a*log10(T_pasta/T_pastb)
 
 ```
 
-
+| Variables | Value | Unit | 
+|--------|---|-|
+| $L_past1}$ | `r L_past1` | J/(kg.K)|
+| 
 
 #### TO CONTINUE
 ```{python coolprop, echo = T, eval = T}
