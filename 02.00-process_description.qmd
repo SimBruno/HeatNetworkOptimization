@@ -41,6 +41,7 @@ From Litterature [add reference] we chose:
 
 - $c_{p,thickener} = c_{p,albaline} = 0.07 kJ/(kgK)$
 
+
 Assuming that the mixer provides an ideal mix, we have:
 
 \begin{align}
@@ -79,6 +80,7 @@ m_thick = 0.07
 
 Cp_alboline = 70
 Cp_raw_milk = 3800
+Cp_fmilk =  3780
 Cp_cream = 3400
 Cp_glywater = 3900 #(Beer pasteurization exercise)
 Cp_steam = 1996 #(Internet)
@@ -106,7 +108,7 @@ T_crpast_b = 75+273.15
 T_cream = 4+273.15
 
 # Thermodynamical equations
-Cp_fmilk = (m_milk/m_fmilk) * Cp_raw_milk * (5/(T_past_cent-T_mixure_out))
+#Cp_fmilk = (m_milk/m_fmilk) * Cp_raw_milk * (5/(T_past_cent-T_mixure_out))
 Q_refrigeration = m_fmilk * Cp_fmilk * ( T_fmilk - T_mixure_out )
 Q_past1 = m_fmilk * Cp_fmilk * ( T_past_cent - T_mixure_out )
 T_past_c = 5 + T_past_b
@@ -123,6 +125,13 @@ Q_past6 = m_cream * Cp_cream_mixed * ( T_crpast_b - T_crpast_x )
 Q_past7 = m_cream * Cp_cream_mixed * ( - (T_cream - T_crpast_c))
 
 # Computation for steam and glywater
+
+m_gly_ref = Q_refrigeration / ( Cp_glywater * 5 )
+m_steam_past3 = Q_past3 / ( Cp_steam * 5 )
+m_gly_past4 = Q_past4 / ( Cp_glywater * 5 )
+m_steam_past6 = Q_past6 / ( Cp_steam * 5 )
+m_gly_past7 = Q_past7 / ( Cp_glywater * 5 )
+
 
 #LATER not required immediatly
 ```
@@ -147,6 +156,11 @@ Q_past7 = m_cream * Cp_cream_mixed * ( - (T_cream - T_crpast_c))
 | $T_{crpast\_ x}$ | `r T_crpast_x - 273.15` |°C|
 | $Q_{past6}$ | `r Q_past6/1000` |kJ/s|
 | $Q_{past7}$ | `r Q_past7/1000` |kJ/s|
+| $\dot m_{gly,ref}$ | `r m_gly_ref` |kg/s|
+| $\dot m_{steam,past3}$ | `r m_steam_past3` |kg/s|
+| $\dot m_{gly,past4}$ | `r m_gly_past4` |kg/s|
+| $\dot m_{steam,past6}$ | `r m_steam_past6` |kg/s|
+| $\dot m_{gly,past7}$ | `r m_gly_past7` |kg/s|
 
 
 
@@ -163,11 +177,11 @@ L_milk_refr=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-T_a*log10(T_fmilk/T_mixure_o
 # Past 1
 L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-T_a*log10(T_mixure_out/T_past_cent)
 
-L_past1_2=m_milk*Cp_raw_milk*(T_pastc-T_pastd)-T_a*log10(T_pastc/T_pastd)
+#L_past1_2=m_milk*Cp_raw_milk*(T_pastc-T_pastd)-T_a*log10(T_pastc/T_pastd)
 
-L_past1=L_past1_1+L_past1_2
+#L_past1=L_past1_1+L_past1_2
 # Past 3
-L_past3_1=m_milk*Cp_raw_milk*(T_pasta-T_pastb)-T_a*log10(T_pasta/T_pastb)
+#L_past3_1=m_milk*Cp_raw_milk*(T_pasta-T_pastb)-T_a*log10(T_pasta/T_pastb)
 
 #L_past3_2=
 
