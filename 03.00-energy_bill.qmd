@@ -62,6 +62,13 @@ L_{mixer} = L_{mixer,1} + L_{mixer,2}
 $$
 
 
+#### Summary of Pasteurization Exergy Results
+
+```{r compute_pasteurisation_exergy, echo = F, eval = T}
+
+
+
+```
 ### Evaporation 
 
 #### Heat Exchanger
@@ -81,10 +88,13 @@ $$\dot{L}_{splitter}=\dot{m}_{in}(h_{in}-T_{0}s_{in})-\dot{m}_{out}(h_{out}-T_{0
 $$\dot{L}_{evaporation}=\Sigma\dot{L}_{HX}+\Sigma\dot{L}_{evaporator}+\Sigma\dot{L}_{splitter}$$
 
 
+#### Results Exergy Analysis Evaporation
 
+```{python HX, echo = T, eval = T}
 
+#Heat exchangers
 
-
+```
 
 
 Furthermore, we highly encourage the use of a Sankey diagram to succinctly summarize your findings. We have provided an example of how to create an interactive Sankey diagram in R using the Plotly library. You can access the necessary function in the file `./sankey_ipese.R`. The following code chunk demonstrates how to utilize this function:
