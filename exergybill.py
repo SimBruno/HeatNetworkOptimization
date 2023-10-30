@@ -8,9 +8,10 @@ dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
 Ta=25+273
 
-
+print(dfrecap["Mass flow"])
 m1=dfrecap["Mass flow"].iloc(0)
-m2=dfrecap["Mass flow"].iloc(1)
+m2=dfrecap["Mass flow"].loc[1]
+print(dfrecap.loc[1, "Mass flow"])
 m3=dfrecap["Mass flow"].iloc(2)
 m4=dfrecap["Mass flow"].iloc(3)
 m5=dfrecap["Mass flow"].iloc(4)
