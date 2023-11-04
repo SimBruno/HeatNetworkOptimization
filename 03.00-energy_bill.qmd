@@ -22,7 +22,7 @@ Upon completing the process description and analysis for each section, you will 
 
 In the exergy analysis, it's essential to outline the exergy inputs, exergy outputs, and exergy destruction specifically for the Pasteurization and Evaporation sections. To achieve this, you should provide both the theoretical background of exergy calculation and the step-by-step process of your analysis.
 
-To evaluate the losses and inefficiencies of the dairy production an exergy analysis is carried out. The ambient temperature is assumed to be $T_0 = 20°C + 273K = 293K$. 
+To evaluate the losses and inefficiencies of the dairy production an exergy analysis is carried out. The ambient temperature is assumed to be $T_a = 25°C + 273K = 293K$. 
 
 ### Pasteurization
 
@@ -77,7 +77,7 @@ $$\dot{L}_{HX}=\dot{m}_{water}(h_{fg}-T_{a}s_{fg})-Q_{HX}(1-\frac{T_{a}}{T_{c,lm
 $$\dot{L}_{evaporator}=\dot{m}_{milk}(h_{milk,in}-h_{milk,out})-\dot{m}_{milk}T_{a}(s_{milk,in}-s_{milk,out})-\dot{m}_{water}Cp_{water}[T_{out}-$$
 
 #### Splitter
-$$\dot{L}_{splitter}=\dot{m}_{in}(h_{in}-T_{0}s_{in})-\dot{m}_{out}(h_{out}-T_{0}s_{out})$$
+There are no exergy losses in the spliiters since they are isenthalpic
 
 
 #### Total
