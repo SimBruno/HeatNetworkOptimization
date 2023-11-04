@@ -156,18 +156,18 @@ Q_past7 = m_cream * Cp_cream_mixed * ( - (T_cream - T_crpast_c))
 
 # Refrigeration
 
-L_milk_refr=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-T_a*log10(T_fmilk/T_mixure_out)
+#L_milk_refr=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-T_a*log10(T_fmilk/T_mixure_out)
 #Lgw_refr
 #L_ref=L_milk_refr+L_gw_refr
 
 # Past 1
-L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-T_a*log10(T_mixure_out/T_past_cent)
+#L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-T_a*log10(T_mixure_out/T_past_cent)
 
-L_past1_2=m_milk*Cp_raw_milk*(T_pastc-T_pastd)-T_a*log10(T_pastc/T_pastd)
+#L_past1_2=m_milk*Cp_raw_milk*(T_pastc-T_pastd)-T_a*log10(T_pastc/T_pastd)
 
-L_past1=L_past1_1+L_past1_2
+#L_past1=L_past1_1+L_past1_2
 # Past 3
-L_past3_1=m_milk*Cp_raw_milk*(T_pasta-T_pastb)-T_a*log10(T_pasta/T_pastb)
+#L_past3_1=m_milk*Cp_raw_milk*(T_pasta-T_pastb)-T_a*log10(T_pasta/T_pastb)
 
 #L_past3_2=
 
@@ -175,10 +175,6 @@ L_past3_1=m_milk*Cp_raw_milk*(T_pasta-T_pastb)-T_a*log10(T_pasta/T_pastb)
 
 ```
 
-| Variables | Value | Unit | 
-|--------|---|-|
-| $L_past1}$ | `r L_past1` | J/(kg.K)|
-| 
 
 #### TO CONTINUE
 ```{python coolprop, echo = T, eval = T}
