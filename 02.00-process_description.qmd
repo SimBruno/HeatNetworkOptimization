@@ -9,27 +9,27 @@ In this section, your task is to compute the thermodynamic properties of all the
 ![Pasteurisation](Figures/pasteurisation.svg)
 
 In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and milk from fresh milk with the intergation of a thickener at some point. 
-TEST
+
+
 ### Mass Flows 
 
 Because of the mass flow conservation, we have:
 
+
+$$
 \begin{cases}
-\dot m_{Mixure~Out} = \dot m_{Past{\}Cent} = \dot m{Fresh~Milk} = 8~kg/s \\
-
-\dot m_{Milk{\}0} = \dot m{Past{\}a} = \dot m{Past{\}b} = \dot m{Past{\}c} =  \dot m{Past{\}d} = \dot m{Milk} = 7.52~kg/s \\
-
-\dot m_{cream{\}0} = \dot m{crpast{\}a} = \dot m{Past{\}cent} - \dot m{Milk{\}0} =  \dot m{Fresh~Milk} - \dot m_{Milk} = 8 - 7.52 = 0.48~kg/s ~~ (centrifuge) \\
-
-\dot m_{crpast{\}x} = \dot m{crpast{\}b} = \dot m{crpast{\}c} = \dot m{Cream} =  0.55~kg/s \\
-
-\dot m_{thickener} = 0.07~kg/s \\
-
+    \dot m_{Mixure~out} = \dot m_{Past{\_}Cent}=\dot m_{Fresh~Milk}=8~kg/s \\
+    \dot m_{Milk{\_}0} = \dot m_{Past{\_}a} = \dot m_{Past{\_}b} = \dot m_{Past{\_}c} =  \dot m_{Past{\_}d} = \dot m_{Milk} = 7.52~kg/s \\
+    \dot m_{cream{\_}0} = \dot m_{crpast{\_}a} = \dot m_{Past{\_}cent} - \dot m_{Milk{\_}0} =  \dot m_{Fresh~Milk} - \dot m_{Milk} = 8 - 7.52 = 0.48~kg/s \\
+    \dot m_{crpast{\_}x} = \dot m_{crpast{\_}b} = \dot m_{crpast{\_}c} = \dot m_{Cream} =  0.55~kg/s \\
+    \dot m_{thickener} = 0.07~kg/s 
 \end{cases}
+$$
+
 
 Consequently, all mass flows are defined.
 
-### Heat Capacity
+### Heat Capacities
 
 Are already provided the following heat capacity data:
 
@@ -41,28 +41,64 @@ From Litterature [add reference] we chose:
 
 - $c_{p,thickener} = c_{p,albaline} = 0.07 kJ/(kgK)$
 
-
 Assuming that the mixer provides an ideal mix, we have:
 
-\begin{align}
-    c_{p,cream} &= \frac{\dot m_{cream{\}0}}{\dot m{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener} }{\dot m_{Cream}}.c_{p,thickener} \\
+$$
+\begin{align*}
+    c_{p,cream} &= \frac{\dot m_{cream{\_}0}}{\dot m_{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener}}{\dot m_{Cream}}.c_{p,thickener} \\
     \\
-    c_{p,cream} &= \frac{0.48}{0.55}.3400 + \frac{0.07}{0.55}.4175 
-\end{align}
+    c_{p,cream} &= \frac{0.48}{0.55}.3400 + \frac{0.07}{0.55}.4175
+\end{align*}
+$$
+
+We also consider the centrifuge separes an ideal mix, therefore:
+
+$$
+\begin{align*}
+    c_{p,fresh{\_}milk} &= \frac{\dot m_{cream{\_}0}}{\dot m_{fresh{\_}milk}}.c_{p,Cream~ac} + \frac{\dot m_{Milk{\_}0} }{\dot m_{fresh{\_}milk}}.c_{p,raw{\_}milk} \\
+    \\
+    c_{p,fresh{\_}milk} &= \frac{0.48}{8}.3400 + \frac{7.52}{8}.3800
+\end{align*}
+$$
 
 Finally:
 
 - $c_{p,cream} = 3.5~kJ/(kgK)$
+- $c_{p,fresh_milk} = 3.78~kJ/(kgK)$
 
 ### Equations of operations 
 
 #### Refrigeration
 
-$\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out})$
+$$
+\begin{align*}
+    \dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out})
+\end{align*}
+$$
 
 #### PAST1
 
-$\dot Q_{past1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
+$$
+\begin{align*}
+    \dot Q_{past1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})
+\end{align*}
+$$
+
+#### PAST2
+
+#### CENTRIFUGE
+
+#### PAST3
+
+#### PAST4
+
+#### PAST5
+
+#### MIXER
+
+#### PAST6
+
+#### PAST7
 
 
 ```{python compute_pasteurisation, echo = F, eval = T}
@@ -70,6 +106,7 @@ $\dot Q_{past1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
+from codes_01_energy_bill.pasteurisation_functions import heat_exchanger_Q
 
 # Mass flows(kg/s)
 
@@ -82,13 +119,13 @@ m_thick = 0.07
 # Heat capacities (J/(kg.K))
 
 Cp_alboline = 70
-Cp_raw_milk = 3800
-Cp_fmilk =  3780
+Cp_raw_milk = 3800 # Has been computed with mix
 Cp_cream = 3400
 Cp_glywater = 3900 #(Beer pasteurization exercise)
 Cp_steam = 1996 #(Internet)
+Cp_fmilk = (m_int/m_fmilk)*Cp_cream + (m_milk/m_fmilk)*Cp_raw_milk
 Cp_cream_mixed = (m_int/m_cream)*Cp_cream + (m_thick/m_cream)*Cp_alboline
-# Cp_fmilk, computed later
+
 
 # Temperatures (K)
 
@@ -110,22 +147,35 @@ T_crpast_b = 75+273.15
 # T_crpast_c, computed later
 T_cream = 4+273.15
 
-# Thermodynamical equations
-#Cp_fmilk = (m_milk/m_fmilk) * Cp_raw_milk * (5/(T_past_cent-T_mixure_out))
-Q_refrigeration = m_fmilk * Cp_fmilk * ( T_fmilk - T_mixure_out )
-Q_past1 = m_fmilk * Cp_fmilk * ( T_past_cent - T_mixure_out )
+# Temperatures computation
+
 T_past_c = 5 + T_past_b
 T_past_a = T_past_c - T_past_b + T_milk_0
 T_past_d = (( m_fmilk / m_milk ) * ( Cp_fmilk / Cp_raw_milk ) * (T_past_cent - T_mixure_out)) + T_past_c
-Q_past2 = m_milk * Cp_raw_milk * 5
-Q_past3 = m_milk * Cp_raw_milk * ( T_past_b - T_past_a)
-Q_past4 = m_milk * Cp_raw_milk * ( T_past_d - T_milk)
 T_crpast_a = (( m_cream / m_int ) * ( Cp_cream_mixed / Cp_cream ) * 5) + T_cream_0
 T_crpast_c = (( m_int / m_cream ) * ( Cp_cream / Cp_cream_mixed ) * (T_crpast_a - T_cream_0)) + T_crpast_b
-Q_past5 =  m_cream * Cp_cream_mixed * 5
 T_crpast_x = ((Cp_alboline*m_thick)*T_thick + (Cp_cream*m_int)*T_crpast_a) / ((Cp_alboline*m_thick)+(Cp_cream*m_int))
-Q_past6 = m_cream * Cp_cream_mixed * ( T_crpast_b - T_crpast_x )
-Q_past7 = m_cream * Cp_cream_mixed * ( - (T_cream - T_crpast_c))
+
+# Heat flows computation
+
+Q_refrigeration = heat_exchanger_Q(T_fmilk,T_mixure_out,m_fmilk,Cp_fmilk)
+Q_past1 = heat_exchanger_Q(T_past_cent,T_mixure_out,m_fmilk,Cp_fmilk) 
+Q_past2 = heat_exchanger_Q(T_past_a,T_milk_0,m_milk,Cp_raw_milk)
+Q_past3 = heat_exchanger_Q(T_past_a,T_past_b,m_milk,Cp_raw_milk)
+Q_past4 = heat_exchanger_Q(T_past_d,T_milk,m_milk,Cp_raw_milk)
+Q_past5 = heat_exchanger_Q(T_crpast_a,T_crpast_b,m_cream,Cp_cream_mixed)
+Q_past6 = heat_exchanger_Q(T_crpast_x,T_crpast_b,m_cream,Cp_cream_mixed)
+Q_past7 = heat_exchanger_Q(T_cream,T_crpast_c,m_cream,Cp_cream_mixed)
+
+# Previous way of computing
+#Q_refrigeration = m_fmilk * Cp_fmilk * ( T_fmilk - T_mixure_out )
+#Q_past1 = m_fmilk * Cp_fmilk * ( T_past_cent - T_mixure_out )
+#Q_past2 = m_milk * Cp_raw_milk * 5
+#Q_past3 = m_milk * Cp_raw_milk * ( T_past_b - T_past_a)
+#Q_past4 = m_milk * Cp_raw_milk * ( T_past_d - T_milk)
+#Q_past5 =  m_cream * Cp_cream_mixed * 5
+#Q_past6 = m_cream * Cp_cream_mixed * ( T_crpast_b - T_crpast_x )
+#Q_past7 = m_cream * Cp_cream_mixed * ( - (T_cream - T_crpast_c))
 
 # Computation for steam and glywater
 
@@ -136,14 +186,63 @@ m_steam_past6 = Q_past6 / ( Cp_steam * 5 )
 m_gly_past7 = Q_past7 / ( Cp_glywater * 5 )
 
 
-#LATER not required immediatly
+#DATAFRAMES
 
-Variables_Names = ['Q_{refrigeration}','Q_{past1}']
-Variables_Values = [Q_refrigeration,Q_past1]
-Variables_Units =  ['J/s','J/s']
-df_pasteurization = pd.DataFrame(data = {'Name of Variable': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+# Dataframe for Heat Flows
 
-HTML(df_pasteurization.to_html())
+Energy_flow = 'kJ/s'
+
+Variables_Names = ['Refrigeration','Past1','Past2','Past3','Past4','Past5','Past6','Past7']
+Variables_Values = np.divide([Q_refrigeration,Q_past1,Q_past2,Q_past3,Q_past4,Q_past5,Q_past6,Q_past7],1000)
+Variables_Units =  Energy_flow 
+df_pasteurization_heat_flow = pd.DataFrame(data = {'Heat Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+# Dataframe for Temperatures
+
+Temperature = '°C'
+
+Temperatures_vector = [T_a,T_fmilk,T_mixure_out,T_past_cent,T_milk_0,T_cream_0,T_past_a,T_past_b,T_past_c,T_past_d,T_milk,T_crpast_a,T_thick,T_crpast_x,T_crpast_b,T_crpast_c,T_cream]
+to_celsius = lambda t: t - 273.15
+Temperatures_vector = np.array([to_celsius(x) for x in Temperatures_vector])
+
+Variables_Names = ['a','fmilk','mixure_out','past_cent','milk_0','cream_0','past_a','past_b','past_c','past_d','milk','crpast_a','thick','crpast_x','crpast_b','crpast_c','cream']
+Variables_Values = Temperatures_vector
+Variables_Units =  Temperature 
+df_pasteurization_temperatures = pd.DataFrame(data = {'Temperature': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+# Dataframe for Mass Flows in the Pasteurisation
+
+Mass_flow = 'kg/s'
+
+Variables_Names = ['glywater in refrigeration','steam in past3','glywater in past4','steam in past6','glywater in past4']
+Variables_Values = [m_gly_ref,m_steam_past3,m_gly_past4,m_steam_past6,m_gly_past7 ]
+Variables_Units =  Mass_flow 
+df_pasteurization_mf_in = pd.DataFrame(data = {'Mass Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+
+# Dataframe for Mass Flows for steam and glywater
+
+Mass_flow = 'kg/s'
+
+Variables_Names = ['fresh_milk','milk','cream','intern = fresh_milk - milk','thickener']
+Variables_Values = [m_fmilk,m_milk,m_cream,m_int,m_thick]
+Variables_Units =  Mass_flow 
+df_pasteurization_mf_steam_gly = pd.DataFrame(data = {'Mass Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+# Dataframe for Heat capacities (J/(kg.K))
+
+Heat_capacity = 'J/(kg.K)'
+
+Variables_Names = ['alboline','raw_milk','cream','glywater','steam','fmilk','cream_mixed']
+Variables_Values = [Cp_alboline,Cp_raw_milk,Cp_cream,Cp_glywater,Cp_steam,Cp_fmilk,Cp_cream_mixed]
+Variables_Units =  Heat_capacity 
+df_pasteurization_heat_capacities = pd.DataFrame(data = {'Heat Capacity': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+#HTML(df_pasteurization_heat_flow.to_html(index=False))
+#HTML(df_pasteurization_temperatures.to_html(index=False))
+#HTML(df_pasteurization_mf_in.to_html(index=False))
+#HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
+#HTML(df_pasteurization_heat_capacities.to_html(index=False))
 ```
 
 
@@ -151,8 +250,27 @@ HTML(df_pasteurization.to_html())
 #### Results
  
 
+```{python display_pasteurisation, echo = F, eval = T}
 
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
 
+HTML(df_pasteurization_heat_flow.to_html(index=False))
+HTML(df_pasteurization_temperatures.to_html(index=False))
+HTML(df_pasteurization_mf_in.to_html(index=False))
+HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
+HTML(df_pasteurization_heat_capacities.to_html(index=False))
+```
+
+```{python pasteurisation_csv, echo = F, eval = T}
+
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+
+#Ideas: create new dataframes with name of the value in first column and value in second, concatenate and finally write to csv
+```
 
 #### Results Exergy Analysis Pasteurization
 
