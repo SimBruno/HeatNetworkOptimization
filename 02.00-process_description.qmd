@@ -65,8 +65,11 @@ $\dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Mil
 $\dot Q_{past1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})$
 
 
-```{r compute_pasteurisation, echo = F, eval = T}
+```{python compute_pasteurisation, echo = F, eval = T}
 
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
 
 # Mass flows(kg/s)
 
@@ -134,48 +137,35 @@ m_gly_past7 = Q_past7 / ( Cp_glywater * 5 )
 
 
 #LATER not required immediatly
+
+Variables_Names = ['Q_{refrigeration}','Q_{past1}']
+Variables_Values = [Q_refrigeration,Q_past1]
+Variables_Units =  ['J/s','J/s']
+df_pasteurization = pd.DataFrame(data = {'Name of Variable': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+HTML(df_pasteurization.to_html())
 ```
+
+
 
 #### Results
  
 
-| Variables | Value | Unit | 
-|--------|---|-|
-| $c_{p,Fresh~Milk}$ | `r Cp_fmilk` | J/(kg.K)|
-| $Q_{refrigeration}$ | `r Q_refrigeration/1000` |kJ/s|
-| $Q_{past1}$ | `r Q_past1/1000` |kJ/s|
-| $T_{pastc}$ | `r T_past_c - 273.15` |°C|
-| $T_{pasta}$ | `r T_past_a - 273.15` |°C|
-| $T_{pastd}$ | `r T_past_d - 273.15` |°C|
-| $Q_{past2}$ | `r Q_past2/1000` |kJ/s|
-| $Q_{past3}$ | `r Q_past3/1000` |kJ/s|
-| $Q_{past4}$ | `r Q_past4/1000` |kJ/s|
-| $T_{crpast\_ a}$ | `r T_crpast_a - 273.15` |°C|
-| $T_{crpast\_ c}$ | `r T_crpast_c - 273.15` |°C|
-| $Q_{past5}$ | `r Q_past5/1000` |kJ/s|
-| $T_{crpast\_ x}$ | `r T_crpast_x - 273.15` |°C|
-| $Q_{past6}$ | `r Q_past6/1000` |kJ/s|
-| $Q_{past7}$ | `r Q_past7/1000` |kJ/s|
-| $\dot m_{gly,ref}$ | `r m_gly_ref` |kg/s|
-| $\dot m_{steam,past3}$ | `r m_steam_past3` |kg/s|
-| $\dot m_{gly,past4}$ | `r m_gly_past4` |kg/s|
-| $\dot m_{steam,past6}$ | `r m_steam_past6` |kg/s|
-| $\dot m_{gly,past7}$ | `r m_gly_past7` |kg/s|
 
 
 
 #### Results Exergy Analysis Pasteurization
 
-```{r compute_pasteurisation_exergy, echo = F, eval = T}
+```{python compute_pasteurisation_exergy, echo = F, eval = T}
 
 # Refrigeration
 
-L_milk_refr=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-T_a*log10(T_fmilk/T_mixure_out)
+#L_milk_refr=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-T_a*log10(T_fmilk/T_mixure_out)
 #Lgw_refr
 #L_ref=L_milk_refr+L_gw_refr
 
 # Past 1
-L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-T_a*log10(T_mixure_out/T_past_cent)
+#L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-T_a*log10(T_mixure_out/T_past_cent)
 
 #L_past1_2=m_milk*Cp_raw_milk*(T_pastc-T_pastd)-T_a*log10(T_pastc/T_pastd)
 
