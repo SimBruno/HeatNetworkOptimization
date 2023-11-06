@@ -83,7 +83,32 @@ s22=dfrecap["Entropy"].iloc(21)
 s23=dfrecap["Entropy"].iloc(22)
 
 
+#Exergy for heat exchangers
+
 L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
-
-
 print(L_heat1)
+
+L_heat2= m2*(h2-Ta*s2)-m3*(h3-Ta*s3)+m16*(h16-Ta*s16)
+print(L_heat2)
+
+L_heat3=m3*(h3-Ta*s3)-m4*(h4-Ta*s4)+m20*(h20-Ta*s20)
+print(L_heat3)
+
+L_heat4=m4*(h4-Ta*s4)-m5*(h5-Ta*s5)-m15*(h15-Ta*s15)
+print(L_heat4)
+
+#Exergy for evaporators
+
+L_eva1=m6*(h6-Ta*s6)-m7*(h7-Ta*s7)-m14*(h14-Ta*s14)+m_21(h21-Ta*s21)
+print(L_eva1)
+
+L_eva2=m8*(h8-Ta*s8)+m17*(h17-Ta*s17)-m15*(h15-Ta*s15)-m9*(h9-Ta*s9)
+print(L_eva2)
+
+L_eva3=m10*(h10-Ta*s10)-m18*(h18-Ta*s18)-m19*(h19-Ta*s19)-m11*(h11-Ta*s11)
+
+
+#Total exergy evaporation section
+
+L_tot_eva= L_heat1+L_heat2+L_heat3+L_heat4+L_eva1+L_eva2+L_eva3
+print(L_tot_eva)
