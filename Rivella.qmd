@@ -225,7 +225,7 @@ QHX2=m20*cp20*(T21-T20) #J/s
 
 ```{python SummaryData, echo = T, eval = T}
 #Put everything in a dataframe
-
+from IPython.display import HTML
 import pandas as pd
 import numpy as np
 
@@ -284,7 +284,8 @@ Rivella['Mass flow rate (kg/s)']=[m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14
 Rivella['Heat capacity (J/kgK)']=[cp1,cp2,cp3,cp4,cp5,cp6,cp7,cp8,'',cp10,cp11,cp12,cp13,cp14,'',cp16,cp17,cp18,cp19,cp20,cp21,'',cp23]
 Rivella['Enthalpy (J/kg)']=[h1,'',h3,'',h5,h6,h7,h8,'',h10,h11,'h12',h13,h14,'',h16,h17,h18,h19,h20,h21,'',h23]
 
-print(Rivella)
+HTML(Rivella.to_html())
+
 
 #TBChecked
 #CHECK FOR h12, h13, h14, h16 and h19,h20,h21,h23

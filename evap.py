@@ -233,7 +233,7 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
 T4=337
 T5=338
 T19=T14
-p4=p6
+p4=100000
 State_e4=mixture(T=T4, P=p4, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
 cp4=State_e4["cpmass"]
 m5=m1
@@ -257,7 +257,7 @@ T20=T15
 m4=m1
 m20=m15-m_w3
 p20=p8
-p3=p6
+p3=p4
 State_e3=mixture(T=T3, P=p3, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
 cp3=State_e3["cpmass"]
 
@@ -274,7 +274,7 @@ Q3, Thot3 = HeatExchanger(m4, cp3, T3, T4, T20, cp20, m20, h20)
 #Heat Exchanger 2
 T2=309
 m3=m1
-p2=p6
+p2=p4
 State_e2=mixture(T=T2, P=p2, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
 cp2=State_e2["cpmass"]
 cp16=State_e16["cpmass"]
@@ -283,7 +283,7 @@ Q2, Thot2 = HeatExchanger(m3, cp2, T2, T3, T16, cp16, m16, h16)
 
 #Heat Exchanger 1
 T1=282.5
-p1=p6
+p1=p4
 State_e1=mixture(T=T1, P=p1, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
 cp1=State_e1["cpmass"]
 cp11=State_e11["cpmass"]
