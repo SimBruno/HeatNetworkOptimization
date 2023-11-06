@@ -14,8 +14,8 @@ Thus the produced waste water is 0.021m3/s given a milk density of 1035kg/m3.
 
 Then from 2017 data in Asherruzzaman we have that ES=110000t, RMa=7163000m3 and thus $$SW=\frac{\frac{110000000}{7163000}}{2.71}=5.59kg/m3$$. Thus the produced sludge is $$SP = 5.59 \times 0.021 = 0.1174\text{kg/s}$$.
 
-There is also the assumption that dw3 is only sludge and dw4 only water ($$dw_{tot2}=dw_{tot3}+dw_{tot4}$$)
-In dw3, the quantity of dray matter is again assume to be 13.3wt% and thus the quantity of water is 86.7wt%.
+There is also the assumption that dw3 is only sludge and dw4 only water ($dw_{tot2}=dw_{tot3}+dw_{tot4}$).
+In dw3, the quantity of dry matter is again assume to be 13.3wt% and thus the quantity of water is 86.7wt%.
 The total mass entering the system is WP and because of mass balance, the dry quantity exiting at dw3 must be the same that at dw2 and dw1 (because there is no dry matter in dw4).
 Finally, we assume that WP density is around that of water (1000kg/m3).
 Thus, we have the following table to sum up the results:

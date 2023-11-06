@@ -1,4 +1,4 @@
-Point,Temperature (K),Pressure (Pa),Mass flow (kg/s),Enthalpy (J/kg),Entropy (J/kgK)
+Point,Temperature,Pressure,Mass flow,Enthalpy,Entropy
 1,277.0,31000,5.0,-97398.14,-203.14
 2,302.0,31000,5.0,498.17,135.24
 3,317.5,31000,5.0,61076.0,330.85
