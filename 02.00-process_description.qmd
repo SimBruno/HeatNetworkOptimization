@@ -210,24 +210,25 @@ Variables_Values = Temperatures_vector
 Variables_Units =  Temperature 
 df_pasteurization_temperatures = pd.DataFrame(data = {'Temperature': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
+
 # Dataframe for Mass Flows in the Pasteurisation
-
-Mass_flow = 'kg/s'
-
-Variables_Names = ['glywater in refrigeration','steam in past3','glywater in past4','steam in past6','glywater in past4']
-Variables_Values = [m_gly_ref,m_steam_past3,m_gly_past4,m_steam_past6,m_gly_past7 ]
-Variables_Units =  Mass_flow 
-df_pasteurization_mf_in = pd.DataFrame(data = {'Mass Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
-
-
-# Dataframe for Mass Flows for steam and glywater
 
 Mass_flow = 'kg/s'
 
 Variables_Names = ['fresh_milk','milk','cream','intern = fresh_milk - milk','thickener']
 Variables_Values = [m_fmilk,m_milk,m_cream,m_int,m_thick]
 Variables_Units =  Mass_flow 
+df_pasteurization_mf_in = pd.DataFrame(data = {'Mass Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+# Dataframe for Mass Flows for steam and glywater
+
+Mass_flow = 'kg/s'
+
+Variables_Names = ['glywater in refrigeration','steam in past3','glywater in past4','steam in past6','glywater in past4']
+Variables_Values = [m_gly_ref,m_steam_past3,m_gly_past4,m_steam_past6,m_gly_past7 ]
+Variables_Units =  Mass_flow 
 df_pasteurization_mf_steam_gly = pd.DataFrame(data = {'Mass Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
 
 # Dataframe for Heat capacities (J/(kg.K))
 
@@ -269,7 +270,32 @@ import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
 
-#Ideas: create new dataframes with name of the value in first column and value in second, concatenate and finally write to csv
+
+df_1_variable = pd.DataFrame(data = {'Variable' : ['Q_refrigeration','Q_past1','Q_past2','Q_past3','Q_past4','Q_past5','Q_past6','Q_past7']})
+df_1_values = df_pasteurization_heat_flow['Value']
+df_1 = pd.concat([df_1_variable,df_1_values], axis = 1)
+
+df_2_variable = pd.DataFrame(data = {'Variable' : ['T_a','T_fmilk','T_mixure_out','T_past_cent','T_milk_0','T_cream_0','T_past_a','T_past_b','T_past_c','T_past_d','T_milk','T_crpast_a','T_thick','T_crpast_x','T_crpast_b','T_crpast_c','T_cream']})
+df_2_values = df_pasteurization_temperatures['Value']
+df_2 = pd.concat([df_2_variable,df_2_values], axis = 1)
+
+df_3_variable = pd.DataFrame(data = {'Variable' : ['m_fmilk','m_milk','m_cream','m_int','m_thick']})
+df_3_values = df_pasteurization_mf_in['Value']
+df_3 = pd.concat([df_3_variable,df_3_values], axis = 1)
+
+df_4_variable = pd.DataFrame(data = {'Variable' : ['m_gly_ref','m_steam_past3','m_gly_past4','m_steam_past6','m_gly_past7']})
+df_4_values = df_pasteurization_mf_steam_gly['Value']
+df_4 = pd.concat([df_4_variable,df_4_values], axis = 1)
+
+df_5_variable = pd.DataFrame(data = {'Variable' : ['Cp_alboline','Cp_raw_milk','Cp_cream','Cp_glywater','Cp_steam','Cp_fmilk','Cp_cream_mixed']})
+df_5_values = df_pasteurization_heat_capacities['Value']
+df_5 = pd.concat([df_5_variable,df_5_values], axis = 1)
+
+df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5], axis = 0, ignore_index = True)
+
+df_pasteurization_csv.to_csv('pasteurization_process.csv',sep=';')
+
+
 ```
 
 #### Results Exergy Analysis Pasteurization
