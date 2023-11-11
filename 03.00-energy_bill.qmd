@@ -115,3 +115,4 @@ To execute this conversion, you must explicitly state the assumptions you make d
 You can refer to the "Brewery example" in the Suivival Guide for comprehensive guidance and relevant information to facilitate this conversion process.
 
 Once you have established the energy utility demand within the dairy factory, you can proceed to calculate the energy bill. This calculation will be based on assumptions regarding energy prices in different countries or regions.
+

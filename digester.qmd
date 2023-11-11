@@ -1,3 +1,5 @@
+
+```{python Digester, echo = T, eval = T}
 import numpy as np
 import pandas as pd
 from codes_01_energy_bill.coolprop_functions import mixture
@@ -95,3 +97,5 @@ digester['Pressure (bar)']=[p,p,p,p,p,p,p,p]
 digester['Mass flow rate (kg/s)']=[d1,d2,d3,d4,d5,d6,d7,d8]
 
 print(digester)
+
+```
