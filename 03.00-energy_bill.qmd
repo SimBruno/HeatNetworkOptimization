@@ -116,3 +116,70 @@ You can refer to the "Brewery example" in the Suivival Guide for comprehensive g
 
 Once you have established the energy utility demand within the dairy factory, you can proceed to calculate the energy bill. This calculation will be based on assumptions regarding energy prices in different countries or regions.
 
+```{python Energy Bill, echo = T, eval = T}
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+
+elec_fr = 0.12 # €/kWh
+elec_ger = 0.21 # €/kWh
+gas_fr = 0.08 # €/kWh
+gas_gr = 0.08 # €/kWh 
+
+top = 24*0.95*365 #h/year
+
+#Pasterization
+Qpast_ref = 60416 #W    
+Qpast_4 = 3863424 #W  #A changer 
+Qpast_5 = 16344 #W    #A changer
+Qpast_3 = 285.76 #W   #A changer
+Qpast_6 = 16643 #W    #A changer
+
+Qpast_cool = Qpast_ref + Qpast_4 + Qpast_5
+Qpast_heat = Qpast_3 + Qpast_6 
+
+#Evap
+Qevap_5 = 55703.14  #W
+Qevap_st1 = 98038.87 #W
+Qevap_cool = Qevap_5
+Qevap_heat = Qevap_st1
+
+#Dryer
+Qdry_cool = 44.30 #W
+Qdry_hx1 = 1967.71 #W
+Qdry_hx2 = 15299.94 #W
+Qdry_cool = Qdry_cool
+Qdry_heat = Qdry_hx1 + Qdry_hx2 
+
+#Cleaning
+Qclean_cool = 225940 #W
+Qclean_heat = 334710 #W
+
+#Storage & hot water
+Q_storage = 500000  #W
+Qhot_water = 167253.2 #W
+
+#Rivella
+Qrivella_heat =  579418.2 #W
+
+#Digester
+Qdigester_dq1 = 28754.1 #W
+Qdigester_steam = 107608.5 #W
+Qdigester_heat = Qdigester_dq1 + Qdigester_steam
+
+#Cool cost
+COP = 3.5 # assumption
+Qcool_tot = (Qpast_cool + Qevap_cool + Qdry_cool + Qclean_cool + Q_storage)/COP
+OPEXcool_fr = Qcool_tot*0.001 * elec_fr * top
+OPEXcool_ger = Qcool_tot*0.001 * elec_ger *top
+
+#Heat cost
+Qheat_tot = Qpast_heat + Qevap_heat + Qdry_heat + Qclean_heat + Qhot_water + Qrivella_heat + Qdigester_heat
+OPEXheat_fr = Qheat_tot*0.001 * gas_fr * top
+OPEXheat_ger = Qheat_tot*0.001 * gas_gr * top
+
+#print in a dataframe the OPEX line: cooling, heating and total and column: France, Germany
+OPEX = pd.DataFrame({'France (M€/y)':[OPEXcool_fr/1e6, OPEXheat_fr/1e6, OPEXcool_fr/1e6 + OPEXheat_fr/1e6], 'Germany (M€/y)':[OPEXcool_ger/1e6, OPEXheat_ger/1e6, OPEXcool_ger/1e6 + OPEXheat_ger/1e6]}, index = ['Cooling', 'Heating', 'Total'])
+OPEX = OPEX.round(3)
+HTML(OPEX.to_html())
+```
