@@ -151,7 +151,7 @@ T_cream = 4+273.15
 
 T_past_c = 5 + T_past_b
 T_past_a = T_past_c - T_past_b + T_milk_0
-T_past_d = (( m_fmilk / m_milk ) * ( Cp_fmilk / Cp_raw_milk ) * (T_past_cent - T_mixure_out)) + T_past_c
+T_past_d = - (( m_fmilk / m_milk ) * ( Cp_fmilk / Cp_raw_milk ) * (T_past_cent - T_mixure_out)) + T_past_c
 T_crpast_a = (( m_cream / m_int ) * ( Cp_cream_mixed / Cp_cream ) * 5) + T_cream_0
 T_crpast_c = (( m_int / m_cream ) * ( Cp_cream / Cp_cream_mixed ) * (T_crpast_a - T_cream_0)) + T_crpast_b
 T_crpast_x = ((Cp_alboline*m_thick)*T_thick + (Cp_cream*m_int)*T_crpast_a) / ((Cp_alboline*m_thick)+(Cp_cream*m_int))
