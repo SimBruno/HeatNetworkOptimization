@@ -47,9 +47,9 @@ print(L_past2)
 dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
 for i in range(0,len(dfrecap.index)):
-    globals()['m'+str(i)] = dfrecap['Mass flow (kg/s)'].iloc[i]
-    globals()['h'+str(i)] = dfrecap['Enthalpy (J/mol)'].iloc[i]
-    globals()['s'+str(i)] = dfrecap['Entropy (J/K)'].iloc[i]
+    globals()['m'+str(i+1)] = dfrecap['Mass flow (kg/s)'].iloc[i]
+    globals()['h'+str(i+1)] = dfrecap['Enthalpy (J/mol)'].iloc[i]
+    globals()['s'+str(i+1)] = dfrecap['Entropy (J/K)'].iloc[i]
 
 
 #Exergy for heat exchangers
