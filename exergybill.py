@@ -1,49 +1,16 @@
 #Exergy Pasteurization
 
 import math
+import pandas as pd
+import numpy as np
 
-Q_refrigeration=60.416
-Q_past1=1691.648
-Q_past2=142.88
-Q_past3=285.76
-Q_past4=3863.4239999999995
-Q_past5=16.344426439950947
-Q_past6=16.643399999999918
-Q_past7=124.40440000000011
-T_fmilk=6.0
-T_mixure_out=4.0
-T_past_cent=60.0
-T_milk_0=60.0
-T_cream_0=60.0
-T_past_a=65.0
-T_past_b=75.0
-T_past_c=80.0
-T_past_d=139.19820828667412
-T_milk=4.0
-T_crpast_a=65.01501225490199
-T_thick=4.0
-T_crpast_x=64.83236605779223
-T_crpast_b=75.0
-T_crpast_c=80.0
-T_cream=4.0
-m_fmilk=8.0
-m_milk=7.52
-m_cream=0.55
-m_int=0.4800000000000004
-m_thick=0.07
-m_gly_ref=3.0982564102564103
-m_steam_past3=28.63326653306613
-m_gly_past4=198.12430769230767
-m_steam_past6=1.6676753507013946
-m_gly_past7=6.379712820512826
-Cp_alboline=70.0
-Cp_raw_milk=3800.0
-Cp_cream=3400.0
-Cp_glywater=3900.0
-Cp_steam=1996.0
-Cp_fmilk=3776.0
-Cp_cream_mixed=2976.1818181818207
-Ta=25+273
+df = pd.read_csv('pasteurization_process.csv',sep = ';')
+
+for i in range(0,len(df.index)):
+    globals()[df.iloc[i][1]] = df.iloc[i][2]
+
+Ta=25+273.15
+
 #Refrigeration
 L_milk_ref=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_out)
 
@@ -68,9 +35,10 @@ print(L_past2)
 
 
 #Exergy Evaporation
+
 #Load csv files (dfevap, dfhx, dfrecap)
-import pandas as pd
-import numpy as np
+#import pandas as pd
+#import numpy as np
 #Load csv files
 dfevap = pd.read_csv('dfevap.csv', sep = ',')
 dfhx = pd.read_csv('dfhx.csv', sep = ',')
@@ -152,12 +120,13 @@ s22=dfrecap["Entropy"].iloc(21)
 s23=dfrecap["Entropy"].iloc(22)
 
 
+
 #Exergy for heat exchangers
 
 L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
 print(L_heat1)
 
-L_heat2= m2*(h2-Ta*s2)-m3*(h3-Ta*s3)+m16*(h16-Ta*s16)
+L_heat2= m2*(h2-Ta*s2)-m3*(h3-Ta*s3)+m16*(h16-T_a*s16)
 print(L_heat2)
 
 L_heat3=m3*(h3-Ta*s3)-m4*(h4-Ta*s4)+m20*(h20-Ta*s20)
