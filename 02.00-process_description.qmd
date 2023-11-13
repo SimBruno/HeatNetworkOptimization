@@ -1053,12 +1053,9 @@ dfhx.to_csv('dfhx.csv')
 
 ## Drum Dryers Section
 
-
 This section will present the mass and energy balances of the various steps involved in the process of drying the concentrated milk into milk powder. The concentrated milk is received by the evaporation section. As such the concentrated milk is considered to be a mixture of 50% water and 50% fat which will be transformed into a mixture of 96% fat and 4% water.
 
-
 This section consists of multiple step:
-
 
 1. Compute the mixture proportions at the input and output of each dryer.
 1. Compute the heating demand of each dryer
@@ -1067,12 +1064,9 @@ This section consists of multiple step:
 1. Compute the amount of steam needed to heat up the humid air
 1. Compute the amount of water exiting the system at dd13
 
-
 ### Mixture at each dryer
 
-
 The parameters of the mixture at the position dd1 is known, since it is the same mixture exiting the evaporation process. Knowing that the second dryer evaporates 63% of the water it receives as input, it is possible to compute the proportions of water and fat content at each input and output of the dryers.
-
 
 ```{python DrumDryersMass, echo = T, eval = T}
 mass_dd1 = 1.32
@@ -1113,28 +1107,16 @@ The same equations as the ones of section 2.2.2 are used here.
 
 
 ```{python DrumDryers, echo = T, eval = T}
-
-
 from codes_01_energy_bill.coolprop_functions import mixture
-
-
 from pyxosmose.state import State
-
 
 m1_dryer = mass_dd1
 
-
 cpH2O = 4182 #J/kg
-
-
 cpConcMilk = 2610 #J/kg
 
-
 pressure_dryer = 70529 #Pa, it's the saturatioon pressure for 90°C
-
-
 pressure_dd1 = pressure_dd4 = pressure_dd5 = 20000 #Pa
-
 
 Temp_dd11 = 318.15
 Temp_dd10 = 333.15
@@ -1144,7 +1126,6 @@ Temp_dd1 = 277.15
 Temp_dd4 = 333.15
 Temp_dd5 = 333.15
 
-
 mass_dd8 = (mass_dd4-mass_dd5)/200
 mass_dd9 = mass_dd4-mass_dd5 + mass_dd8
 mass_dd10 = mass_dd9
@@ -1152,265 +1133,121 @@ mass_dd11 = mass_dd10 + mass_dd1-mass_dd4
 
 
 def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg):
-
-
     Q_evap = m_in*cp_in*deltaT - m_in*h_in + m_out1*h_out1 + m_out2*h_out2
-
-
     m_w = (Q_evap)/(hfg)
-
-
     #print('Qevap:',Q_evap)
-
-
     #print('mw:',m_w)
-
-
     return Q_evap, m_w
 
-
-
-
-
-
 State_dd1 = mixture(T = Temp_dd1, P = pressure_dd1, frac_water = water_dd1/100, frac_fat = 1-water_dd1/100)
-
-
 h1_dryer = State_dd1["enthalpy"]
-
-
 cp1_dryer = State_dd1["cpmass"]
 
-
-
-
-
-
 State_dd4 = mixture(T = Temp_dd4, P = pressure_dd4, frac_water = water_dd4/100, frac_fat = 1-water_dd4/100)
-
-
 h4_dryer = State_dd4["enthalpy"]
-
-
 cp4_dryer = State_dd4["cpmass"]
 
-
-
-
-
-
 State_dd5 = mixture(T = Temp_dd5, P = pressure_dd5, frac_water = water_dd5/100, frac_fat = 1-water_dd5/100)
-
-
 h5_dryer = State_dd5["enthalpy"]
-
-
 cp5_dryer = State_dd5["cpmass"]
-
-
-
-
-
 
 #We assume T9 goes to 50C so it can go back to 60 for T10 and pressure is the ambient pressure
 
-
 Point_dd9 = State(pair='TP', fluid='water', temperature=Temp_dd9, pressure=pressure_dryer)
-
-
 Point_dd9.StateCalc()
-
-
 State_dd9 = Point_dd9.__dict__
-
-
 h9_dryer = State_dd9["enthalpy"]
-
-
 cp9_dryer = State_dd9["cpmass"]
 
-
-
-
-
-
 Point_dd8 = State(pair='TP', fluid='water', temperature=Temp_dd8, pressure=pressure_dryer)
-
-
 Point_dd8.StateCalc()
-
-
 State_dd8 = Point_dd8.__dict__
-
-
 hfg8_dryer = State_e24["enthalpy"]
-
-
 cp8_dryer = State_dd8["cpmass"]
+
 cp14_dryer = cp8_dryer
 
-
-
-
 Q2_dryer, m_w_2_dryer = evaporator_fct(mass_dd4, mass_dd4-mass_dd5, mass_dd5, h4_dryer, h9_dryer, h5_dryer, cp4_dryer, 40, hfg8_dryer)
-
-
-
-
-
-
 print(Q2_dryer)
 
-
-
-
-
-
-
-
-
-
 Point_dd10 = State(pair='TP', fluid='water', temperature=Temp_dd10, pressure=pressure_dryer)
-
-
 Point_dd10.StateCalc()
-
-
 State_dd10 = Point_dd10.__dict__
-
-
 hfg10_dryer = State_dd10["enthalpy"]
 
-
-
-
 Point_dd11 = State(pair='TP', fluid='water', temperature=Temp_dd11, pressure=pressure_dryer)
-
-
 Point_dd11.StateCalc()
-
-
 State_dd11 = Point_dd11.__dict__
-
-
 h11_dryer = State_dd11["enthalpy"]
 
-
-
-
-
-
 Q3_dryer, m_w_3_dryer = evaporator_fct(mass_dd1, mass_dd1-mass_dd4 + mass_dd4-mass_dd5, mass_dd4, h1_dryer, h11_dryer, h4_dryer, cp1_dryer, 15, hfg10_dryer)
-
-
 print(Q3_dryer)
-
-
-
-
-
-
-
 
 data_param = {'Position': ['1', '4', '5', '8', '9', '10', '11'],
             'Mass flow (kg/s)': [mass_dd1, mass_dd4, mass_dd5, mass_dd8, mass_dd9, mass_dd10, mass_dd11],
             'Temperature (K)': [Temp_dd1, Temp_dd4, Temp_dd5, Temp_dd8, Temp_dd9, Temp_dd10, Temp_dd11],
             'Pressure (Pa)': [pressure_dd1, pressure_dd4, pressure_dd5, pressure_dryer, pressure_dryer, pressure_dryer, pressure_dryer]}
 
-
 dfp = pd.DataFrame(data_param)
 dfp = dfp.set_index('Position')
 dfp = dfp.round(4)
 HTML(dfp.to_html())
 
-
-
-
-
-
-
-
 data_q = {'Dryer': ['Dryer 1', 'Dryer 2'],
         'Heat demand (W)': [Q3_dryer, Q2_dryer]}
-
 
 dfq = pd.DataFrame(data_q)
 dfq = dfq.set_index('Dryer')
 dfq = dfq.round(2)
 HTML(dfq.to_html())
-
-
-
-
 ```
-
 
 ### Heating demand of each HEX
 
-
 In this secrtion the following equation is used:
-
 
 \begin{align}
     Q = m \cdot cp \cdot (T_{1} - T_{2})
 \end{align}
 
-
 The cp corresponding to the milk mixtures were calculated in the precedent section.
 
-
 ```{python cpDryers, echo = T, eval = T}
-
-
-
-
 data_cp = {'Position': ['5', '9', '14'],
         'cp (J/kg.K)': [ cp5_dryer, cp9_dryer, cp14_dryer]}
-
 
 dfcp = pd.DataFrame(data_cp)
 dfcp = dfcp.set_index('Position')
 dfcp = dfcp.round(2)
 HTML(dfcp.to_html())
 
-
 QHEX1_dryer = mass_dd8*cp8_dryer*(Temp_dd8-Temp_dd11)
 QHEX2_dryer = mass_dd9*cp9_dryer*(Temp_dd10-Temp_dd9)
 QHEX3_dryer = mass_dd5*cp5_dryer*(-10)
 
-
 data_QHEX = {'HEX': ['1', '2', '3'],
         'Q (J/kg.K)': [ QHEX1_dryer, QHEX2_dryer, QHEX3_dryer]}
-
 
 dfqhex = pd.DataFrame(data_QHEX)
 dfqhex = dfqhex.set_index('HEX')
 dfqhex = dfqhex.round(2)
 HTML(dfqhex.to_html())
-
-
 ```
-
 
 ### Water demand to cool down the milk powder
 
-
 It is assumed that the water used to cool down the milk powder is saturated. As such, the following formula can be used:
-
 
 \begin{align}
     Q = m_{water} \cdot L_{water}
 \end{align}
 
-
 ```{python waterDryers, echo = T, eval = T}
 Lwater = -2264.705
 mass_water = QHEX3_dryer / Lwater
 
-
 data_water = {'HEX': ['3'],
         'Mass flow (kg/s)': [ mass_water]}
-
 
 dfw = pd.DataFrame(data_water)
 dfw = dfw.set_index('HEX')
@@ -1418,22 +1255,17 @@ dfw = dfw.round(2)
 HTML(dfw.to_html())
 ```
 
-
 ### Steam demand to heat up the air
 
-
 The steam demand can be computed in the same way as the water demand by inverting the sign of the latent heat parameter. The steam is assumed to be saturated.
-
 
 ```{python steamDryers, echo = T, eval = T}
 LwaterEvap = 2264.705
 mass_steam1 = QHEX1_dryer / LwaterEvap
 mass_steam2 = QHEX2_dryer / LwaterEvap
 
-
 data_steam = {'HEX': ['1', '2'],
         'Mass flow (kg/s)': [ mass_steam1, mass_steam2]}
-
 
 dfs = pd.DataFrame(data_steam)
 dfs = dfs.set_index('HEX')
@@ -1441,20 +1273,15 @@ dfs = dfs.round(2)
 HTML(dfs.to_html())
 ```
 
-
 ### Water exiting the system
 
-
 The amount of water exiting the system at dd13 is simply the difference of mass between dd11 and dd8:
-
 
 ```{python water, echo = T, eval = T}
 water_exiting = mass_dd11 - mass_dd8
 
-
 data_water_exiting = {'Position': ['13'],
         'Mass flow (kg/s)': [ water_exiting]}
-
 
 dfwe = pd.DataFrame(data_water_exiting)
 dfwe = dfwe.set_index('Position')
@@ -1463,6 +1290,8 @@ HTML(dfwe.to_html())
 ```
 
 ## Cleaning in Place
+
+![Cleaning in Place](Figures/CIP.svg)
 
 Assumptions: 
 
@@ -1582,8 +1411,7 @@ As showed above with calculations for the HX_Steam there is thus  `r round(q_cip
 Here are reported calculation of air mass flow required to remove 500kW of heat from a cold storage and the heat required to heat 1kg/s of water from 15°C to 55°C.
 
 
-```{python Hot Water, echo=False}
-
+```{python Hot Water, echo=F}
 from pyxosmose.state import State
 
 water_in = State(pair='TP',fluid='Water',temperature=288,pressure=100000)
@@ -1613,6 +1441,7 @@ The air mass flow required to remove 500kW of heat from a cold storage is `m_air
 
 ## WasteWater and Sludge Production 
 
+![Wastewater](Figures/Wastewater.svg)
 
 For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($$dw_{tot}=dw_{dry}+dw_{liq}$$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% fry matter and 86.7wt% water (Ashekuzzaman).
 From Ashekuzzaman, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
@@ -1646,6 +1475,7 @@ Table:Discharge water and sludge production streams mass composition
 
 ## Rivella Production
 
+![Rivella](Figures/Rivella.svg)
 
 Now that we have a better understanding of dairy process we have to evaluate the energy and mass balance of Rivella production to be able to compare later its costs with the digester.
 The process is described in the following figure:
@@ -2206,6 +2036,3 @@ df = df.set_index('Point')
 df = df.round(2)
 HTML(df.to_html())
 ```
-
-
-
