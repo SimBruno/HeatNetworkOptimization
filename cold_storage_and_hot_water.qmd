@@ -34,4 +34,3 @@ m_air
 
 The heat required to heat 1kg/s of water from 15°C to 55°C is `Q_hot` W. 
 The air mass flow required to remove 500kW of heat from a cold storage is `m_air` kg/s.
-```

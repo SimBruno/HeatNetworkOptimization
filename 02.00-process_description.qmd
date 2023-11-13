@@ -1462,7 +1462,479 @@ dfwe = dfwe.round(2)
 HTML(dfwe.to_html())
 ```
 
+## Cleaning in Place
 
+Assumptions: 
+
+- For safety purposes the glass needs to contact with water which is at least at 65 . Each glass bottle weights 370g and has 500 mL of capacity. 
+
+
+For this part of the process, the following data are used:
+
+- Mass Flows
+   $\dot{m}_2 = 4kg/s$
+- Specific Heats
+  - $c_{p,water} = 4.184\,kJ/kgK$ (Specific heat of liquid water)
+  - $C_{p,glass} = 0.840\,kJ/kgK$ (Specific heat of glass: from http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/sphtt.html#c1)
+  - $h_{fg, steam} = 2257\,kJ/kg$ (Latent heat of steam at $100^\circ C$)
+- Temperatures
+  - $T_1 = 25°C = 298K$ 
+  - $T_2 = 60°C = 333K$
+  - $T_3 = T_{10} = 80°C = 353K$
+  - $T_4 = T_5 = T_6 = T_{12} = 75°C = 348K$
+  - $T_7 = 30°C = 303K$
+  - $T_8 = 25°C = 298K$
+  - $T_{11} = 40°C = 313K$
+  - $T_{steam} = 100°C = 373K$ (Steam pressure is assumed at 1 bar)
+
+```{r Constants Cleaning in Place, echo = F, results='hide'}
+cp_water=4.184
+cp_glass=0.84
+hfg_cipsteam = 2257
+
+m_cip2=4
+
+t_cip1=298
+t_cip2=333
+t_cip3=353
+t_cip4=348
+t_cip5 = t_cip4
+t_cip6 = t_cip4
+t_cip7=303
+t_cip8=298
+t_cip11=313
+t_cip10 = t_cip3
+t_cip12 = t_cip4
+t_cipsteam = 373
+
+```
+
+
+### MIXER
+The first component is an adiabatic mixer (enthalpy stays constant over the mixing). There are three different flows assumed to be water flow (according to pressure and temperature flows). Two in flows and on out flow. We can obtain the mass and energy balance at the mixer as follows:
+$$\dot{m}_{CIP,1}Cp_{water}T_{CIP,1}+\dot{m}_{CIP,5}Cp_{water}T_{CIP,5}=\dot{m}_{CIP,2}Cp_{water}T_{CIP,2}$$
+$$\dot{m}_{CIP,1}+\dot{m}_{CIP,5}=\dot{m}_{CIP,2}$$
+
+```{r Mixer, echo=F}
+m_cip1 = m_cip2*(t_cip2-t_cip5)/(t_cip1-t_cip5) 
+m_cip5 = m_cip2-m_cip1
+```
+Hence, $m_{CIP,1}$ is equal to `r m_cip1` $kg/s$ and $m_{CIP,5}$ is equal to `r m_cip5` $kg/s$.
+
+### HEATER
+The next step is to compute balances of the upper HX (between Steam and point 2 and 3). At this HX, there is mixed water at $60^\circ C$ which is heated to $80^\circ C$. The steam used to heat up the water is assumed to be at 1 bar (costs saving reason). Again we have the following equations to compute the heat exchanged and the mass flow of steam (NB: mass flow of water is constant over the HX).
+$$Q_{CIPHX,steam}=\dot{m}_{CIP,2}Cp_{water}(T_{CIP,3}-T_{CIP,2})$$
+$$Q_{CIPHX,steam}=\dot{m}_{steam}h_{fg,steam}$$
+```{r HX_steam, echo=F} 
+
+q_cipsteam = m_cip2*cp_water*(t_cip3-t_cip2)
+m_cipsteam = q_cipsteam/hfg_cipsteam
+
+# Splitting between CIP-3 and CIP-10 
+p = 0.5 # assumed for ease of calculation
+m_cip3 = m_cip2*p
+m_cip10 = m_cip2*(1-p)
+```
+There is `r q_cipsteam` $kW$ heat exchanged thanks to a `r m_cipsteam` $kg/s$ steam flow. 
+
+
+### SHOWERS
+It has been assume for ease of calculation that both showers received the same exact mass flow of hot water. Thus, $\dot{m}_{3} = \dot{m}_{4} = \dot{m}_{10} = \dot{m}_{12}= \dot{m}_{shower}=\frac{\dot{m}_2}{2}$  Furthermore, it is assumed that there is no heat loss through radiation. It is also assumed the mass of the bottle will stay constant the entire process (from part 8 to part 11) and thus: $\dot{m}_8 = \dot{m}_9 = \dot{m}_{11} = \dot{m}_{glass}$. 
+
+The heat balance for the first shower is as followed:
+$$ \dot{m}_{glass}c_{p,glass}(T_9-T_8)=\dot{m}_{shower}c_{p,water}(T_{3}-T_4)$$
+Then for shower 2:
+$$ \dot{m}_{glass}c_{p,glass}(T_{11}-T_9)=\dot{m}_{shower}c_{p,water}(T_{10}-T_{12})$$
+```{r Showers, echo=F}
+Q_shower=m_cip3*cp_water*(t_cip3-t_cip4) #same w/ m_cip4
+t_cip9=(t_cip11+t_cip8)/2
+m_cipglass = Q_shower/(cp_glass*(t_cip9-t_cip8))
+
+```
+Thus, there is `r Q_shower` $kW$ of heat used at each shower and bottle flow rate is `r m_cipglass` $kg/s$.
+
+### SPLITTER
+```{r Splitter, echo=F}
+m_cip4 = m_cip3
+m_cip6 = 2*m_cip4-m_cip5
+```
+No heat exchanged. Only mass flows such that $$ \dot{m}_{4}+\dot{m}_{12}=\dot{m}_{2}=\dot{m}_{5}+\dot{m}_{6}$$
+This gives $\dot{m}_6$ is equal to `r m_cip6` $kg/s$.
+
+
+
+### COOLER
+
+```{r Cooler, echo=F}
+t_cwater_in = 283
+t_cwater_out = 298
+m_cip7 = m_cip6
+q_cipwater = m_cip6*(t_cip6-t_cip7)*cp_water
+m_cipwater = q_cipwater/((t_cwater_out-t_cwater_in)*cp_water)
+```
+
+The final steps of this cleaning process is with the of a HX as a cooler. hot water will be cooled down to $30^\circ C$. 
+As showed above with calculations for the HX_Steam there is thus  `r round(q_cipwater,2)` $kW$ transferred thanks to a `r m_cipwater` $kg/s$ cooling water flow (which is itself going from $10^\circ C$ to $25^\circ C$).
+
+
+## Cold Storage & Hot Water
+
+Here are reported calculation of air mass flow required to remove 500kW of heat from a cold storage and the heat required to heat 1kg/s of water from 15°C to 55°C.
+
+
+```{python Hot Water, echo=False}
+
+from pyxosmose.state import State
+
+water_in = State(pair='TP',fluid='Water',temperature=288,pressure=100000)
+water_in.StateCalc()
+water_out = State(pair='TP',fluid='Water',temperature=328,pressure=100000)
+water_out.StateCalc()
+
+
+h_in=water_in.enthalpy 
+m_water=1
+h_out=water_out.enthalpy 
+Q_hot=m_water*(h_out-h_in)
+Q_hot
+```
+
+```{python Cold Storage}
+T_in=273
+T_out=268
+Q_fridge=500000
+Cp_air=1000
+m_air=Q_fridge/(Cp_air*(T_in-T_out))
+m_air
+```
+
+The heat required to heat 1kg/s of water from 15°C to 55°C is `Q_hot` W. 
+The air mass flow required to remove 500kW of heat from a cold storage is `m_air` kg/s.
+
+## WasteWater and Sludge Production 
+
+
+For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($$dw_{tot}=dw_{dry}+dw_{liq}$$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% fry matter and 86.7wt% water (Ashekuzzaman).
+From Ashekuzzaman, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
+
+$$WP = WRM \times RM$$
+$$SP = SW \times WP$$
+
+$$SW = \frac{\frac{ES}{RMa}}{WRM}$$
+
+Where $WRM$ is the wastewater to raw milk ratio (-) and $RM$ is the Raw Milk processing volume (m3/s), $SW$  is the sludge to wastewater ratio (kg/m3), $ES$ is the estimated annual sludge produced (kg), $RMa$ is the annual milk production (m3), $WP$ is the wastewater produced (m3/s) and $SP$ is the amount of sludge produced (kg/s).
+
+From the data given we have that RM=8kg/s and Asherruzzaman gives us that $WRM=2.71\pm 0.9$ in average. 
+Thus the produced waste water is 0.021m3/s given a milk density of 1035kg/m3.
+
+Then from 2017 data in Asherruzzaman we have that ES=110000t, RMa=7163000m3 and thus $$SW=\frac{\frac{110000000}{7163000}}{2.71}=5.59kg/m3$$. Thus the produced sludge is $$SP = 5.59 \times 0.021 = 0.1174\text{kg/s}$$.
+
+There is also the assumption that dw3 is only sludge and dw4 only water ($dw_{tot2}=dw_{tot3}+dw_{tot4}$).
+In dw3, the quantity of dry matter is again assume to be 13.3wt% and thus the quantity of water is 86.7wt%.
+The total mass entering the system is WP and because of mass balance, the dry quantity exiting at dw3 must be the same that at dw2 and dw1 (because there is no dry matter in dw4).
+Finally, we assume that WP density is around that of water (1000kg/m3).
+Thus, we have the following table to sum up the results:
+
+| Stream | $\dot{m}_{dry}\,(kg/s)$ | $\dot{m}_{liquid}\,(kg/s)$ |$\dot{m}_{total}$  |
+|--------|:-----------------------:|:-------------------------:|:-----------------:|
+| dw1    | 0.0156  | 20.9844 |21|
+| dw2    |0.0156 |20.9844  |21|
+| dw3    |0.01561  |0.1018 |0.1174|
+| dw4    |0  |20.8826  |20.8826|
+Table:Discharge water and sludge production streams mass composition
+
+
+## Rivella Production
+
+
+Now that we have a better understanding of dairy process we have to evaluate the energy and mass balance of Rivella production to be able to compare later its costs with the digester.
+The process is described in the following figure:
+
+The process will be divided in 3 main parts:
+
+1. The concentration of the whey 
+
+2. The production of Rivella Green 
+
+3. The production of Rivella Red
+
+### 1. The concentration of the whey
+
+All the whey is assumed to come from the evaporator stage with the following characteristics:
+
+* 14.46% of dry matter, 
+* 85.54% of water, 
+* T=4°C, 
+* p=1bar 
+* mass flow rate of 1.52 kg/s.
+
+At the end of the concentration process the whey will have the following characteristics:
+
+* 50% of dry matter, 
+* 50% of water, 
+* T=100°C, 
+* p=1bar 
+* mass flow rate to be determined.
+
+We assume, the following: in the fermentation we have heating from 4 to 25°C, the mixer is isothermal and the evaporator is adiabatic.
+Also the bacterias are added at T=25°C and without disturbing the flow rate of the whey (m1=m3, m4=0 $m.s^{-1}$) and the aromas are added at T=25°C with 2g aromas/100g of whey.
+Bacteria and aromas have the same heat capacity as water (cp=4184J/kgK).
+The pressure stays constant at 1 bar.
+
+```{python ConcentrationWhey, echo = T, eval = T}
+
+from codes_01_energy_bill.coolprop_functions import mixture
+from pyxosmose.state import State
+
+#Fixed Parameters
+m1=1.52 #kg.s-1
+m2=0 #kg.s-1
+m3=1.52 #kg.s-1
+m4=0.02*m3 #kg.s-1
+m5=m3+m4 #kg.s-1
+#to get m6 we assume that R6 is only water and that the flow is a mixture of fat and water
+#m6=1*mw6+0*mf6 so m6=mw6
+#mw7=0.5m7=0.5*(m5-m6)
+#mw6=mw5-mw7=0.8554*m5-0.5*(m5-m6)
+#m6=[0.8554*m5-0.5*m5]/0.5
+m6=(0.8554*m5-0.5*m5)/0.5 #kg.s-1
+m7=m5-m6 #kg.s-1
+
+T1=277 #K
+T2=298 #K
+T3=T2 #K
+T4=T2 #K
+T5=T2 #K
+T6=373 #K
+T7=T6 #K
+
+Tsteam_out = 373 #K
+
+p=1 #bar
+
+R1 = mixture(T=T1, P=p, frac_water=0.8554, frac_fat=0.1446) # this is a dictionary!!
+cp1=R1["cpmass"]
+h1=R1["enthalpy"]
+
+#Fermentation 
+Qferm = m1*cp1*(T2-T1) #J/s
+
+#Evaporator
+Tsteam=373 #K
+Steam = State(pair='TP', fluid='water', temperature=Tsteam, pressure=p)
+Steam.StateCalc()
+State_Steam = Steam.__dict__ # Whole dictionary with properties
+hfg=State_Steam["enthalpy"]
+
+h5=h1
+cp5=cp1
+
+R6 = mixture(T=T6, P=p, frac_water=1, frac_fat=0) # this is a dictionary!!
+h6=R6["enthalpy"]
+
+R7 = mixture(T=T7, P=p, frac_water=0.5, frac_fat=0.5) # this is a dictionary!!
+h7=R7["enthalpy"]
+cp7=R7["cpmass"]
+
+Qevap = m5*cp5*(T7-T5) - m5*h5 + m6*h6 + m7*h7 #J/s
+msteam = Qevap/hfg #kg/s
+print(Qevap)
+```
+
+### 2. The production of Rivella Green 
+
+30% of the concentrated whey is used for the Rivella Green production
+The composition of the Rivella Green is the following: 
+
+* 30% whey,
+* 50% water,
+* 20% sugar.
+
+Tea is added at T=50°C, without disturbing the flow rate of the Rivella Green (m8=m10, m9=0 $m.s^{-1}$) 
+The sugar and water are added are added at T=25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore
+CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (because we don't know the content of gas in each bottle).
+The Rivella Green exits at T=10°C
+The pressure stays constant at 1 bar during the entire production.
+
+```{python RivellaGreen, echo = T, eval = T}
+#Fixed Parameters
+m8=0.3*m7 #kg.s-1
+m10=m8 #kg.s-1
+m9=0 #kg.s-1
+
+TA=298 #K ref temperature
+T8=323 #K
+T9=323 #K
+T10=T8
+T11=298
+T12=T11
+T16=283 #K
+T14=T16
+T15=T16
+
+
+
+#HX1: heater
+QHX1=m7*cp7*(T7-T8) #J/s
+
+#Mixer 3
+#We first have to determine the different flows of this non-isothermal mixer
+#we will use the composition of Rivella Green and assume water comes from both R10 (50% of the conc whey) and R11
+#m13=m10+m11+m12
+#m11=0.5*m13-0.5*m10
+#m12=0.2*m13
+
+m13=(0.5*m10)/0.3 #kg.s-1
+m14=m13
+m16=m14
+m11=0.5*m13-0.5*m10
+m12=0.2*m13
+
+R10 = mixture(T=T10, P=p, frac_water=0.5, frac_fat=0.5) # this is a dictionary!!
+cp10=R10["cpmass"]
+
+R11 = mixture(T=T11, P=p, frac_water=1, frac_fat=0) # this is a dictionary!!
+cp11=R11["cpmass"]
+h11=R11["enthalpy"]
+
+cp12=1224 #J/kgK
+
+cp13 = 0.3*cp10 + 0.5*cp11 + 0.2*cp12
+
+#From the heat balance of non-isothermal mixer we can then determine the temperature of the Rivella Green T13
+#m13*cp13*(T13-TA)=m10*cp10*(T10-TA)+m11*cp11*(T11-TA)+m12*cp12*(T12-TA)
+
+T13=((m10*cp10*(T10-TA)+m11*cp11*(T11-TA)+m12*cp12*(T12-TA))/(m13*cp13))+TA
+
+#HX2: cooler1
+QHX2=m13*cp13*(T13-T14) #J/s
+```
+
+### 3. The production of Rivella Red 
+
+70% of the concentrated whey is used for the Rivella Red production
+The composition of the Rivella Red is the following: 
+
+* 30% whey,
+* 35% water,
+* 35% sugar.
+
+The sugar and water are added are added at T=25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore
+CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (because we don't know the content of gas in each bottle).
+The Rivella Red exits as Rivella Green at T=10°C
+The pressure stays constant at 1 bar during the entire production.
+
+```{python RivellaRed, echo = T, eval = T}
+#Fixed Parameters
+m17=0.7*m7 #kg.s-1
+
+
+T17=T8 #K
+T18=T11
+T19=T11
+T23=T16 #K
+T22=T23
+T21=T23
+
+
+#Mixer 4
+#We first have to determine the different flows of this non-isothermal mixer
+#we will use the composition of Rivella Green and assume water comes from both R17 (50% of the conc whey) and R18
+#m20=m17+m18+m19
+#m18=0.35*m20-0.5*m17
+#m19=0.35*m20
+m20=(0.5*m17)/0.3 #kg.s-1
+m21=m20
+m23=m21
+m18=0.35*m20-0.5*m17
+m19=0.35*m20
+
+R17 = mixture(T=T17, P=p, frac_water=0.5, frac_fat=0.5) # this is a dictionary!!
+cp17=R17["cpmass"]
+h17=R17["enthalpy"]
+
+R18 = mixture(T=T18, P=p, frac_water=1, frac_fat=0) # this is a dictionary!!
+cp18=R18["cpmass"]
+h18=R18["enthalpy"]
+
+cp19=1224 #J/kgK
+
+cp20 = 0.3*cp17 + 0.35*cp18 + 0.35*cp19
+
+#From the heat balance of non-isothermal mixer we can then determine the temperature of the Rivella Green T13
+#m20*cp20*(T20-TA)=m17*cp17*(T17-TA)+m18*cp18*(T18-TA)+m19*cp19*(T19-TA)
+
+T20=((m17*cp17*(T17-TA)+m18*cp18*(T18-TA)+m19*cp19*(T19-TA))/(m20*cp20))+TA
+#HX2: cooler1
+QHX2=m20*cp20*(T21-T20) #J/s
+
+```
+
+
+```{python SummaryData, echo = T, eval = T}
+#Put everything in a dataframe
+from IPython.display import HTML
+import pandas as pd
+import numpy as np
+
+#Compute remaining enthalpies and heat capacities
+
+cp2=4184 #J/kgK
+
+h3=h1
+cp3=cp1
+
+cp4=4184 #J/kgK
+
+R6 = State(pair='TP', fluid='water', temperature=T6, pressure=p)
+R6.StateCalc()
+State_R6 = R6.__dict__ # Whole dictionary with properties
+h6=State_R6["enthalpy"]
+cp6=State_R6["cpmass"]
+
+R8 = mixture(T=T8, P=p, frac_water=0.5, frac_fat=0.5) 
+h8=R8["enthalpy"]
+cp8=R8["cpmass"]
+
+h10=h8
+cp10=cp8
+
+h12=0 #CHECKKKKKKKKKKK HOW TO GET ENTHALPY SUGAR 
+#m13*h13=m10*h10+m11*h11+m12*h12
+h13=((m10*h10+m11*h11+m12*h12)/m13)
+
+#m13(h13-h14)=m13*cp13*(T13-T14)
+h14=h13-m13*cp13*(T13-T14)
+cp14=cp13 #assume no change of cp with cooling for Rivella Green
+
+h16=h14
+cp16=cp13
+
+h19=h16 #CHECKKKKKKKKKKK HOW TO GET ENTHALPY SUGAR
+
+#m20*h20=m17*h17+m18*h18+m19*h19
+h20=((m17*h17+m18*h18+m19*h19)/m20)
+
+#m20(h20-h21)=m20*cp20*(T20-T21)
+h21=h20-m20*cp20*(T20-T21)
+cp21=cp20 #assume no change of cp with cooling for Rivella Red
+
+h23=h21
+cp23=cp20
+
+#Create a dataframe with all the parameters
+
+Rivella = pd.DataFrame(columns=['Point', 'Temperature (K)', 'Pressure (bar)', 'Mass flow rate (kg/s)', 'Heat capacity (J/kgK)', 'Enthalpy (J/kg)'])
+Rivella['Point']=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11','12','13','14','15','16','17','18','19','20','21','22','23']
+Rivella['Temperature (K)']=[T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23]
+Rivella['Pressure (bar)']=[p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p]
+Rivella['Mass flow rate (kg/s)']=[m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14,'',m16,m17,m18,m19,m20,m21,'',m23]
+Rivella['Heat capacity (J/kgK)']=[cp1,cp2,cp3,cp4,cp5,cp6,cp7,cp8,'',cp10,cp11,cp12,cp13,cp14,'',cp16,cp17,cp18,cp19,cp20,cp21,'',cp23]
+Rivella['Enthalpy (J/kg)']=[h1,'',h3,'',h5,h6,h7,h8,'',h10,h11,'h12',h13,h14,'',h16,h17,h18,h19,h20,h21,'',h23]
+
+HTML(Rivella.to_html())
+
+```
 
 ## Digester
 
