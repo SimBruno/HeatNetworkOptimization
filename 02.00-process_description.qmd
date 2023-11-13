@@ -1223,10 +1223,10 @@ HTML(dfcp.to_html())
 
 QHEX1_dryer = mass_dd8*cp8_dryer*(Temp_dd8-Temp_dd11)
 QHEX2_dryer = mass_dd9*cp9_dryer*(Temp_dd10-Temp_dd9)
-QHEX3_dryer = mass_dd5*cp5_dryer*(-10)
+QHEX3_dryer = mass_dd5*cp5_dryer*(10)
 
 data_QHEX = {'HEX': ['1', '2', '3'],
-        'Q (J/kg.K)': [ QHEX1_dryer, QHEX2_dryer, QHEX3_dryer]}
+        'Q (W)': [ QHEX1_dryer, QHEX2_dryer, QHEX3_dryer]}
 
 dfqhex = pd.DataFrame(data_QHEX)
 dfqhex = dfqhex.set_index('HEX')
