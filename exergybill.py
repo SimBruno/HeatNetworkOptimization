@@ -1,3 +1,71 @@
+#Exergy Pasteurization
+
+import math
+
+Q_refrigeration=60.416
+Q_past1=1691.648
+Q_past2=142.88
+Q_past3=285.76
+Q_past4=3863.4239999999995
+Q_past5=16.344426439950947
+Q_past6=16.643399999999918
+Q_past7=124.40440000000011
+T_fmilk=6.0
+T_mixure_out=4.0
+T_past_cent=60.0
+T_milk_0=60.0
+T_cream_0=60.0
+T_past_a=65.0
+T_past_b=75.0
+T_past_c=80.0
+T_past_d=139.19820828667412
+T_milk=4.0
+T_crpast_a=65.01501225490199
+T_thick=4.0
+T_crpast_x=64.83236605779223
+T_crpast_b=75.0
+T_crpast_c=80.0
+T_cream=4.0
+m_fmilk=8.0
+m_milk=7.52
+m_cream=0.55
+m_int=0.4800000000000004
+m_thick=0.07
+m_gly_ref=3.0982564102564103
+m_steam_past3=28.63326653306613
+m_gly_past4=198.12430769230767
+m_steam_past6=1.6676753507013946
+m_gly_past7=6.379712820512826
+Cp_alboline=70.0
+Cp_raw_milk=3800.0
+Cp_cream=3400.0
+Cp_glywater=3900.0
+Cp_steam=1996.0
+Cp_fmilk=3776.0
+Cp_cream_mixed=2976.1818181818207
+Ta=25+273
+#Refrigeration
+L_milk_ref=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_out)
+
+L_gy_ref=m_gly_ref*Cp_glywater*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_out)
+
+L_ref=L_milk_ref+L_gy_ref
+
+#Past 1
+
+L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-Ta*math.log(T_mixure_out/T_past_cent)
+L_past1_2=m_milk*Cp_raw_milk*(T_past_c-T_past_d)-Ta*math.log(T_past_c/T_past_d) 
+
+L_past1=L_past1_1+L_past1_2
+
+#Past 2
+
+L_past2_1=m_milk*Cp_raw_milk*(T_milk_0-T_past_a)-Ta*math.log(T_milk_0/T_past_a) #Question which m and cp
+L_past2_2=m_milk*Cp_raw_milk*(T_past_b-T_past_c)-Ta*math.log(T_past_b/T_past_c) #Question which m and cp
+
+L_past2=L_past2_1+L_past2_2
+
+#Exergy Evaporation
 #Load csv files (dfevap, dfhx, dfrecap)
 import pandas as pd
 import numpy as np
@@ -6,7 +74,7 @@ dfevap = pd.read_csv('dfevap.csv', sep = ',')
 dfhx = pd.read_csv('dfhx.csv', sep = ',')
 dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
-Ta=25+273
+
 
 print(dfrecap["Mass flow"])
 m1=dfrecap["Mass flow"].iloc(0)
