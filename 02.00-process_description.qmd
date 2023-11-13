@@ -244,6 +244,8 @@ df_pasteurization_heat_capacities = pd.DataFrame(data = {'Heat Capacity': Variab
 #HTML(df_pasteurization_mf_in.to_html(index=False))
 #HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
 #HTML(df_pasteurization_heat_capacities.to_html(index=False))
+
+
 ```
 
 
@@ -270,13 +272,18 @@ import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
 
+def degree(x):
+    return x +273.15
+
+def to_J(x):
+    return x *1000
 
 df_1_variable = pd.DataFrame(data = {'Variable' : ['Q_refrigeration','Q_past1','Q_past2','Q_past3','Q_past4','Q_past5','Q_past6','Q_past7']})
-df_1_values = df_pasteurization_heat_flow['Value']
+df_1_values = df_pasteurization_heat_flow['Value'].apply(to_J)
 df_1 = pd.concat([df_1_variable,df_1_values], axis = 1)
 
 df_2_variable = pd.DataFrame(data = {'Variable' : ['T_a','T_fmilk','T_mixure_out','T_past_cent','T_milk_0','T_cream_0','T_past_a','T_past_b','T_past_c','T_past_d','T_milk','T_crpast_a','T_thick','T_crpast_x','T_crpast_b','T_crpast_c','T_cream']})
-df_2_values = df_pasteurization_temperatures['Value']
+df_2_values = df_pasteurization_temperatures['Value'].apply(degree)
 df_2 = pd.concat([df_2_variable,df_2_values], axis = 1)
 
 df_3_variable = pd.DataFrame(data = {'Variable' : ['m_fmilk','m_milk','m_cream','m_int','m_thick']})
