@@ -50,20 +50,22 @@ L_milk_ref=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_
 L_gy_ref=m_gly_ref*Cp_glywater*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_out)
 
 L_ref=L_milk_ref+L_gy_ref
-
+print(L_ref)
 #Past 1
 
 L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-Ta*math.log(T_mixure_out/T_past_cent)
 L_past1_2=m_milk*Cp_raw_milk*(T_past_c-T_past_d)-Ta*math.log(T_past_c/T_past_d) 
 
 L_past1=L_past1_1+L_past1_2
-
+print(L_past1)
 #Past 2
 
 L_past2_1=m_milk*Cp_raw_milk*(T_milk_0-T_past_a)-Ta*math.log(T_milk_0/T_past_a) #Question which m and cp
 L_past2_2=m_milk*Cp_raw_milk*(T_past_b-T_past_c)-Ta*math.log(T_past_b/T_past_c) #Question which m and cp
 
 L_past2=L_past2_1+L_past2_2
+print(L_past2)
+
 
 #Exergy Evaporation
 #Load csv files (dfevap, dfhx, dfrecap)
@@ -75,8 +77,7 @@ dfhx = pd.read_csv('dfhx.csv', sep = ',')
 dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
 
-
-print(dfrecap["Mass flow"])
+print(dfrecap["Mass flow (kg/s)"])
 m1=dfrecap["Mass flow"].iloc(0)
 m2=dfrecap["Mass flow"].loc[1]
 print(dfrecap.loc[1, "Mass flow"])
