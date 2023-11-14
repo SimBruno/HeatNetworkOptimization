@@ -72,33 +72,91 @@ Finally:
 
 $$
 \begin{align*}
-    \dot Q_{refrigeration} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out})
+    \dot Q_{refrigeration} &= \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out}) \\
+    &= \dot m_{gliwater{\_}ref} . c_{p,gliwater} . (T_{Gliwater{\_}out,ref} - T_{Gliwater{\_}in,ref})
 \end{align*}
-$$
+$${#eq-past_refrigeration}
 
 #### PAST1
 
 $$
 \begin{align*}
-    \dot Q_{past1} = \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) = \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}d} - T_{Past{\_}c})
+    \dot Q_{past1} &= \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) \\
+    &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}c} - T_{Past{\_}d})
 \end{align*}
-$$
+$${#eq-past_past1}
 
 #### PAST2
 
+$$
+\begin{align*}
+    \dot Q_{past2} &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Milk{\_}0} - T_{Past{\_}a}) \\
+    &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}c} - T_{Past{\_}b})
+\end{align*}
+$${#eq-past_past2}
+
 #### CENTRIFUGE
+
+$$
+\begin{align*}
+    T_{Past{\_}cent} = T_{Milk{\_}0} = T_{cream{\_}0} ~~~~~~(isothermal~mix)
+\end{align*}
+$${#eq-past_centrifuge}
 
 #### PAST3
 
+$$
+\begin{align*}
+    \dot Q_{past3} &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Milk{\_}b} - T_{Past{\_}a}) \\
+    &= \dot m_{steam{\_}p2} . c_{p,steam} . (T_{Steam{\_}in,p3} - T_{Steam{\_}out,p3})
+\end{align*}
+$${#eq-past_past3}
+
 #### PAST4
+
+$$
+\begin{align*}
+    \dot Q_{past4} &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{past{\_}d} - T_{Milk}) \\
+    &= \dot m_{gliwater{\_}p4} . c_{p,gliwater} . (T_{Gliwater{\_}out,p4} - T_{Gliwater{\_}in,p4})
+\end{align*}
+$${#eq-past_past4}
+
 
 #### PAST5
 
+$$
+\begin{align*}
+    \dot Q_{past5} &= \dot m_{Intern} . c_{p,Cream~ac} . (T_{cream{\_}0} - T_{crpast{\_}a}) \\
+    &= \dot m_{Cream} . c_{p,Cream} . (T_{crpast{\_}c} - T_{crpast{\_}b})
+\end{align*}
+$${#eq-past_past5}
+
 #### MIXER
+
+$$
+\begin{align*}
+    \dot m_{thickener} . c_{p,thickener} . (T_{crpast{\_}x} - T_{thickener})
+    = \dot m_{intern} . c_{p,Cream~ac} . (T_{crpast{\_}a} - T_{thickener}) \\
+\end{align*}
+$${#eq-past_mixer}
 
 #### PAST6
 
+$$
+\begin{align*}
+    \dot Q_{past6} &= \dot m_{Cream} . c_{p,Cream} . (T_{crpast{\_}b} - T_{crpast{\_}x}) \\
+    &= \dot m_{steam{\_}p6} . c_{p,steam} . (T_{Steam{\_}in,p6} - T_{Steam{\_}out,p6})
+\end{align*}
+$${#eq-past_past6}
+
 #### PAST7
+
+$$
+\begin{align*}
+    \dot Q_{past7} &= \dot m_{Cream} . c_{p,Cream} . (T_{crpast{\_}c} - T_{Cream}) \\
+    &= \dot m_{gliwater{\_}p7} . c_{p,gliwater} . (T_{Gliwater{\_}out,p7} - T_{Gliwater{\_}in,p7})
+\end{align*}
+$${#eq-past_past7}
 
 
 ```{python compute_pasteurisation, echo = F, eval = T}
