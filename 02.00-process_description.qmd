@@ -1428,9 +1428,9 @@ h_in=water_in.enthalpy
 m_water=1
 h_out=water_out.enthalpy 
 Q_hot=m_water*(h_out-h_in)
-Q_hot
+#print Q_hot rounded at 2 digits
+print('The heat required to heat 1kg/s of water from 15°C to 55°C is', round(Q_hot,2), 'W.')
 ```
-The heat required to heat 1kg/s of water from 15°C to 55°C is `Q_hot` W.
 
 ```{python Cold Storage, echo=T}
 T_in=273
@@ -1438,28 +1438,33 @@ T_out=268
 Q_fridge=500000
 Cp_air=1000
 m_air=Q_fridge/(Cp_air*(T_in-T_out))
-m_air
+print('The air mass flow required to remove 500kW of heat from a cold storage is', m_air, 'kg/s.')
 ```
-The air mass flow required to remove 500kW of heat from a cold storage is `m_air` kg/s.
 
 ## WasteWater and Sludge Production 
 
 ![Wastewater](Figures/Wastewater.svg)
 
-For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($$dw_{tot}=dw_{dry}+dw_{liq}$$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% fry matter and 86.7wt% water (Ashekuzzaman).
-From Ashekuzzaman, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
+For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($dw_{tot}=dw_{dry}+dw_{liq}$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% fry matter and 86.7wt% water (@shiDairyProcessingSludge2021). From this paper, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
 
-$$WP = WRM \times RM$$
-$$SP = SW \times WP$$
+$$
+WP = WRM \times RM
+$${#eq-WP}
 
-$$SW = \frac{\frac{ES}{RMa}}{WRM}$$
+$$
+SP = SW \times WP
+$${#eq-SP}
 
-Where $WRM$ is the wastewater to raw milk ratio (-) and $RM$ is the Raw Milk processing volume (m3/s), $SW$  is the sludge to wastewater ratio (kg/m3), $ES$ is the estimated annual sludge produced (kg), $RMa$ is the annual milk production (m3), $WP$ is the wastewater produced (m3/s) and $SP$ is the amount of sludge produced (kg/s).
+$$
+SW = \frac{\frac{ES}{RMa}}{WRM}
+$${#eq-SW}
 
-From the data given we have that RM=8kg/s and Asherruzzaman gives us that $WRM=2.71\pm 0.9$ in average. 
-Thus the produced waste water is 0.021m3/s given a milk density of 1035kg/m3.
+Where $WRM$ is the wastewater to raw milk ratio (-) and $RM$ is the Raw Milk processing volume ($m^3/s$), $SW$  is the sludge to wastewater ratio ($kg/m^3$), $ES$ is the estimated annual sludge produced ($kg$), $RMa$ is the annual milk production ($m^3$), $WP$ is the wastewater produced ($m^3/s$) and $SP$ is the amount of sludge produced ($kg/s$).
 
-Then from 2017 data in Asherruzzaman we have that ES=110000t, RMa=7163000m3 and thus $$SW=\frac{\frac{110000000}{7163000}}{2.71}=5.59kg/m3$$. Thus the produced sludge is $$SP = 5.59 \times 0.021 = 0.1174\text{kg/s}$$.
+From the data given we have that $RM=8kg/s$ and Asherruzzaman gives us that $WRM=2.71\pm 0.9$ in average. 
+Thus the produced waste water is $0.021 m^3/s$ given a milk density of $1035kg/m^3$.
+
+Then from 2017 data in Asherruzzaman we have that $ES=110000t$, $RMa=7163000m^3$ and thus $SW=\frac{\frac{110000000}{7163000}}{2.71}=5.59kg/m^3$. Thus the produced sludge is $SP = 5.59 \times 0.021 = 0.1174\text{kg/s}$.
 
 There is also the assumption that dw3 is only sludge and dw4 only water ($dw_{tot2}=dw_{tot3}+dw_{tot4}$).
 In dw3, the quantity of dry matter is again assume to be 13.3wt% and thus the quantity of water is 86.7wt%.
@@ -1480,38 +1485,36 @@ Table:Discharge water and sludge production streams mass composition
 
 ![Rivella](Figures/Rivella.svg)
 
-Now that we have a better understanding of dairy process we have to evaluate the energy and mass balance of Rivella production to be able to compare later its costs with the digester.
+Having a better understanding of dairy process, it is now possible to evaluate the energy and mass balance of Rivella production to be able to compare later its costs with the digester.
 The process is described in the following figure:
 
 The process will be divided in 3 main parts:
 
 1. The concentration of the whey 
-
 2. The production of Rivella Green 
-
 3. The production of Rivella Red
 
-### 1. The concentration of the whey
+### The concentration of the whey
 
 All the whey is assumed to come from the evaporator stage with the following characteristics:
 
-* 14.46% of dry matter, 
-* 85.54% of water, 
-* T=4°C, 
-* p=1bar 
+* 14.46 % of dry matter, 
+* 85.54 % of water, 
+* T = 4°C, 
+* p = 1 bar,
 * mass flow rate of 1.52 kg/s.
 
 At the end of the concentration process the whey will have the following characteristics:
 
-* 50% of dry matter, 
-* 50% of water, 
-* T=100°C, 
-* p=1bar 
+* 50 % of dry matter, 
+* 50 % of water, 
+* T = 100°C, 
+* p = 1 bar,
 * mass flow rate to be determined.
 
 We assume, the following: in the fermentation we have heating from 4 to 25°C, the mixer is isothermal and the evaporator is adiabatic.
-Also the bacterias are added at T=25°C and without disturbing the flow rate of the whey (m1=m3, m4=0 $m.s^{-1}$) and the aromas are added at T=25°C with 2g aromas/100g of whey.
-Bacteria and aromas have the same heat capacity as water (cp=4184J/kgK).
+Also the bacterias are added at T = 25°C and without disturbing the flow rate of the whey (m1 = m3, m4 = 0 $m/ s$) and the aromas are added at T = 25°C with 2g aromas/100g of whey.
+Bacteria and aromas have the same heat capacity as water ($c_p=4184\,J/kgK$).
 The pressure stays constant at 1 bar.
 
 ```{python ConcentrationWhey, echo = T, eval = T}
@@ -1571,10 +1574,10 @@ cp7=R7["cpmass"]
 
 Qevap = m5*cp5*(T7-T5) - m5*h5 + m6*h6 + m7*h7 #J/s
 msteam = Qevap/hfg #kg/s
-print(Qevap)
+print('Qevap =', round(Qevap,2), 'W')
 ```
 
-### 2. The production of Rivella Green 
+### The production of Rivella Green 
 
 30% of the concentrated whey is used for the Rivella Green production
 The composition of the Rivella Green is the following: 
@@ -1583,10 +1586,10 @@ The composition of the Rivella Green is the following:
 * 50% water,
 * 20% sugar.
 
-Tea is added at T=50°C, without disturbing the flow rate of the Rivella Green (m8=m10, m9=0 $m.s^{-1}$) 
-The sugar and water are added are added at T=25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore
-CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (because we don't know the content of gas in each bottle).
-The Rivella Green exits at T=10°C
+Tea is added at T = 50°C, without disturbing the flow rate of the Rivella Green (m8 = m10, m9 = 0 m/s) 
+The sugar and water are added are added at T = 25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore.
+CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (the content of gas in each bottle is not known).
+The Rivella Green exits at T = 10°C.
 The pressure stays constant at 1 bar during the entire production.
 
 ```{python RivellaGreen, echo = T, eval = T}
@@ -1604,8 +1607,6 @@ T12=T11
 T16=283 #K
 T14=T16
 T15=T16
-
-
 
 #HX1: heater
 QHX1=m7*cp7*(T7-T8) #J/s
@@ -1641,26 +1642,27 @@ T13=((m10*cp10*(T10-TA)+m11*cp11*(T11-TA)+m12*cp12*(T12-TA))/(m13*cp13))+TA
 
 #HX2: cooler1
 QHX2=m13*cp13*(T13-T14) #J/s
+
+print(' QHX1 =', round(QHX1,2), 'W', '\n', 'QHXgreen =', round(QHX2,2), 'W')
 ```
 
-### 3. The production of Rivella Red 
+### The production of Rivella Red 
 
-70% of the concentrated whey is used for the Rivella Red production
+70% of the concentrated whey is used for the Rivella Red production.
 The composition of the Rivella Red is the following: 
 
 * 30% whey,
 * 35% water,
 * 35% sugar.
 
-The sugar and water are added are added at T=25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore
-CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (because we don't know the content of gas in each bottle).
-The Rivella Red exits as Rivella Green at T=10°C
+The sugar and water are added are added at T = 25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore.
+CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (because the content of gas in each bottle is not known).
+The Rivella Red exits as Rivella Green at T = 10°C.
 The pressure stays constant at 1 bar during the entire production.
 
 ```{python RivellaRed, echo = T, eval = T}
 #Fixed Parameters
 m17=0.7*m7 #kg.s-1
-
 
 T17=T8 #K
 T18=T11
@@ -1668,7 +1670,6 @@ T19=T11
 T23=T16 #K
 T22=T23
 T21=T23
-
 
 #Mixer 4
 #We first have to determine the different flows of this non-isothermal mixer
@@ -1699,10 +1700,12 @@ cp20 = 0.3*cp17 + 0.35*cp18 + 0.35*cp19
 
 T20=((m17*cp17*(T17-TA)+m18*cp18*(T18-TA)+m19*cp19*(T19-TA))/(m20*cp20))+TA
 #HX2: cooler1
-QHX2=m20*cp20*(T21-T20) #J/s
+QHX3=-m20*cp20*(T21-T20) #J/s
 
+print('QHXred =', round(QHX3,2), 'W')
 ```
 
+### Summary for the Rivella production section
 
 ```{python SummaryData, echo = T, eval = T}
 #Put everything in a dataframe
@@ -1764,9 +1767,17 @@ Rivella['Pressure (bar)']=[p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p]
 Rivella['Mass flow rate (kg/s)']=[m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14,'',m16,m17,m18,m19,m20,m21,'',m23]
 Rivella['Heat capacity (J/kgK)']=[cp1,cp2,cp3,cp4,cp5,cp6,cp7,cp8,'',cp10,cp11,cp12,cp13,cp14,'',cp16,cp17,cp18,cp19,cp20,cp21,'',cp23]
 Rivella['Enthalpy (J/kg)']=[h1,'',h3,'',h5,h6,h7,h8,'',h10,h11,'h12',h13,h14,'',h16,h17,h18,h19,h20,h21,'',h23]
-
+Rivella = Rivella.set_index('Point')
+Rivella = Rivella.round(2)
 HTML(Rivella.to_html())
 
+#print a data frame with the heating value of the 3 hex
+HX = pd.DataFrame(columns=['HX', 'Heat exchanged (W)'])
+HX['HX']=['Evap', 'HX1', 'HX green', 'HX red']
+HX['Heat exchanged (W)']=[Qevap, QHX1,QHX2,QHX3]
+HX = HX.set_index('HX')
+HX = HX.round(2)
+HTML(HX.to_html())
 ```
 
 ## Digester
