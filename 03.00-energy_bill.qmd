@@ -104,15 +104,121 @@ sankey_ipese(df = df, unit = 'kmol/h', title = 'Example of an interactive Sankey
 
 ## Energy bill
 
-In this section, your objective is to transform the energy demand you previously calculated into utility consumption. This transformation involves the following energy vectors:
+> **Task Instructions**
+>
+>In this section, your objective is to transform the energy demand you previously calculated into utility consumption. This transformation involves the following energy vectors:
+>
+>- Natural gas
+>- Electricity
+>- Water
+>
+>To execute this conversion, you must explicitly state the assumptions you make during the process. For example, if you are aware of the refrigeration duty within the factory and understand that the refrigeration system operates on electricity, you will pre-determine the coefficient of performance (COP) for your refrigeration cycle. This assumption will enable you to calculate the actual electricity consumption for your processes.
+>
+>You can refer to the "Brewery example" in the Suivival Guide for comprehensive guidance and relevant information to facilitate this conversion process.
+>
+>Once you have established the energy utility demand within the dairy factory, you can proceed to calculate the energy bill. This calculation will be based on assumptions regarding energy prices in different countries or regions.
 
-- Natural gas
-- Electricity
-- Water
+First, the price of electricity (@noauthor_electricity_nodate) and natural gas (@noauthor_natural_nodate) in France and Germany has to be determined. 
 
-To execute this conversion, you must explicitly state the assumptions you make during the process. For example, if you are aware of the refrigeration duty within the factory and understand that the refrigeration system operates on electricity, you will pre-determine the coefficient of performance (COP) for your refrigeration cycle. This assumption will enable you to calculate the actual electricity consumption for your processes.
+```{python Price Table, echo = T, eval = T}
+#print dataframe with the price of electricity and natural gas in France and Germany
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
 
-You can refer to the "Brewery example" in the Suivival Guide for comprehensive guidance and relevant information to facilitate this conversion process.
+elec_fr = 0.12 # €/kWh
+elec_ger = 0.21 # €/kWh
+gas_fr = 0.08 # €/kWh
+gas_gr = 0.08 # €/kWh
 
-Once you have established the energy utility demand within the dairy factory, you can proceed to calculate the energy bill. This calculation will be based on assumptions regarding energy prices in different countries or regions.
+price = pd.DataFrame({'France (€/kWh)':[elec_fr, gas_fr], 'Germany (€/kWh)':[elec_ger, gas_gr]}, index = ['Electricity', 'Natural gas'])
+price = price.round(3)
+HTML(price.to_html())
+```
 
+Now, let list all the assumptions used to computed the energy bill:
+
+- The factory is running 95% of the time (8322 hours per year)
+- COP of the refrigeration system is 3.5
+- All water is used in closed loop. The cost is not taken into account in OPEX but will be in CAPEX.
+
+|                     |            Heating            |           Cooling           |
+|:-------------------:|:-----------------------------:|:---------------------------:|
+|    Pasteurization   |        Qpast_3, Qpast_6       | Qpast_ref, Qpast_4, Qpast_5 |
+|     Evaporation     |           Qevap_st1           |           Qevap_5           |
+|        Dryer        |       Qdry_hx1, Qdry_hx2      |          Qdry_cool          |
+|       Cleaning      |          Qclean_heat          |         Qclean_cool         |
+| Storage & hot water |           Qhot_water          |          Q_storage          |
+|       Rivella       |         Qrivella_heat         |                             |
+|       Digester      | Qdigester_dq, Qdigester_steam |                             |
+
+The electricity consumption for cooling is computed as follow:
+
+$$
+Elec(kW)= Q(kW) / COP
+$${#eq-cool_elec}
+
+The OPEX cost is computed as follow:
+
+$$
+OPEX(M€/y)= Q(kW) \cdot t_{\text{op}} (h/y) \cdot price(€/kWh) \cdot 10^{-6} (M€/€)
+$${#eq-opex}
+
+```{python Energy Bill, echo = T, eval = T}
+top = 24*0.95*365 #h/year
+
+#Pasterization
+Qpast_ref = 60416 #W    
+Qpast_4 = 3863424 #W  #A changer 
+Qpast_5 = 16344 #W    #A changer
+Qpast_3 = 285.76 #W   #A changer
+Qpast_6 = 16643 #W    #A changer
+
+Qpast_cool = Qpast_ref + Qpast_4 + Qpast_5
+Qpast_heat = Qpast_3 + Qpast_6 
+
+#Evap
+Qevap_5 = 55703.14  #W
+Qevap_st1 = 98038.87 #W
+Qevap_cool = Qevap_5
+Qevap_heat = Qevap_st1
+
+#Dryer
+Qdry_cool = 15299.94 #W
+Qdry_hx1 =  112.16 #W
+Qdry_hx2 =  1967.71#W
+Qdry_cool = Qdry_cool
+Qdry_heat = Qdry_hx1 + Qdry_hx2 
+
+#Cleaning
+Qclean_cool = 225940 #W
+Qclean_heat = 334710 #W
+
+#Storage & hot water
+Q_storage = 500000  #W
+Qhot_water = 167253.2 #W
+
+#Rivella
+Qrivella_heat =  579418.2 #W
+
+#Digester
+Qdigester_dq1 = 28754.1 #W
+Qdigester_steam = 107608.5 #W
+Qdigester_heat = Qdigester_dq1 + Qdigester_steam
+
+#Cool cost
+COP = 3.5 # assumption
+Qcool_tot = (Qpast_cool + Qevap_cool + Qdry_cool + Qclean_cool + Q_storage)/COP
+OPEXcool_fr = Qcool_tot*0.001 * elec_fr * top
+OPEXcool_ger = Qcool_tot*0.001 * elec_ger *top
+
+#Heat cost
+Qheat_tot = Qpast_heat + Qevap_heat + Qdry_heat + Qclean_heat + Qhot_water + Qrivella_heat + Qdigester_heat
+OPEXheat_fr = Qheat_tot*0.001 * gas_fr * top
+OPEXheat_ger = Qheat_tot*0.001 * gas_gr * top
+
+#print in a dataframe the OPEX line: cooling, heating and total and column: France, Germany
+OPEX = pd.DataFrame({'France (M€/y)':[OPEXcool_fr/1e6, OPEXheat_fr/1e6, OPEXcool_fr/1e6 + OPEXheat_fr/1e6], 'Germany (M€/y)':[OPEXcool_ger/1e6, OPEXheat_ger/1e6, OPEXcool_ger/1e6 + OPEXheat_ger/1e6]}, index = ['Cooling', 'Heating', 'Total'])
+OPEX = OPEX.round(3)
+HTML(OPEX.to_html())
+```
