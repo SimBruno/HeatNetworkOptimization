@@ -1081,23 +1081,17 @@ mass_dd1 = 1.32
 #mass_dd5 = mass_dd1*0.5 + mass_dd1*0.5*0.04
 #96% = 0.5*mass_dd1
 
-
 mass_dd5 = 0.5*mass_dd1 + (0.5*mass_dd1/0.96)*0.04
 mass_dd4 = mass_dd5/(0.5+0.5*(1-0.63))
 mass_dd4 = 0.5*mass_dd1 + (mass_dd5-0.5*mass_dd1)/0.37
-
 
 water_dd1 = 50
 water_dd4 = ((mass_dd4 - mass_dd1/2)/mass_dd4)*100
 water_dd5 = ((mass_dd5 - mass_dd1/2)/mass_dd5)*100
 
-
-
-
 data_m = {'Position': ['dd1', 'dd4', 'dd5', 'dd7'],
         'm (kg)': [mass_dd1, mass_dd4, mass_dd5, mass_dd5],
         'Water Proportion': [water_dd1, water_dd4, water_dd5, water_dd5]}
-
 
 dfm = pd.DataFrame(data_m)
 dfm = dfm.set_index('Position')
@@ -1133,7 +1127,7 @@ Temp_dd1 = 277.15
 Temp_dd4 = 333.15
 Temp_dd5 = 333.15
 
-mass_dd8 = (mass_dd4-mass_dd5)/200
+mass_dd8 = (mass_dd4-mass_dd5)/79
 mass_dd9 = mass_dd4-mass_dd5 + mass_dd8
 mass_dd10 = mass_dd9
 mass_dd11 = mass_dd10 + mass_dd1-mass_dd4
