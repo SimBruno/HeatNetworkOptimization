@@ -184,9 +184,9 @@ Qevap_cool = Qevap_5
 Qevap_heat = Qevap_st1
 
 #Dryer
-Qdry_cool = 112.16 #W
-Qdry_hx1 = 1967.71 #W
-Qdry_hx2 = 15299.94 #W
+Qdry_cool = 15299.94 #W
+Qdry_hx1 =  112.16 #W
+Qdry_hx2 =  1967.71#W
 Qdry_cool = Qdry_cool
 Qdry_heat = Qdry_hx1 + Qdry_hx2 
 
