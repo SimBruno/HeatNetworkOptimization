@@ -366,9 +366,9 @@ df_5 = pd.concat([df_5_variable,df_5_values], axis = 1)
 df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5], axis = 0, ignore_index = True)
 
 df_pasteurization_csv.to_csv('pasteurization_process.csv',sep=';')
-
-
 ```
+
+<!---
 
 #### Results Exergy Analysis Pasteurization
 
@@ -409,7 +409,7 @@ rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
 library(reticulate)
 x = 42
 ```
-
+-->
 
 ## Evaporation
 

@@ -6,11 +6,13 @@ Starting from this chapter, you will embark on optimizing the energy efficiency 
 
 ## Optimization of $\Delta$T minimum
 
-This section corresponds to Task 4 of your [project](https://ipese-lectures.epfl.ch/advanced-energetics/project-description/project-5.html#industrial-round-table-4). In this segment, you are required to include the following elements:
-
-- Theoretical Background: Provide a thorough theoretical foundation for your optimization problem. Explain concepts such as how to calculate heat exchanger area and how to estimate heat exchanger investment. Offer insights into the underlying principles and equations involved.
-- Assumptions: Clearly outline the assumptions you have made regarding the parameters and variables within your optimization formulas. This includes assumptions related to heat exchanger characteristics, costs, and other relevant factors.
-- Optimization Results: Present your optimization outcomes using graphical representations or tables. If possible, consider leveraging R and Python libraries to create figures and visualizations, as this may enhance your presentation. **You will receive bonus points if you meet to do so.**
+> **Task Instructions**
+>
+>This section corresponds to Task 4 of your [project](https://ipese-lectures.epfl.ch/advanced-energetics/project-description/project-5.html#industrial-round-table-4). In this segment, you are required to include the following elements:
+>
+>- Theoretical Background: Provide a thorough theoretical foundation for your optimization problem. Explain concepts such as how to calculate heat exchanger area and how to estimate heat exchanger investment. Offer insights into the underlying principles and equations involved.
+>- Assumptions: Clearly outline the assumptions you have made regarding the parameters and variables within your optimization formulas. This includes assumptions related to heat exchanger characteristics, costs, and other relevant factors.
+>- Optimization Results: Present your optimization outcomes using graphical representations or tables. If possible, consider leveraging R and Python libraries to create figures and visualizations, as this may enhance your presentation. **You will receive bonus points if you meet to do so.**
 
 ## Minimum energy requirement
 
