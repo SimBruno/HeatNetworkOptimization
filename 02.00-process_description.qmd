@@ -245,6 +245,15 @@ m_gly_past4 = Q_past4 / ( Cp_glywater * 5 )
 m_steam_past6 = Q_past6 / ( Cp_steam * 5 )
 m_gly_past7 = Q_past7 / ( Cp_glywater * 5 )
 
+# Specific entropy and enthalpy
+
+T_in = 100+273.15
+T_out = T_in - 5
+T0 = 25+273.15
+s3 = Cp_steam*np.log(T_in/T_out)
+h3= T0*s3
+s6= Cp_steam*np.log(T_in/T_out)
+h6 = T0*s6
 
 #DATAFRAMES
 
@@ -298,6 +307,24 @@ Variables_Names = ['alboline','raw_milk','cream','glywater','steam','fmilk','cre
 Variables_Values = [Cp_alboline,Cp_raw_milk,Cp_cream,Cp_glywater,Cp_steam,Cp_fmilk,Cp_cream_mixed]
 Variables_Units =  Heat_capacity 
 df_pasteurization_heat_capacities = pd.DataFrame(data = {'Heat Capacity': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+# Dataframe for entropy
+
+Specific_entropy = 'J/(kg.K)'
+
+Variables_Names = ['s3','s6']
+Variables_Values = [s3,s6]
+Variables_Units =  Specific_entropy 
+df_pasteurization_entropy = pd.DataFrame(data = {'Specific Entropy': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+# Dataframe for enthalpy
+
+Specific_enthalpy = 'J/(kg)'
+
+Variables_Names = ['h3','h6']
+Variables_Values = [h3,h6]
+Variables_Units =  Specific_enthalpy 
+df_pasteurization_enthalpy = pd.DataFrame(data = {'Specific Enthalpy': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
 #HTML(df_pasteurization_heat_flow.to_html(index=False))
 #HTML(df_pasteurization_temperatures.to_html(index=False))
