@@ -14,51 +14,137 @@ dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
 ## Exergy analysis
 
-To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. The exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
+To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a uunit and the exergy leaving the unit. This exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
 
 ### Pasteurization
 
 #### Refrigeration
 
 $$
-L_{milk-refr} = \dot{m}_{in,m}c_{p,whm}[(T_{in} - T_{mix,o})-T_0\ln(\frac{T_1}{T_2})] \\
-L_{gw-refr}  = \dot{m}_{gw,refr}c_{p,gw}[(T_{in,gw} - T_{out,gw})-T_0\ln(\frac{T_{in,gw}}{T_{out,gw}})] \\
-L_{refr} = L_{milk-refr} + L_{gw-refr}
+L_{milk\_ref} = \dot{m}_{f\_milk}c_{p_{f\_milk}}\left((T_{f\_milk} - T_{mixure\_out}) - T_a \ln\left(\frac{T_{f\_milk}}{T_{mixure\_out}}\right)\right)
+$$
+$$
+L_{gly\_ref} = \dot{m}_{gly\_ref}c_{p_{glywater}}\left((T_{f\_milk} - T_{mixure\_out}) - T_a \ln\left(\frac{T_{f\_milk}}{T_{mixure\_out}}\right)\right)
+$$
+$$
+L_{ref} = L_{milk\_ref} + L_{gly\_ref}
 $$
 
-#### Past 1, Past 2, Past 5
+#### Past 1
+$$
+L_{past1\_1} = \dot{m}_{f\_milk}c_{p_{f\_milk}}\left((T_{mixure\_out} - T_{past\_cent}) - T_a \ln\left(\frac{T_{mixure\_out}}{T_{past\_cent}}\right)\right)
+$$
+$$
+L_{past1\_2} = \dot{m}_{milk}c_{p_{raw\_milk}}\left((T_{past\_c} - T_{past\_d}) - T_a \ln\left(\frac{T_{past\_c}}{T_{past\_d}}\right)\right)
+$$
+$$
+L_{past1} = L_{past1\_1} + L_{past1\_2}
+$$
+
+#### Past 2
+$$
+L_{past2\_1} = \dot{m}_{milk}c_{p_{raw\_milk}}\left((T_{milk\_0} - T_{past\_a}) - T_a \ln\left(\frac{T_{milk\_0}}{T_{past\_a}}\right)\right)
+$$
+$$
+L_{past2\_2} = \dot{m}_{milk}c_{p_{raw\_milk}}\left((T_{past\_b} - T_{past\_c}) - T_a \ln\left(\frac{T_{past\_b}}{T_{past\_c}}\right)\right)
+$$
+$$
+L_{past2} = L_{past2\_1} + L_{past2\_2}
+$$
+
+#### Past 3
+$$
+L_{past3\_1} = \dot{m}_{milk}c_{p_{raw\_milk}}\left((T_{past\_a} - T_{past\_b}) - T_a \ln\left(\frac{T_{past\_a}}{T_{past\_b}}\right)\right)
+$$
 
 $$
-L_{past1,1}  = \dot{m}_{in,m}c_{p,whm}[(T_{mix,o} - T_{past,cent})-T_0\ln(\frac{T_{mix,o}}{T_{past,cent}})] \\
-L_{past1,2}  = \dot{m}_{out,m}c_{p,rm}[(T_{past,c} - T_{past,d})-T_0\ln(\frac{T_{past,c}}{T_{past,d}})] \\
-L_{past1} = L_{past1,1} + L_{past1,2}
+L_{past3\_2} = \dot{m}_{steam\_past3}c_{p_{steam}} \Delta h_3 - T_a \Delta s_3
+$$
+$$
+L_{past3} = L_{past3\_1} + L_{past3\_2}
 $$
 
-#### Past 3, Past 6
+#### Past 4
 
 $$
-L_{past3,1}  = \dot{m}_{out,m}c_{p,rm}[(T_{past,a} - T_{past,b})-T_0\ln(\frac{T_{past,a}}{T_{past,b}})] \\
-L_{past3,2}  = \dot{m}_{steam,3}[(h_{in,steam}-h_{out,steam})-T_0(s_{in,steam}-s_{out,steam})] \\
-L_{past3}  = L_{past3,1} + L_{past3,2}
-$$ 
+L_{past4\_1} = \dot{m}_{milk}c_{p_{raw\_milk}}\left((T_{past\_d} - T_{milk}) - T_a \ln\left(\frac{T_{past\_d}}{T_{milk}}\right)\right)
+$$
+$$
+L_{gly\_past4} = \dot{m}_{gly\_past4}c_{p_{glywater}}\left((T_{past\_d} - T_{milk}) - T_a \ln\left(\frac{T_{past\_d}}{T_{milk}}\right) \right)
+$$
+$$
+L_{past4} = L_{past4\_1} + L_{gly\_past4}
+$$
+
+#### Past 5
+$$
+L_{past5\_1} = \dot{m}_{int}c_{p_{cream}}\left((T_{cream} - T_{crpast\_a}) - T_a \ln\left(\frac{T_{cream}}{T_{crpast\_a}}\right)\right)
+$$
+$$
+L_{past5\_2} = \dot{m}_{cream}c_{p_{cream}}\left((T_{crpast\_b} - T_{crpast\_c}) - T_a \ln\left(\frac{T_{crpast\_b}}{T_{crpast\_c}}\right)\right)
+$$
+$$
+L_{past5} = L_{past5\_1} + L_{past5\_2}
+$$
+
+#### Past 6
+$$
+L_{past6\_1} = \dot{m}_{cream}c_{p_{cream\_mixed}}\left((T_{crpast\_x} - T_{crpast\_b}) - T_a \ln\left(\frac{T_{crpast\_x}}{T_{crpast\_b}}\right)\right)
+$$
+$$
+L_{past6\_2} = \dot{m}_{steam\_past6}c_{p_{steam}} \Delta h_6 - T_a \Delta s_6
+$$
+$$
+L_{past6} = L_{past6\_1} + L_{past6\_2}
+$$
+
+#### Past 7
+
+$$
+L_{past7\_1} = \dot{m}_{cream}c_{p_{cream}}\left((T_{crpast\_c} - T_{cream}) - T_a \ln\left(\frac{T_{crpast\_c}}{T_{cream}}\right)\right)
+$$
+$$
+L_{gy\_past7} = \dot{m}_{gly\_past7}c_{p_{glywater}}\left((T_{crpast\_c} - T_{cream}) - T_a \ln\left(\frac{T_{crpast\_c}}{T_{cream}}\right)\right)
+$$
+$$
+L_{past7} = L_{past7\_1} + L_{gy\_past7}
+$$
 
 #### Mixer
 
 $$
-L_{mixer,1}  = \dot{m}_{cr,o}c_{p,cr}[(T_{crpast,a} - T_{crpast,x})-T_0\ln(\frac{T_{crpast,a}}{T_{crpast,x}})] \\
-L_{mixer,2} = \dot{m}_{th}c_{p,alginate}[(T_{th} - T_{crpast,x})-T_0\ln(\frac{T_{th}}{T_{crpast,x}})] \\
-L_{mixer} = L_{mixer,1} + L_{mixer,2} 
+L_{mixer\_1} = \dot{m}_{cream}c_{p_{cream}}\left((T_{crpast\_a} - T_{crpast\_x}) - T_a \ln\left(\frac{T_{crpast\_a}}{T_{crpast\_x}}\right)\right)
 $$
+$$
+L_{mixer\_2} = \dot{m}_{thick}c_{p_{alboline}}\left((T_{thick} - T_{crpast\_x}) - T_a \ln\left(\frac{T_{thick}}{T_{crpast\_x}}\right)\right)
+$$
+$$
+L_{mixer} = L_{mixer\_1} + L_{mixer\_2}
+$$
+
+
+
 
 
 #### Summary of Pasteurization Exergy Results
 
-Energy_flow = 'kJ/s'
+```{python compute_pasteurisation, echo = T, eval = T}
+
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+
+
+# Dataframe for Heat Flows
+
+Exergy losses = 'kJ/s'
 
 Variables_Names = ['Refrigeration','Past1','Past2','Past3','Past4','Past5','Past6','Past7']
 Variables_Values = np.divide([Q_refrigeration,Q_past1,Q_past2,Q_past3,Q_past4,Q_past5,Q_past6,Q_past7],1000)
 Variables_Units =  Energy_flow 
 df_pasteurization_heat_flow = pd.DataFrame(data = {'Heat Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+```
+
 
 ### Evaporation 
 
