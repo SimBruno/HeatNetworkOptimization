@@ -47,9 +47,9 @@ Assuming that the mixer provides an ideal mix, we have:
 
 $$
 \begin{align*}
-    c_{p,cream} &= \frac{\dot m_{cream{\_}0}}{\dot m_{Cream}}.c_{p,Cream~ac} + \frac{\dot m_{thickener}}{\dot m_{Cream}}.c_{p,thickener} \\
+    c_{p,cream} &= \frac{\dot m_{cream{\_}0}}{\dot m_{Cream}} \cdot c_{p,Cream~ac} + \frac{\dot m_{thickener}}{\dot m_{Cream}} \cdot c_{p,thickener} \\
     \\
-    c_{p,cream} &= \frac{0.48}{0.55}.3400 + \frac{0.07}{0.55}.4175
+    c_{p,cream} &= \frac{0.48}{0.55} \cdot 3400 + \frac{0.07}{0.55} \cdot 4175
 \end{align*}
 $$
 
@@ -57,9 +57,9 @@ We also consider the centrifuge separes an ideal mix, therefore:
 
 $$
 \begin{align*}
-    c_{p,fresh{\_}milk} &= \frac{\dot m_{cream{\_}0}}{\dot m_{fresh{\_}milk}}.c_{p,Cream~ac} + \frac{\dot m_{Milk{\_}0} }{\dot m_{fresh{\_}milk}}.c_{p,raw{\_}milk} \\
+    c_{p,fresh{\_}milk} &= \frac{\dot m_{cream{\_}0}}{\dot m_{fresh{\_}milk}} \cdot c_{p,Cream~ac} + \frac{\dot m_{Milk{\_}0} }{\dot m_{fresh{\_}milk}} \cdot c_{p,raw{\_}milk} \\
     \\
-    c_{p,fresh{\_}milk} &= \frac{0.48}{8}.3400 + \frac{7.52}{8}.3800
+    c_{p,fresh{\_}milk} &= \frac{0.48}{8} \cdot 3400 + \frac{7.52}{8} \cdot 3800
 \end{align*}
 $$
 
@@ -74,8 +74,8 @@ Finally:
 
 $$
 \begin{align*}
-    \dot Q_{refrigeration} &= \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Fresh~Milk} - T_{Mixure{\_}out}) \\
-    &= \dot m_{gliwater{\_}ref} . c_{p,gliwater} . (T_{Gliwater{\_}out,ref} - T_{Gliwater{\_}in,ref})
+    \dot Q_{refrigeration} &= \dot m_{Fresh~Milk} \cdot c_{p,Fresh~Milk} \cdot (T_{Fresh~Milk} - T_{Mixure{\_}out}) \\
+    &= \dot m_{gliwater{\_}ref} \cdot c_{p,gliwater} \cdot (T_{Gliwater{\_}out,ref} - T_{Gliwater{\_}in,ref})
 \end{align*}
 $${#eq-past_refrigeration}
 
@@ -83,8 +83,8 @@ $${#eq-past_refrigeration}
 
 $$
 \begin{align*}
-    \dot Q_{past1} &= \dot m_{Fresh~Milk} . c_{p,Fresh~Milk} . (T_{Past{\_}cent} - T_{Mixure{\_}out}) \\
-    &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}c} - T_{Past{\_}d})
+    \dot Q_{past1} &= \dot m_{Fresh~Milk} \cdot c_{p,Fresh~Milk} \cdot (T_{Past{\_}cent} - T_{Mixure{\_}out}) \\
+    &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Past{\_}c} - T_{Past{\_}d})
 \end{align*}
 $${#eq-past_past1}
 
@@ -92,8 +92,8 @@ $${#eq-past_past1}
 
 $$
 \begin{align*}
-    \dot Q_{past2} &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Milk{\_}0} - T_{Past{\_}a}) \\
-    &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Past{\_}c} - T_{Past{\_}b})
+    \dot Q_{past2} &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Milk{\_}0} - T_{Past{\_}a}) \\
+    &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Past{\_}c} - T_{Past{\_}b})
 \end{align*}
 $${#eq-past_past2}
 
@@ -109,8 +109,8 @@ $${#eq-past_centrifuge}
 
 $$
 \begin{align*}
-    \dot Q_{past3} &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{Milk{\_}b} - T_{Past{\_}a}) \\
-    &= \dot m_{steam{\_}p2} . c_{p,steam} . (T_{Steam{\_}in,p3} - T_{Steam{\_}out,p3})
+    \dot Q_{past3} &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Milk{\_}b} - T_{Past{\_}a}) \\
+    &= \dot m_{steam{\_}p2} \cdot c_{p,steam} \cdot (T_{Steam{\_}in,p3} - T_{Steam{\_}out,p3})
 \end{align*}
 $${#eq-past_past3}
 
@@ -118,8 +118,8 @@ $${#eq-past_past3}
 
 $$
 \begin{align*}
-    \dot Q_{past4} &= \dot m_{Milk} . c_{p,Raw~Milk} . (T_{past{\_}d} - T_{Milk}) \\
-    &= \dot m_{gliwater{\_}p4} . c_{p,gliwater} . (T_{Gliwater{\_}out,p4} - T_{Gliwater{\_}in,p4})
+    \dot Q_{past4} &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{past{\_}d} - T_{Milk}) \\
+    &= \dot m_{gliwater{\_}p4} \cdot c_{p,gliwater} \cdot (T_{Gliwater{\_}out,p4} - T_{Gliwater{\_}in,p4})
 \end{align*}
 $${#eq-past_past4}
 
@@ -128,8 +128,8 @@ $${#eq-past_past4}
 
 $$
 \begin{align*}
-    \dot Q_{past5} &= \dot m_{Intern} . c_{p,Cream~ac} . (T_{cream{\_}0} - T_{crpast{\_}a}) \\
-    &= \dot m_{Cream} . c_{p,Cream} . (T_{crpast{\_}c} - T_{crpast{\_}b})
+    \dot Q_{past5} &= \dot m_{Intern} \cdot c_{p,Cream~ac} \cdot (T_{cream{\_}0} - T_{crpast{\_}a}) \\
+    &= \dot m_{Cream} \cdot c_{p,Cream} \cdot (T_{crpast{\_}c} - T_{crpast{\_}b})
 \end{align*}
 $${#eq-past_past5}
 
@@ -137,8 +137,8 @@ $${#eq-past_past5}
 
 $$
 \begin{align*}
-    \dot m_{thickener} . c_{p,thickener} . (T_{crpast{\_}x} - T_{thickener})
-    = \dot m_{intern} . c_{p,Cream~ac} . (T_{crpast{\_}a} - T_{thickener}) \\
+    \dot m_{thickener} \cdot c_{p,thickener} \cdot (T_{crpast{\_}x} - T_{thickener})
+    = \dot m_{intern} \cdot c_{p,Cream~ac} \cdot (T_{crpast{\_}a} - T_{thickener}) \\
 \end{align*}
 $${#eq-past_mixer}
 
@@ -146,8 +146,8 @@ $${#eq-past_mixer}
 
 $$
 \begin{align*}
-    \dot Q_{past6} &= \dot m_{Cream} . c_{p,Cream} . (T_{crpast{\_}b} - T_{crpast{\_}x}) \\
-    &= \dot m_{steam{\_}p6} . c_{p,steam} . (T_{Steam{\_}in,p6} - T_{Steam{\_}out,p6})
+    \dot Q_{past6} &= \dot m_{Cream} \cdot c_{p,Cream} \cdot (T_{crpast{\_}b} - T_{crpast{\_}x}) \\
+    &= \dot m_{steam{\_}p6} \cdot c_{p,steam} \cdot (T_{Steam{\_}in,p6} - T_{Steam{\_}out,p6})
 \end{align*}
 $${#eq-past_past6}
 
@@ -155,13 +155,13 @@ $${#eq-past_past6}
 
 $$
 \begin{align*}
-    \dot Q_{past7} &= \dot m_{Cream} . c_{p,Cream} . (T_{crpast{\_}c} - T_{Cream}) \\
-    &= \dot m_{gliwater{\_}p7} . c_{p,gliwater} . (T_{Gliwater{\_}out,p7} - T_{Gliwater{\_}in,p7})
+    \dot Q_{past7} &= \dot m_{Cream} \cdot c_{p,Cream} \cdot (T_{crpast{\_}c} - T_{Cream}) \\
+    &= \dot m_{gliwater{\_}p7} \cdot c_{p,gliwater} \cdot (T_{Gliwater{\_}out,p7} - T_{Gliwater{\_}in,p7})
 \end{align*}
 $${#eq-past_past7}
 
 
-```{python compute_pasteurisation, echo = F, eval = T}
+```{python compute_pasteurisation, echo = T, eval = T}
 
 import pandas as pd
 import numpy as np
@@ -340,11 +340,16 @@ df_pasteurization_enthalpy = pd.DataFrame(data = {'Specific Enthalpy': Variables
 #### Results
  
 
-```{python display_pasteurisation, echo = F, eval = T}
+```{python display_pasteurisation, echo = T, eval = T}
 
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
+
+df_pasteurization_heat_flow = df_pasteurization_heat_flow.round(2)
+df_pasteurization_temperatures = df_pasteurization_temperatures.round(2)
+df_pasteurization_mf_steam_gly = df_pasteurization_mf_steam_gly.round(2)
+df_pasteurization_heat_capacities = df_pasteurization_heat_capacities.round(2)
 
 HTML(df_pasteurization_heat_flow.to_html(index=False))
 HTML(df_pasteurization_temperatures.to_html(index=False))
@@ -353,7 +358,7 @@ HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
 HTML(df_pasteurization_heat_capacities.to_html(index=False))
 ```
 
-```{python pasteurisation_csv, echo = F, eval = T}
+```{python pasteurisation_csv, echo = T, eval = T}
 
 import pandas as pd
 import numpy as np
@@ -397,9 +402,9 @@ df_7 = pd.concat([df_7_variable,df_7_values], axis = 1)
 df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5,df_6,df_7], axis = 0, ignore_index = True)
 
 df_pasteurization_csv.to_csv('pasteurization_process.csv',sep=';')
-
-
 ```
+
+<!---
 
 #### Results Exergy Analysis Pasteurization
 
@@ -435,13 +440,12 @@ rho = PropsSI('D', 'T', 298.15, 'P', 101325, 'Nitrogen')
 
 
 
-
 ```{r render-table, echo = T}
 # a way to pass the value from python to r is to through json file
 library(reticulate)
 x = 42
 ```
-
+-->
 
 ## Evaporation
 

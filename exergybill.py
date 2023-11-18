@@ -14,7 +14,7 @@ Ta=25+273.15
 #Refrigeration
 L_milk_ref=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_out)
 
-L_gy_ref=m_gly_ref*Cp_glywater*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_out)
+L_gy_ref=m_gly_ref*Cp_glywater*(T_fmilk-T_mixure_out)-Ta*math.log(T_fmilk/T_mixure_out)#glywater temperature
 
 L_ref=L_milk_ref+L_gy_ref
 print(L_ref)
@@ -33,7 +33,41 @@ L_past2_2=m_milk*Cp_raw_milk*(T_past_b-T_past_c)-Ta*math.log(T_past_b/T_past_c) 
 L_past2=L_past2_1+L_past2_2
 print(L_past2)
 
+#Past 3
 
+#Past 4
+
+L_past4_1=m_milk*Cp_milk*(T_past_d-T_milk)-Ta*math.log(T_past_d/T_milk)
+
+L_gy_past4=m_gly_past4*Cp_glywater*(T_past_d-T_milk)-Ta*math.log(T_past_d/T_milk)#glywater temperature
+
+L_past4=L_past4_1+L_gy_past4
+print(L_past4)
+
+#Past 5
+L_past5_1=m_cream*Cp_cream*(T_cream-T_crpast_a)-Ta*math.log(T_cream/T_crpast_a)
+L_past5_2=m_cream*Cp_cream**(T_crpast_b-T_crpast_c)-Ta*math.log(T_crpast_b/T_crpast_c) 
+
+L_past5=L_past5_1+L_past5_2
+print(L_past5)
+
+#Past 6
+
+#Past 7
+
+L_past7_1=m_cream*Cp_cream*(T_crpast_c-T_cream)-Ta*math.log(T_crpast_c/T_cream)
+
+L_gy_past7=m_gly_past7*Cp_glywater*(T_crpast_c-T_cream)-Ta*math.log(T_crpast_c/T_cream)#glywater temperature
+
+L_past7=L_past7_1+L_gy_past7
+print(L_past7)
+#Mixer
+
+L_mixer_1=m_cream*Cp_cream*(T_crpast_a-T_crpast_x)-Ta*math.log(T_crpast_a/T_crpast_x)
+L_mixer_2=m_thick*Cp_alboline*(T_thick-T_crpast_x)-Ta*math.log(T_thick/T_crpast_x)
+
+L_mixer=L_mixer_1+L_mixer_2
+print(L_mixer)
 #Exergy Evaporation
 
 #Load csv files (dfevap, dfhx, dfrecap)
