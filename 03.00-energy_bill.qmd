@@ -12,17 +12,9 @@ dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 ```
 # Exergy analysis and Energy bill
 
-Upon completing the process description and analysis for each section, you will gain insights into the current operational status and energy/exergy efficiency of the dairy factory. This analysis comprises two main components:
-
-- Exergy analysis of both pasteurisation and evaporation section
-- Energy bills of the whole dairy factory under different scenarios
-
-
 ## Exergy analysis
 
-In the exergy analysis, it's essential to outline the exergy inputs, exergy outputs, and exergy destruction specifically for the Pasteurization and Evaporation sections. To achieve this, you should provide both the theoretical background of exergy calculation and the step-by-step process of your analysis.
-
-To evaluate the losses and inefficiencies of the dairy production an exergy analysis is carried out. The ambient temperature is assumed to be $T_a = 25°C + 273K = 293K$. 
+To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. The exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
 
 ### Pasteurization
 
@@ -61,11 +53,13 @@ $$
 
 #### Summary of Pasteurization Exergy Results
 
-```{r compute_pasteurisation_exergy, echo = F, eval = T}
+Energy_flow = 'kJ/s'
 
+Variables_Names = ['Refrigeration','Past1','Past2','Past3','Past4','Past5','Past6','Past7']
+Variables_Values = np.divide([Q_refrigeration,Q_past1,Q_past2,Q_past3,Q_past4,Q_past5,Q_past6,Q_past7],1000)
+Variables_Units =  Energy_flow 
+df_pasteurization_heat_flow = pd.DataFrame(data = {'Heat Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
-
-```
 ### Evaporation 
 
 #### Heat Exchanger
