@@ -16,13 +16,14 @@ T2 = 348
 
 p1 = 100000
 
-h1 = -91021.1032324004
-h2 = -38880.66837888083
-
 m1 = 0.48
 m2 = 0.55
-cp1 = 3400
-cp2 = 2976.18181818181
+
+h1 = -91021.1032324004*m1
+h2 = -38880.66837888083*m2
+
+cp1 = 3470.44348
+cp2 = 3482.1944
 
 slope1 = 1/(m1*cp1)
 slope2 = 1/(m2*cp2)
@@ -38,15 +39,14 @@ T1v = slope1*h + T_1
 T_2 = T2 - slope2*h2
 T2v = slope2*h + T_2
 
-plt.plot(h, T1v)
-plt.plot(h, T2v)
-plt.xlabel('Enthalpy (kJ/kg)')
+plt.plot(h, T1v, label='Cold Stream')
+plt.plot(h, T2v, label='Hot Stream')
+plt.xlabel('Enthalpy (J)')
 plt.ylabel('Temperature (K)')
 plt.title('Temperature vs Enthalpy')
+plt.legend()
 plt.grid(True)
 plt.show()
-print(slope1)
-print(slope2)
 
 #
 Q=0
