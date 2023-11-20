@@ -2156,7 +2156,7 @@ point7 = point7.__dict__ # Whole dictionary with properties
 h7=point7["enthalpy"]
 cp7=point7["cpmass"]
 d7 = Q_sd / (cp7 * (T7 - T8)) # kg/s
-d8 = d7
+d8 = d7 + d5*0.9
 
 # print in a dataframe the mass flow of dry and liquid for point 6, 7 and 8 and the total mass flow for point 6, 7 and 8
 data = {'Point': ['6', '7', '8'],
