@@ -13,60 +13,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 #from codes_01_energy_bill.coolprop_functions import mixture
 
-
-
-T1 = 333
-T2 = 348
-
-p1 = 100000
-
-m1 = 0.48
-m2 = 0.55
-
-h1 = -91021.1032324004*m1  #from mixture with dry = 35% and wet = 65%
-h2 = -38880.66837888083*m2
-
-cp1 = 3470.44348
-cp2 = 3482.1944
-
-slope1 = 1/(m1*cp1)
-slope2 = 1/(m2*cp2)
-
-#Plot the two lines with T on the y-axis and h on the x-axis
-#h is the enthalpy of the stream between h1 and h2
-N = 100
-h = np.linspace(h1, h2, N)
-
-C1 = T1 - slope1*h1
-T1v = slope1*h + C1
-
-C2 = T2 - slope2*h2
-T2v = slope2*h + C2
-
-T2_prime = T2v.min()
-
-
-plt.plot(h, T1v, label='Cold Stream')
-plt.plot(h, T2v, label='Hot Stream')
-plt.xlabel('Enthalpy (J)')
-plt.ylabel('Temperature (K)')
-plt.title('Temperature vs Enthalpy')
-plt.legend()
-#Plot as a vertical line the dTmin (i.e. the minimum temperature difference between the two streams)
-dt = T2v-T1v
-dTmin = dt.min()
-min_index = dt.argmin()
-plt.axvline(x=h[min_index], color='r', linestyle='--')
-plt.grid(True)
-plt.show()
-
-print('dTmin = ', dTmin, 'K at h = ', h[min_index], 'kJ/kg')
-
-
-#Find T1_prime
-
-def DTMIN(dT, T1, T2, m1, m2, cp1, cp2, h1, h2):
-
+#####
+def Dtmin(dT, T1, T2, T2_prime, m1, m2, cp1, cp2, h1, h2):
+    
     T1_prime = T2 - dT
 
     #Find the minimum Area of the HX
@@ -123,92 +72,164 @@ def DTMIN(dT, T1, T2, m1, m2, cp1, cp2, h1, h2):
 
     return CAPEX, OPEX_fr, OPEX_ger, TOTEX_fr, TOTEX_ger, Area
 
+# Scenario 1: dTmin for the past5
+
+
+T1_6 = 333
+T2_6 = 348
+
+p1_6 = 100000
+
+m1_6 = 0.48
+m2_6 = 0.55
+
+h1_6 = -91021.1032324004*m1_6  #from mixture with dry = 35% and wet = 65%
+h2_6 = -38880.66837888083*m2_6
+
+cp1_6 = 3470.44348
+cp2_6 = 3482.1944
+
+slope1_6 = 1/(m1_6*cp1_6)
+slope2_6 = 1/(m2_6*cp2_6)
+
+#Plot the two lines with T on the y-axis and h on the x-axis
+#h is the enthalpy of the stream between h1 and h2
+N = 100
+h_6 = np.linspace(h1_6, h2_6, N)
+
+C1_6 = T1_6 - slope1_6*h1_6
+T1v_6 = slope1_6*h_6 + C1_6
+
+C2_6 = T2_6 - slope2_6*h2_6
+T2v_6 = slope2_6*h_6 + C2_6
+
+T2_prime_6 = T2v_6.min()
+
+
+plt.plot(h_6, T1v_6, label='Cold Stream')
+plt.plot(h_6, T2v_6, label='Hot Stream')
+plt.xlabel('Enthalpy (J)')
+plt.ylabel('Temperature (K)')
+plt.title('Temperature vs Enthalpy')
+plt.legend()
+#Plot as a vertical line the dTmin (i.e. the minimum temperature difference between the two streams)
+dt_6 = T2v_6-T1v_6
+dTmin_6 = dt_6.min() #This dTmin is not the optimized with respect to TOTEX but just to know the LMTD of HX relation based on if dTmin is left or rigth of the curves 
+min_index_6 = dt_6.argmin()
+plt.axvline(x=h_6[min_index_6], color='r', linestyle='--')
+plt.grid(True)
+plt.show()
+
+print('dTmin = ', dTmin_6, 'K at h = ', h_6[min_index_6], 'kJ/kg')
+
+
 #Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
 
-CAPEXv = []
-OPEX_frv = []
-OPEX_gerv = []
-TOTEX_frv = []
-TOTEX_gerv = []
-Areav = []
+CAPEXv_6 = []
+OPEX_frv_6 = []
+OPEX_gerv_6 = []
+TOTEX_frv_6 = []
+TOTEX_gerv_6 = []
+Areav_6 = []
 
-dt = np.linspace(0, 30, 300)
+dt_6 = np.linspace(0, 30, 300)
 
-for t in dt:
-    CAPEX, OPEX_fr, OPEX_ger, TOTEX_fr, TOTEX_ger, Area = DTMIN(t, T1, T2, m1, m2, cp1, cp2, h1, h2)
-    CAPEXv.append(CAPEX)
-    OPEX_frv.append(OPEX_fr)
-    OPEX_gerv.append(OPEX_ger)
-    TOTEX_frv.append(TOTEX_fr)
-    TOTEX_gerv.append(TOTEX_ger)
-    Areav.append(Area)
+for t in dt_6:
+    CAPEX_6, OPEX_fr_6, OPEX_ger_6, TOTEX_fr_6, TOTEX_ger_6, Area_6 = Dtmin(t, T1_6, T2_6, T2_prime_6, m1_6, m2_6, cp1_6, cp2_6, h1_6, h2_6)
+    CAPEXv_6.append(CAPEX_6)
+    OPEX_frv_6.append(OPEX_fr_6)
+    OPEX_gerv_6.append(OPEX_ger_6)
+    TOTEX_frv_6.append(TOTEX_fr_6)
+    TOTEX_gerv_6.append(TOTEX_ger_6)
+    Areav_6.append(Area_6)
 
 #plot the results with respect to the dt values
 
-plt.plot(dt, CAPEXv, label='CAPEX', linestyle='-', color = 'black')
-plt.plot(dt, OPEX_frv, label='OPEX (France)', linestyle='-', color = 'blue')
-plt.plot(dt, OPEX_gerv, label='OPEX (Germany)', linestyle='-', color = 'red')
-plt.plot(dt, TOTEX_frv, label='TOTEX (France)',linestyle='--', color = 'blue')
-plt.plot(dt, TOTEX_gerv, label='TOTEX (Germany)', linestyle='--', color = 'red')
+plt.plot(dt_6, CAPEXv_6, label='CAPEX', linestyle='-', color = 'black')
+plt.plot(dt_6, OPEX_frv_6, label='OPEX (France)', linestyle='-', color = 'blue')
+plt.plot(dt_6, OPEX_gerv_6, label='OPEX (Germany)', linestyle='-', color = 'red')
+plt.plot(dt_6, TOTEX_frv_6, label='TOTEX (France)',linestyle='--', color = 'blue')
+plt.plot(dt_6, TOTEX_gerv_6, label='TOTEX (Germany)', linestyle='--', color = 'red')
 plt.xlabel('dTmin (K)')
 plt.ylabel('Costs (€)')
 plt.title('Costs vs dTmin')
 plt.legend()
 plt.grid(True)
 
-min_index_fr = np.argmin(TOTEX_frv)
-plt.plot(dt[min_index_fr], TOTEX_frv[min_index_fr], 'bo')
-min_index_ger = np.argmin(TOTEX_gerv)
-plt.plot(dt[min_index_ger], TOTEX_gerv[min_index_ger], 'ro')
+min_index_fr_6 = np.argmin(TOTEX_frv_6)
+plt.plot(dt_6[min_index_fr_6], TOTEX_frv_6[min_index_fr_6], 'bo')
+min_index_ger_6 = np.argmin(TOTEX_gerv_6)
+plt.plot(dt_6[min_index_ger_6], TOTEX_gerv_6[min_index_ger_6], 'ro')
 
 #print the area, dt, CAPEX, OPEX, TOTEX for the minimum TOTEX
 
-dtmin_opt = dt[min_index_fr]
-area_opt = Areav[min_index_fr]
-CAPEX_opt = CAPEXv[min_index_fr]
-OPEX_fr_opt = OPEX_frv[min_index_fr]
-OPEX_ger_opt = OPEX_gerv[min_index_fr]
-TOTEX_fr_opt = TOTEX_frv[min_index_fr]
-TOTEX_ger_opt = TOTEX_gerv[min_index_fr]
-
-recap = pd.DataFrame({'dTmin [K]': dtmin_opt, 'Area [m^2]': area_opt, 'CAPEX[€/yr]': CAPEX_opt, 'OPEX_fr[€/yr]': OPEX_fr_opt, 'OPEX_ger[€/yr]': OPEX_ger_opt, 'TOTEX_fr[€/yr]': TOTEX_fr_opt, 'TOTEX_ger[€/yr]': TOTEX_ger_opt}, index=[0])
-print(recap)
-
-
-
+dtmin_opt_6 = dt_6[min_index_fr_6]
+area_opt_6 = Areav_6[min_index_fr_6]
+CAPEX_opt_6 = CAPEXv_6[min_index_fr_6]
+OPEX_fr_opt_6 = OPEX_frv_6[min_index_fr_6]
+OPEX_ger_opt_6 = OPEX_gerv_6[min_index_fr_6]
+TOTEX_fr_opt_6 = TOTEX_frv_6[min_index_fr_6]
+TOTEX_ger_opt_6 = TOTEX_gerv_6[min_index_fr_6]
+Past6_opt = pd.DataFrame({'dTmin [K]': dtmin_opt_6, 'Area [m^2]': area_opt_6, 'CAPEX[€/yr]': CAPEX_opt_6, 'OPEX_fr[€/yr]': OPEX_fr_opt_6, 'OPEX_ger[€/yr]': OPEX_ger_opt_6, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_6, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_6}, index=[0])
 plt.show()
+
+
+# Scenario 2: dTmin for the past1+past6
 
 #PAST1 
 
 
 T1_1 = 277
-T2_1 = 293.8
+T1_prime_1 = 333
+
+#This time we know only T_cin and T_cout but nothing about the hot streams
+#We can't reuse the exact same method as for past6 where we knew T_hin and T_cin
+
+#We assume dTmin is on the left of the curves.
+#We will thus have dTmin = T_cout - T_hin which gives two unkowns dTmin and T_cout
+#We will solve 
+
+
 
 p1_1 = 100000
 
 m1_1 = 8
 m2_1 = 7.52
 
-h1 = -91021.1032324004*m1   #from mixture function with dry = 11.7% and wet = 88.3%
-h2 = -38880.66837888083*m2
+h1_1 = -84420.13*m1_1   #from mixture function with dry = 11.7% and wet = 88.3%
+h2_1 = -18059.7680*m2_1
 
-cp1 = 3470.44348
-cp2 = 3482.1944
+cp1_1 = 3963.18
+cp2_1 = 3941.70
 
-slope1 = 1/(m1*cp1)
-slope2 = 1/(m2*cp2)
+slope1_1 = 1/(m1_1*cp1_1)
+slope2_1 = 1/(m2_1*cp2_1)
 
 #Plot the two lines with T on the y-axis and h on the x-axis
 #h is the enthalpy of the stream between h1 and h2
 N = 100
-h = np.linspace(h1, h2, N)
+h_1 = np.linspace(h1_1, h2_1, N)
 
-C1 = T1 - slope1*h1
-T1v = slope1*h + C1
+C1_1 = T1_1 - slope1_1*h1_1
+T1v_1 = slope1_1*h_1 + C1_1
 
-C2 = T2 - slope2*h2
-T2v = slope2*h + C2
+C2_1 = T2_1 - slope2_1*h2_1
+T2v_1 = slope2_1*h_1 + C2_1
 
-T2_prime = T2v.min()
+T2_prime_1 = T2v_1.min()
 
+plt.plot(h_1, T1v_1, label='Cold Stream')
+plt.plot(h_1, T2v_1, label='Hot Stream')
+plt.xlabel('Enthalpy (J)')
+plt.ylabel('Temperature (K)')
+plt.title('Temperature vs Enthalpy')
+plt.legend()
+#Plot as a vertical line the dTmin (i.e. the minimum temperature difference between the two streams)
+dt_1 = T2v_1-T1v_1
+dTmin_1 = dt_1.min()   
+min_index_1 = dt_1.argmin()
+plt.axvline(x=h_1[min_index_1], color='r', linestyle='--')
+plt.grid(True)
+plt.show()
 
+print('dTmin = ', dTmin_1, 'K at h = ', h_1[min_index_1], 'kJ/kg')
