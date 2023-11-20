@@ -245,8 +245,8 @@ m_gly_past7 = Q_past7 / ( Cp_glywater * (T_glywater_out-T_glywater_in) )
 
 # Specific entropy and enthalpy from beer pasteurisation
 
-delta_s_steam = 0
-delta_h_steam= 0
+delta_s_steam = 7.343e3 - 1.418e3
+delta_h_steam = 2880.8e3 - 461.368e3
 
 
 #DATAFRAMES
@@ -267,7 +267,7 @@ Temperature = '°C'
 Temperatures_vector = [T_a,T_fmilk,T_mixure_out,T_past_cent,T_milk_0,T_cream_0,T_past_a,T_past_b,T_past_c,T_past_d,T_milk,T_crpast_a,T_thick,T_crpast_x,T_crpast_b,T_crpast_c,T_cream,T_steam_in,T_steam_out,T_glywater_in,T_glywater_out]
 to_celsius = lambda t: t - 273.15
 Temperatures_vector = np.array([to_celsius(x) for x in Temperatures_vector])
-Variables_Names = ['a','fmilk','mixure_out','past_cent','milk_0','cream_0','past_a','past_b','past_c','past_d','milk','crpast_a','thick','crpast_x','crpast_b','crpast_c','cream','steam_in','steam_out','glywtaer_in','glywater_out']
+Variables_Names = ['a','fmilk','mixure_out','past_cent','milk_0','cream_0','past_a','past_b','past_c','past_d','milk','crpast_a','thick','crpast_x','crpast_b','crpast_c','cream','steam_in','steam_out','glywater_in','glywater_out']
 
 Variables_Values = Temperatures_vector
 Variables_Units =  Temperature 
