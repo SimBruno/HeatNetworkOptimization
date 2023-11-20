@@ -164,7 +164,6 @@ $${#eq-past_past7}
 
 
 ```{python compute_pasteurisation, echo = T, eval = T}
-
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
@@ -1474,7 +1473,9 @@ $$ \dot{m}_{glass}c_{p,glass}(T_{11}-T_9)=\dot{m}_{shower}c_{p,water}(T_{10}-T_{
 Q_shower=m_cip3*cp_water*(t_cip3-t_cip4) #same w/ m_cip4
 t_cip9=(t_cip11+t_cip8)/2
 m_cipglass = Q_shower/(cp_glass*(t_cip9-t_cip8))
-
+m_cip8 = m_cipglass
+m_cip9 = m_cipglass
+m_cip11 = m_cipglass
 ```
 Thus, there is `r Q_shower` $kW$ of heat used at each shower and bottle flow rate is `r m_cipglass` $kg/s$.
 
@@ -1483,6 +1484,7 @@ Thus, there is `r Q_shower` $kW$ of heat used at each shower and bottle flow rat
 ```{r Splitter, echo=T}
 m_cip4 = m_cip3
 m_cip6 = 2*m_cip4-m_cip5
+m_cip12 = m_cip4
 ```
 No heat exchanged. Only mass flows such that $$ \dot{m}_{4}+\dot{m}_{12}=\dot{m}_{2}=\dot{m}_{5}+\dot{m}_{6}$$
 This gives $\dot{m}_6$ is equal to `r m_cip6` $kg/s$.
@@ -1502,7 +1504,7 @@ As showed above with calculations for the HX_Steam there is thus  `r round(q_cip
 
 ### Summary for the Cleaning in Place section
 
-```{r recap, echo=F}
+```{r CIPrecap, echo=F}
 # Remaining data
 
 # Creating data frames

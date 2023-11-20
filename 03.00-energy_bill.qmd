@@ -129,16 +129,11 @@ $$
 #### Summary of Pasteurization Exergy Results
 
 ```{python compute_pasteurisation, echo = T, eval = T}
-
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
-
-
-# Dataframe for Heat Flows
-
-Exergy losses = 'kJ/s'
-
+Dataframe for Heat Flows
+Exergy_losses = 'kJ/s'
 Variables_Names = ['Refrigeration','Past1','Past2','Past3','Past4','Past5','Past6','Past7']
 Variables_Values = np.divide([Q_refrigeration,Q_past1,Q_past2,Q_past3,Q_past4,Q_past5,Q_past6,Q_past7],1000)
 Variables_Units =  Energy_flow 
