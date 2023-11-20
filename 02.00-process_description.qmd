@@ -249,11 +249,11 @@ m_gly_past7 = Q_past7 / ( Cp_glywater * 5 )
 
 T_in = 100+273.15
 T_out = T_in - 5
-T0 = 25+273.15
-s3 = Cp_steam*np.log(T_in/T_out)
-h3= T0*s3
-s6= Cp_steam*np.log(T_in/T_out)
-h6 = T0*s6
+T0 = 25+273
+delta_s3 = Cp_steam*np.log(T_in/T_out)
+delta_h3= Cp_steam*(T_in-T_out)
+delta_s6= Cp_steam*np.log(T_in/T_out)
+delta_h6 = Cp_steam*(T_in-T_out)
 
 #DATAFRAMES
 
@@ -312,8 +312,8 @@ df_pasteurization_heat_capacities = pd.DataFrame(data = {'Heat Capacity': Variab
 
 Specific_entropy = 'J/(kg.K)'
 
-Variables_Names = ['s3','s6']
-Variables_Values = [s3,s6]
+Variables_Names = ['delta_s3','delta_s6']
+Variables_Values = [delta_s3,delta_s6]
 Variables_Units =  Specific_entropy 
 df_pasteurization_entropy = pd.DataFrame(data = {'Specific Entropy': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
@@ -321,8 +321,8 @@ df_pasteurization_entropy = pd.DataFrame(data = {'Specific Entropy': Variables_N
 
 Specific_enthalpy = 'J/(kg)'
 
-Variables_Names = ['h3','h6']
-Variables_Values = [h3,h6]
+Variables_Names = ['delta_h3','delta_h6']
+Variables_Values = [delta_h3,delta_h6]
 Variables_Units =  Specific_enthalpy 
 df_pasteurization_enthalpy = pd.DataFrame(data = {'Specific Enthalpy': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
@@ -339,24 +339,6 @@ df_pasteurization_enthalpy = pd.DataFrame(data = {'Specific Enthalpy': Variables
 
 #### Results
  
-
-```{python display_pasteurisation, echo = T, eval = T}
-
-import pandas as pd
-import numpy as np
-from IPython.display import display, HTML
-
-df_pasteurization_heat_flow = df_pasteurization_heat_flow.round(2)
-df_pasteurization_temperatures = df_pasteurization_temperatures.round(2)
-df_pasteurization_mf_steam_gly = df_pasteurization_mf_steam_gly.round(2)
-df_pasteurization_heat_capacities = df_pasteurization_heat_capacities.round(2)
-
-HTML(df_pasteurization_heat_flow.to_html(index=False))
-HTML(df_pasteurization_temperatures.to_html(index=False))
-HTML(df_pasteurization_mf_in.to_html(index=False))
-HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
-HTML(df_pasteurization_heat_capacities.to_html(index=False))
-```
 
 ```{python pasteurisation_csv, echo = T, eval = T}
 
@@ -390,9 +372,37 @@ df_5_variable = pd.DataFrame(data = {'Variable' : ['Cp_alboline','Cp_raw_milk','
 df_5_values = df_pasteurization_heat_capacities['Value']
 df_5 = pd.concat([df_5_variable,df_5_values], axis = 1)
 
+df_6_variable =  pd.DataFrame(data = {'Variable' : ['delta_s3','delta_s6']})
+df_6_values = df_pasteurization_entropy['Value']
+df_6 = pd.concat([df_6_variable,df_6_values], axis = 1)
+
+df_7_variable =  pd.DataFrame(data = {'Variable' : ['delta_h3','delta_h6']})
+df_7_values = df_pasteurization_enthalpy['Value']
+df_7 = pd.concat([df_7_variable,df_7_values], axis = 1)
+
+
+df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5,df_6,df_7], axis = 0, ignore_index = True)
 df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5], axis = 0, ignore_index = True)
 
 df_pasteurization_csv.to_csv('pasteurization_process.csv',sep=';')
+```
+
+```{python display_pasteurisation, echo = T, eval = T}
+
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+
+df_pasteurization_heat_flow = df_pasteurization_heat_flow.round(2)
+df_pasteurization_temperatures = df_pasteurization_temperatures.round(2)
+df_pasteurization_mf_steam_gly = df_pasteurization_mf_steam_gly.round(2)
+df_pasteurization_heat_capacities = df_pasteurization_heat_capacities.round(2)
+
+HTML(df_pasteurization_heat_flow.to_html(index=False))
+HTML(df_pasteurization_temperatures.to_html(index=False))
+HTML(df_pasteurization_mf_in.to_html(index=False))
+HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
+HTML(df_pasteurization_heat_capacities.to_html(index=False))
 ```
 
 <!---
