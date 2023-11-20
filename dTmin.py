@@ -23,7 +23,7 @@ p1 = 100000
 m1 = 0.48
 m2 = 0.55
 
-h1 = -91021.1032324004*m1
+h1 = -91021.1032324004*m1  #from mixture with dry = 35% and wet = 65%
 h2 = -38880.66837888083*m2
 
 cp1 = 3470.44348
@@ -178,7 +178,37 @@ print(recap)
 
 plt.show()
 
+#PAST1 
 
 
+T1_1 = 277
+T2_1 = 293.8
+
+p1_1 = 100000
+
+m1_1 = 8
+m2_1 = 7.52
+
+h1 = -91021.1032324004*m1   #from mixture function with dry = 11.7% and wet = 88.3%
+h2 = -38880.66837888083*m2
+
+cp1 = 3470.44348
+cp2 = 3482.1944
+
+slope1 = 1/(m1*cp1)
+slope2 = 1/(m2*cp2)
+
+#Plot the two lines with T on the y-axis and h on the x-axis
+#h is the enthalpy of the stream between h1 and h2
+N = 100
+h = np.linspace(h1, h2, N)
+
+C1 = T1 - slope1*h1
+T1v = slope1*h + C1
+
+C2 = T2 - slope2*h2
+T2v = slope2*h + C2
+
+T2_prime = T2v.min()
 
 
