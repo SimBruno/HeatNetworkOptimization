@@ -124,20 +124,112 @@ $$
 
 
 
-
-
 #### Summary of Pasteurization Exergy Results
 
 ```{python compute_pasteurisation, echo = T, eval = T}
+
+#Exergy Pasteurization
+
+import math
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
-Dataframe for Heat Flows
-Exergy_losses = 'kJ/s'
-Variables_Names = ['Refrigeration','Past1','Past2','Past3','Past4','Past5','Past6','Past7']
-Variables_Values = np.divide([Q_refrigeration,Q_past1,Q_past2,Q_past3,Q_past4,Q_past5,Q_past6,Q_past7],1000)
-Variables_Units =  Energy_flow 
-df_pasteurization_heat_flow = pd.DataFrame(data = {'Heat Flow': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+df = pd.read_csv('pasteurization_process.csv',sep = ';')
+
+for i in range(0,len(df.index)):
+    globals()[df.iloc[i][1]] = df.iloc[i][2]
+
+Delta_T_Gly=5
+Ta=298
+
+#Refrigeration
+L_milk_ref=m_fmilk*Cp_fmilk*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out))
+
+L_gy_ref=m_gly_ref*Cp_glywater*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out))#glywater temperature
+
+L_ref=L_milk_ref+L_gy_ref
+#print(L_ref)
+
+#Past 1
+
+L_past1_1=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*math.log(T_mixure_out/T_past_cent))
+L_past1_2=m_milk*Cp_raw_milk*((T_past_c-T_past_d)-T_a*math.log(T_past_c/T_past_d) )
+
+L_past1=L_past1_1+L_past1_2
+#print(L_past1)
+#Past 2
+
+L_past2_1=m_milk*Cp_raw_milk*((T_milk_0-T_past_a)-T_a*math.log(T_milk_0/T_past_a)) #Question which m and cp
+L_past2_2=m_milk*Cp_raw_milk*((T_past_b-T_past_c)-T_a*math.log(T_past_b/T_past_c))#Question which m and cp
+
+L_past2=L_past2_1+L_past2_2
+#print(L_past2)
+
+#Past 3
+
+L_past3_1=m_milk*Cp_raw_milk*((T_past_a-T_past_b)-T_a*math.log(T_past_a/T_past_b))
+L_past3_2=m_steam_past3*(delta_h_steam-T_a*delta_s_steam)
+
+L_past3=L_past3_1+L_past3_2
+#print(L_past3)
+
+#Past 4
+
+L_past4_1=m_milk*Cp_raw_milk*((T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk))
+
+L_gy_past4=m_gly_past4*Cp_glywater*((T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk))#glywater temperature
+
+L_past4=L_past4_1+L_gy_past4
+#print(L_past4)
+
+#Past 5
+L_past5_1=m_int*Cp_cream*((T_cream-T_crpast_a)-T_a*math.log(T_cream/T_crpast_a))
+L_past5_2=m_cream*Cp_cream*((T_crpast_b-T_crpast_c)-T_a*math.log(T_crpast_b/T_crpast_c))
+
+L_past5=L_past5_1+L_past5_2
+#print(L_past5)
+
+#Past 6
+L_past6_1=m_cream*Cp_cream_mixed*((T_crpast_x-T_crpast_b)-T_a*math.log(T_crpast_x/T_crpast_b))
+L_past6_2=m_steam_past6*(delta_h_steam-Ta*delta_s_steam)
+
+L_past6=L_past6_1+L_past6_2
+#print(L_past6)
+
+#Past 7
+
+L_past7_1=m_cream*Cp_cream*((T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream))
+
+L_gy_past7=m_gly_past7*Cp_glywater*((T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream))#glywater temperature
+
+L_past7=L_past7_1+L_gy_past7
+#print(L_past7)
+
+#Mixer
+
+L_mixer_1=m_cream*Cp_cream*((T_crpast_a-T_crpast_x)-T_a*math.log(T_crpast_a/T_crpast_x))
+L_mixer_2=m_thick*Cp_alboline*((T_thick-T_crpast_x)-T_a*math.log(T_thick/T_crpast_x))
+
+L_mixer=L_mixer_1+L_mixer_2
+#print(L_mixer)
+
+#Total exergy pasteurisation section
+
+L_tot_past= L_ref+L_past1+L_past2+L_past3+L_past4+L_past5+L_past6+L_past7+L_mixer
+#print(L_tot_past)
+
+# Dataframe for Exergy Loss Pasteurization
+
+Exergy_losses  = 'W'
+
+Variables_Names = ['L_Refrigeration','L_Past1','L_Past2','L_Past3','L_Past4','L_Past5','L_Past6','L_Past7','L_mixer','L_tot_past']
+Variables_Values = np.divide([L_ref,L_past1,L_past2,L_past3,L_past4,L_past5,L_past6,L_past7,L_mixer,L_tot_past],1000)
+Variables_Units =  Exergy_losses
+df = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+HTML(df.to_html(index=False))
+
 ```
 
 
@@ -164,7 +256,74 @@ $$\dot{L}_{evaporation}=\Sigma\dot{L}_{HX}+\Sigma\dot{L}_{evaporator}+\Sigma\dot
 
 ```{python HX, echo = T, eval = T}
 
-#Heat exchangers
+#Exergy Evaporation
+
+import math
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+
+
+
+#Load csv files (dfevap, dfhx, dfrecap)
+#import pandas as pd
+#import numpy as np
+#Load csv files
+
+#dfevap = pd.read_csv('dfevap.csv', sep = ',')
+#dfhx = pd.read_csv('dfhx.csv', sep = ',')
+
+dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
+
+for i in range(0,len(dfrecap.index)):
+    globals()['m'+str(i+1)] = dfrecap['Mass flow (kg/s)'].iloc[i]
+    globals()['h'+str(i+1)] = dfrecap['Enthalpy (J/mol)'].iloc[i]
+    globals()['s'+str(i+1)] = dfrecap['Entropy (J/K)'].iloc[i]
+
+
+#Exergy for heat exchangers
+
+Ta=298
+
+L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
+#print(L_heat1)
+
+L_heat2= m2*(h2-Ta*s2)-m3*(h3-Ta*s3)+m16*(h16-Ta*s16)
+#print(L_heat2)
+
+L_heat3=m3*(h3-Ta*s3)-m4*(h4-Ta*s4)+m20*(h20-Ta*s20)
+#print(L_heat3)
+
+L_heat4=m4*(h4-Ta*s4)-m5*(h5-Ta*s5)-m15*(h15-Ta*s15)
+#print(L_heat4)
+
+#Exergy for evaporators
+
+L_eva1=m6*(h6-Ta*s6)-m7*(h7-Ta*s7)-m14*(h14-Ta*s14)+m21*(h21-Ta*s21)
+#print(L_eva1)
+
+L_eva2=m8*(h8-Ta*s8)+m17*(h17-Ta*s17)-m15*(h15-Ta*s15)-m9*(h9-Ta*s9)
+#print(L_eva2)
+
+L_eva3=m10*(h10-Ta*s10)-m18*(h18-Ta*s18)-m19*(h19-Ta*s19)-m11*(h11-Ta*s11)
+
+
+#Total exergy evaporation section
+
+L_tot_eva= L_heat1+L_heat2+L_heat3+L_heat4+L_eva1+L_eva2+L_eva3
+#print(L_tot_eva)
+
+# Dataframe for Exergy Loss Evaporation
+
+Exergy_losses  = 'W'
+
+Variables_Names = ['L_heat1','L_heat2','L_heat3','L_heat4','L_eva1','L_eva2','L_eva3','L_tot_eva']
+Variables_Values = np.divide([L_heat1,L_heat2,L_heat3,L_heat4,L_eva1,L_eva2,L_eva3,L_tot_eva],1000)
+Variables_Units =  Exergy_losses
+df_2 = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+HTML(df_2.to_html(index=False))
+```
 
 ```
 
