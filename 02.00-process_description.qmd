@@ -33,7 +33,7 @@ Consequently, all mass flows are defined.
 
 ### Heat Capacities
 
-Are already provided the following heat capacity data:
+The following heat capacities are already provided :
 
 - $c_{p,Raw~Milk} = 3.8 kJ/(kgK)$ (milk after centrifuge)
 
@@ -69,6 +69,8 @@ Finally:
 - $c_{p,fresh_milk} = 3.78~kJ/(kgK)$
 
 ### Equations of operations 
+
+In this subsection are indicated the heat flows equations of each elements for the pasteurisation. All variables are defined whether on the pasteurization scheme or in the mass flow or heat capacities sections.
 
 #### Refrigeration
 
@@ -195,17 +197,18 @@ T_mixure_out = 4+273.15
 T_past_cent = 60+273.15
 T_milk_0 = T_past_cent
 T_cream_0 = T_past_cent
-# T_past_a, computed later
 T_past_b = 75+273.15
+T_milk = 4+273.15
+T_thick = 4+273.15
+T_crpast_b = 75+273.15
+T_cream = 4+273.15
+
+# T_past_a, computed later
 # T_past_c, computed later
 # T_past_d, computed later
-T_milk = 4+273.15
 # T_crpast_a, computed later
-T_thick = 4+273.15
 # T_crpast_x, computed later
-T_crpast_b = 75+273.15
 # T_crpast_c, computed later
-T_cream = 4+273.15
 
 # Temperatures computation
 
@@ -226,16 +229,6 @@ Q_past4 = heat_exchanger_Q(T_past_d,T_milk,m_milk,Cp_raw_milk)
 Q_past5 = heat_exchanger_Q(T_crpast_a,T_crpast_b,m_cream,Cp_cream_mixed)
 Q_past6 = heat_exchanger_Q(T_crpast_x,T_crpast_b,m_cream,Cp_cream_mixed)
 Q_past7 = heat_exchanger_Q(T_cream,T_crpast_c,m_cream,Cp_cream_mixed)
-
-# Previous way of computing
-#Q_refrigeration = m_fmilk * Cp_fmilk * ( T_fmilk - T_mixure_out )
-#Q_past1 = m_fmilk * Cp_fmilk * ( T_past_cent - T_mixure_out )
-#Q_past2 = m_milk * Cp_raw_milk * 5
-#Q_past3 = m_milk * Cp_raw_milk * ( T_past_b - T_past_a)
-#Q_past4 = m_milk * Cp_raw_milk * ( T_past_d - T_milk)
-#Q_past5 =  m_cream * Cp_cream_mixed * 5
-#Q_past6 = m_cream * Cp_cream_mixed * ( T_crpast_b - T_crpast_x )
-#Q_past7 = m_cream * Cp_cream_mixed * ( - (T_cream - T_crpast_c))
 
 # Computation for steam and glywater
 
@@ -273,8 +266,8 @@ Temperature = '°C'
 Temperatures_vector = [T_a,T_fmilk,T_mixure_out,T_past_cent,T_milk_0,T_cream_0,T_past_a,T_past_b,T_past_c,T_past_d,T_milk,T_crpast_a,T_thick,T_crpast_x,T_crpast_b,T_crpast_c,T_cream]
 to_celsius = lambda t: t - 273.15
 Temperatures_vector = np.array([to_celsius(x) for x in Temperatures_vector])
-
 Variables_Names = ['a','fmilk','mixure_out','past_cent','milk_0','cream_0','past_a','past_b','past_c','past_d','milk','crpast_a','thick','crpast_x','crpast_b','crpast_c','cream']
+
 Variables_Values = Temperatures_vector
 Variables_Units =  Temperature 
 df_pasteurization_temperatures = pd.DataFrame(data = {'Temperature': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
