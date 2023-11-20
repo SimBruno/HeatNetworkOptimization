@@ -39,9 +39,9 @@ The following heat capacities are already provided :
 
 - $c_{p,Cream~ac} = 3.4 kJ/(kgK)$ (cream after centrifuge)
 
-From Litterature [add reference] we chose:
+From Litterature @NAGHAVI201864 we chose:
 
-- $c_{p,thickener} = c_{p,albaline} = 0.07 kJ/(kgK)$
+- $c_{p,thickener} = c_{p,alginate} = 4.175 kJ/(kg.K)$ 
 
 Assuming that the mixer provides an ideal mix, we have:
 
@@ -51,7 +51,7 @@ $$
     \\
     c_{p,cream} &= \frac{0.48}{0.55} \cdot 3400 + \frac{0.07}{0.55} \cdot 4175
 \end{align*}
-$$
+$$ 
 
 We also consider the centrifuge separes an ideal mix, therefore:
 
@@ -70,7 +70,7 @@ Finally:
 
 ### Equations of operations 
 
-In this subsection are indicated the heat flows equations of each elements for the pasteurisation. All variables are defined whether on the pasteurization scheme or in the mass flow or heat capacities sections.
+In this subsection are indicated the heat flow equations for each element of the pasteurisation. All variables are defined whether on the pasteurization scheme or in the mass flow and heat capacities sections. The $\Delta T = 5K$ is applied on Past2, between Milk_0 and Past_a and on Past 5, between crpast_c and cream. Regarding the glycolic water and the steam, the same temperatures and heat capacities as the one in the beer pasteurization process are used, and it is assumed the exact cooling or the heating are controlled by the mass flow of these elements. 
 
 #### Refrigeration
 
@@ -164,7 +164,6 @@ $${#eq-past_past7}
 
 
 ```{python compute_pasteurisation, echo = T, eval = T}
-
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
@@ -180,7 +179,7 @@ m_thick = 0.07
 
 # Heat capacities (J/(kg.K))
 
-Cp_alboline = 70
+Cp_alboline = 4175
 Cp_raw_milk = 3800 # Has been computed with mix
 Cp_cream = 3400
 Cp_glywater = 3900 #(Beer pasteurization exercise)
@@ -202,6 +201,12 @@ T_milk = 4+273.15
 T_thick = 4+273.15
 T_crpast_b = 75+273.15
 T_cream = 4+273.15
+
+T_glywater_in = -5 + 273.15
+T_glywater_out = -1 + 273.15
+T_steam_in = 207.336 + 273.15
+T_steam_out = 110 + 273.15
+
 
 # T_past_a, computed later
 # T_past_c, computed later
@@ -232,21 +237,17 @@ Q_past7 = heat_exchanger_Q(T_cream,T_crpast_c,m_cream,Cp_cream_mixed)
 
 # Computation for steam and glywater
 
-m_gly_ref = Q_refrigeration / ( Cp_glywater * 5 )
-m_steam_past3 = Q_past3 / ( Cp_steam * 5 )
-m_gly_past4 = Q_past4 / ( Cp_glywater * 5 )
-m_steam_past6 = Q_past6 / ( Cp_steam * 5 )
-m_gly_past7 = Q_past7 / ( Cp_glywater * 5 )
+m_gly_ref = Q_refrigeration / ( Cp_glywater * (T_glywater_out-T_glywater_in) )
+m_steam_past3 = Q_past3 / ( Cp_steam * (T_steam_in-T_steam_out) )
+m_gly_past4 = Q_past4 / ( Cp_glywater * (T_glywater_out-T_glywater_in) )
+m_steam_past6 = Q_past6 / ( Cp_steam * (T_steam_in-T_steam_out) )
+m_gly_past7 = Q_past7 / ( Cp_glywater * (T_glywater_out-T_glywater_in) )
 
-# Specific entropy and enthalpy
+# Specific entropy and enthalpy from beer pasteurisation
 
-T_in = 100+273.15
-T_out = T_in - 5
-T0 = 25+273
-delta_s3 = Cp_steam*np.log(T_in/T_out)
-delta_h3= Cp_steam*(T_in-T_out)
-delta_s6= Cp_steam*np.log(T_in/T_out)
-delta_h6 = Cp_steam*(T_in-T_out)
+delta_s_steam = 0
+delta_h_steam= 0
+
 
 #DATAFRAMES
 
@@ -263,10 +264,10 @@ df_pasteurization_heat_flow = pd.DataFrame(data = {'Heat Flow': Variables_Names,
 
 Temperature = '°C'
 
-Temperatures_vector = [T_a,T_fmilk,T_mixure_out,T_past_cent,T_milk_0,T_cream_0,T_past_a,T_past_b,T_past_c,T_past_d,T_milk,T_crpast_a,T_thick,T_crpast_x,T_crpast_b,T_crpast_c,T_cream]
+Temperatures_vector = [T_a,T_fmilk,T_mixure_out,T_past_cent,T_milk_0,T_cream_0,T_past_a,T_past_b,T_past_c,T_past_d,T_milk,T_crpast_a,T_thick,T_crpast_x,T_crpast_b,T_crpast_c,T_cream,T_steam_in,T_steam_out,T_glywater_in,T_glywater_out]
 to_celsius = lambda t: t - 273.15
 Temperatures_vector = np.array([to_celsius(x) for x in Temperatures_vector])
-Variables_Names = ['a','fmilk','mixure_out','past_cent','milk_0','cream_0','past_a','past_b','past_c','past_d','milk','crpast_a','thick','crpast_x','crpast_b','crpast_c','cream']
+Variables_Names = ['a','fmilk','mixure_out','past_cent','milk_0','cream_0','past_a','past_b','past_c','past_d','milk','crpast_a','thick','crpast_x','crpast_b','crpast_c','cream','steam_in','steam_out','glywtaer_in','glywater_out']
 
 Variables_Values = Temperatures_vector
 Variables_Units =  Temperature 
@@ -305,8 +306,8 @@ df_pasteurization_heat_capacities = pd.DataFrame(data = {'Heat Capacity': Variab
 
 Specific_entropy = 'J/(kg.K)'
 
-Variables_Names = ['delta_s3','delta_s6']
-Variables_Values = [delta_s3,delta_s6]
+Variables_Names = ['delta_s_steam']
+Variables_Values = [delta_s_steam]
 Variables_Units =  Specific_entropy 
 df_pasteurization_entropy = pd.DataFrame(data = {'Specific Entropy': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
@@ -314,8 +315,8 @@ df_pasteurization_entropy = pd.DataFrame(data = {'Specific Entropy': Variables_N
 
 Specific_enthalpy = 'J/(kg)'
 
-Variables_Names = ['delta_h3','delta_h6']
-Variables_Values = [delta_h3,delta_h6]
+Variables_Names = ['delta_h_steam']
+Variables_Values = [delta_h_steam]
 Variables_Units =  Specific_enthalpy 
 df_pasteurization_enthalpy = pd.DataFrame(data = {'Specific Enthalpy': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
@@ -349,7 +350,7 @@ df_1_variable = pd.DataFrame(data = {'Variable' : ['Q_refrigeration','Q_past1','
 df_1_values = df_pasteurization_heat_flow['Value'].apply(to_J)
 df_1 = pd.concat([df_1_variable,df_1_values], axis = 1)
 
-df_2_variable = pd.DataFrame(data = {'Variable' : ['T_a','T_fmilk','T_mixure_out','T_past_cent','T_milk_0','T_cream_0','T_past_a','T_past_b','T_past_c','T_past_d','T_milk','T_crpast_a','T_thick','T_crpast_x','T_crpast_b','T_crpast_c','T_cream']})
+df_2_variable = pd.DataFrame(data = {'Variable' : ['T_a','T_fmilk','T_mixure_out','T_past_cent','T_milk_0','T_cream_0','T_past_a','T_past_b','T_past_c','T_past_d','T_milk','T_crpast_a','T_thick','T_crpast_x','T_crpast_b','T_crpast_c','T_cream','T_steam_in','T_steam_out','T_glywater_in','T_glywater_out']})
 df_2_values = df_pasteurization_temperatures['Value'].apply(degree)
 df_2 = pd.concat([df_2_variable,df_2_values], axis = 1)
 
@@ -1474,7 +1475,9 @@ $$ \dot{m}_{glass}c_{p,glass}(T_{11}-T_9)=\dot{m}_{shower}c_{p,water}(T_{10}-T_{
 Q_shower=m_cip3*cp_water*(t_cip3-t_cip4) #same w/ m_cip4
 t_cip9=(t_cip11+t_cip8)/2
 m_cipglass = Q_shower/(cp_glass*(t_cip9-t_cip8))
-
+m_cip8 = m_cipglass
+m_cip9 = m_cipglass
+m_cip11 = m_cipglass
 ```
 Thus, there is `r Q_shower` $kW$ of heat used at each shower and bottle flow rate is `r m_cipglass` $kg/s$.
 
@@ -1483,6 +1486,7 @@ Thus, there is `r Q_shower` $kW$ of heat used at each shower and bottle flow rat
 ```{r Splitter, echo=T}
 m_cip4 = m_cip3
 m_cip6 = 2*m_cip4-m_cip5
+m_cip12 = m_cip4
 ```
 No heat exchanged. Only mass flows such that $$ \dot{m}_{4}+\dot{m}_{12}=\dot{m}_{2}=\dot{m}_{5}+\dot{m}_{6}$$
 This gives $\dot{m}_6$ is equal to `r m_cip6` $kg/s$.
@@ -1502,7 +1506,28 @@ As showed above with calculations for the HX_Steam there is thus  `r round(q_cip
 
 ### Summary for the Cleaning in Place section
 
-SIMON
+```{r CIPrecap, echo=F}
+# Remaining data
+
+# Creating data frames
+# Installing and loading the datatable package
+if (!requireNamespace("DT", quietly = TRUE)) {
+  install.packages("DT")
+}
+library(DT)
+
+# Creating data frames
+CIP_recap <- data.frame('Points' = c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'),
+                       'Mass Flow (kg/s)' = c(m_cip1, m_cip2, m_cip3, m_cip4, m_cip5, m_cip6, m_cip7, m_cip8, m_cipglass, m_cip10, m_cip11, m_cip12),
+                       'Temperature (°C)' = c(t_cip1, t_cip2, t_cip3, t_cip4, t_cip5, t_cip6, t_cip7, t_cip8, t_cip9, t_cip10, t_cip11, t_cip12))
+
+CIP_heat <- data.frame('Points' = c('Steam', 'Shower 1', 'Shower 2', 'Cooler'),
+                       'Heat (kW)' = c(q_cipsteam, Q_shower, Q_shower, q_cipwater))
+
+# Printing data frames as HTML tables
+datatable(CIP_recap)
+datatable(CIP_heat)
+```
 
 ## Cold Storage & Hot Water
 
@@ -2150,3 +2175,4 @@ print(State_Cold)
 State_Hot=mixture(T=348, P=100000, frac_water=0.65, frac_fat=0.35)
 print(State_Hot)
 ```
+
