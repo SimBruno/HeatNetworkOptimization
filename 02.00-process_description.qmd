@@ -2141,3 +2141,11 @@ df = df.set_index('Point')
 df = df.round(2)
 HTML(df.to_html())
 ```
+
+```{python test, echo = T, eval = T}
+State_Cold=mixture(T=333, P=100000, frac_water=0.65, frac_fat=0.35)
+print(State_Cold)
+
+State_Hot=mixture(T=348, P=100000, frac_water=0.65, frac_fat=0.35)
+print(State_Hot)
+```
