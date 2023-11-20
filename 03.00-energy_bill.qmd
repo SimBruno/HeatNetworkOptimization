@@ -146,7 +146,7 @@ Ta=298
 #Refrigeration
 L_milk_ref=m_fmilk*Cp_fmilk*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out))
 
-L_gy_ref=m_gly_ref*Cp_glywater*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out))#glywater temperature
+L_gy_ref=m_gly_ref*Cp_glywater*((Delta_T_Gly)-T_a*math.log(T_fmilk/T_mixure_out))#glywater temperature
 
 L_ref=L_milk_ref+L_gy_ref
 #print(L_ref)
@@ -160,15 +160,16 @@ L_past1=L_past1_1+L_past1_2
 #print(L_past1)
 #Past 2
 
-L_past2_1=m_milk*Cp_raw_milk*((T_milk_0-T_past_a)-T_a*math.log(T_milk_0/T_past_a)) #Question which m and cp
-L_past2_2=m_milk*Cp_raw_milk*((T_past_b-T_past_c)-T_a*math.log(T_past_b/T_past_c))#Question which m and cp
+L_past2_1=m_milk*Cp_raw_milk*((T_past_a-T_milk_0)-T_a*math.log(T_past_a/T_milk_0)) #Question which m and cp
+L_past2_2=m_milk*Cp_raw_milk*((T_past_c-T_past_b)-T_a*math.log(T_past_c/T_past_b))#Question which m and cp
 
 L_past2=L_past2_1+L_past2_2
 #print(L_past2)
 
 #Past 3
 
-L_past3_1=m_milk*Cp_raw_milk*((T_past_a-T_past_b)-T_a*math.log(T_past_a/T_past_b))
+L_past3_1=m_milk*Cp_raw_milk*((T_past_b-T_past_a)-T_a*math.log(T_past_b/T_past_a))
+
 L_past3_2=m_steam_past3*(delta_h_steam-T_a*delta_s_steam)
 
 L_past3=L_past3_1+L_past3_2
@@ -176,16 +177,16 @@ L_past3=L_past3_1+L_past3_2
 
 #Past 4
 
-L_past4_1=m_milk*Cp_raw_milk*((T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk))
+L_past4_1=m_milk*Cp_raw_milk*((T_milk-T_past_d)-T_a*math.log(T_milk/T_past_d))
 
-L_gy_past4=m_gly_past4*Cp_glywater*((T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk))#glywater temperature
+L_gy_past4=m_gly_past4*Cp_glywater*((T_milk-T_past_d)-T_a*math.log(T_milk/T_past_d))#glywater temperature
 
 L_past4=L_past4_1+L_gy_past4
 #print(L_past4)
 
 #Past 5
-L_past5_1=m_int*Cp_cream*((T_cream-T_crpast_a)-T_a*math.log(T_cream/T_crpast_a))
-L_past5_2=m_cream*Cp_cream*((T_crpast_b-T_crpast_c)-T_a*math.log(T_crpast_b/T_crpast_c))
+L_past5_1=m_int*Cp_cream*((T_crpast_a-T_cream)-T_a*math.log(T_crpast_a/T_cream))
+L_past5_2=m_cream*Cp_cream*((T_crpast_c-T_crpast_b)-T_a*math.log(T_crpast_c/T_crpast_b))
 
 L_past5=L_past5_1+L_past5_2
 #print(L_past5)
@@ -209,7 +210,7 @@ L_past7=L_past7_1+L_gy_past7
 #Mixer
 
 L_mixer_1=m_cream*Cp_cream*((T_crpast_a-T_crpast_x)-T_a*math.log(T_crpast_a/T_crpast_x))
-L_mixer_2=m_thick*Cp_alboline*((T_thick-T_crpast_x)-T_a*math.log(T_thick/T_crpast_x))
+L_mixer_2=m_thick*Cp_alboline*((T_crpast_x-T_thick)-T_a*math.log(T_crpast_x/T_thick))
 
 L_mixer=L_mixer_1+L_mixer_2
 #print(L_mixer)
@@ -221,7 +222,7 @@ L_tot_past= L_ref+L_past1+L_past2+L_past3+L_past4+L_past5+L_past6+L_past7+L_mixe
 
 # Dataframe for Exergy Loss Pasteurization
 
-Exergy_losses  = 'W'
+Exergy_losses  = 'kW'
 
 Variables_Names = ['L_Refrigeration','L_Past1','L_Past2','L_Past3','L_Past4','L_Past5','L_Past6','L_Past7','L_mixer','L_tot_past']
 Variables_Values = np.divide([L_ref,L_past1,L_past2,L_past3,L_past4,L_past5,L_past6,L_past7,L_mixer,L_tot_past],1000)
@@ -287,7 +288,8 @@ Ta=298
 
 L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
 #print(L_heat1)
-
+print(h16)
+print(s16)
 L_heat2= m2*(h2-Ta*s2)-m3*(h3-Ta*s3)+m16*(h16-Ta*s16)
 #print(L_heat2)
 
@@ -315,7 +317,7 @@ L_tot_eva= L_heat1+L_heat2+L_heat3+L_heat4+L_eva1+L_eva2+L_eva3
 
 # Dataframe for Exergy Loss Evaporation
 
-Exergy_losses  = 'W'
+Exergy_losses  = 'kW'
 
 Variables_Names = ['L_heat1','L_heat2','L_heat3','L_heat4','L_eva1','L_eva2','L_eva3','L_tot_eva']
 Variables_Values = np.divide([L_heat1,L_heat2,L_heat3,L_heat4,L_eva1,L_eva2,L_eva3,L_tot_eva],1000)
