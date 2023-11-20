@@ -375,6 +375,7 @@ df_7 = pd.concat([df_7_variable,df_7_values], axis = 1)
 
 
 df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5,df_6,df_7], axis = 0, ignore_index = True)
+df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5], axis = 0, ignore_index = True)
 
 df_pasteurization_csv.to_csv('pasteurization_process.csv',sep=';')
 ```
