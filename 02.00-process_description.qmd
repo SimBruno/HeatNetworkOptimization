@@ -1501,7 +1501,28 @@ As showed above with calculations for the HX_Steam there is thus  `r round(q_cip
 
 ### Summary for the Cleaning in Place section
 
-SIMON
+```{r recap, echo=F}
+# Remaining data
+
+# Creating data frames
+# Installing and loading the datatable package
+if (!requireNamespace("DT", quietly = TRUE)) {
+  install.packages("DT")
+}
+library(DT)
+
+# Creating data frames
+CIP_recap <- data.frame('Points' = c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'),
+                       'Mass Flow (kg/s)' = c(m_cip1, m_cip2, m_cip3, m_cip4, m_cip5, m_cip6, m_cip7, m_cip8, m_cipglass, m_cip10, m_cip11, m_cip12),
+                       'Temperature (°C)' = c(t_cip1, t_cip2, t_cip3, t_cip4, t_cip5, t_cip6, t_cip7, t_cip8, t_cip9, t_cip10, t_cip11, t_cip12))
+
+CIP_heat <- data.frame('Points' = c('Steam', 'Shower 1', 'Shower 2', 'Cooler'),
+                       'Heat (kW)' = c(q_cipsteam, Q_shower, Q_shower, q_cipwater))
+
+# Printing data frames as HTML tables
+datatable(CIP_recap)
+datatable(CIP_heat)
+```
 
 ## Cold Storage & Hot Water
 
