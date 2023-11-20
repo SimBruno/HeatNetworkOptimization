@@ -12,69 +12,72 @@ for i in range(0,len(df.index)):
 Delta_T_Gly=5
 
 #Refrigeration
-L_milk_ref=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out)
+L_milk_ref=m_fmilk*Cp_fmilk*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out))
 
-L_gy_ref=m_gly_ref*Cp_glywater*(T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out)#glywater temperature
+L_gy_ref=m_gly_ref*Cp_glywater*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out))#glywater temperature
 
 L_ref=L_milk_ref+L_gy_ref
 print(L_ref)
 
 #Past 1
 
-L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-T_a*math.log(T_mixure_out/T_past_cent)
-L_past1_2=m_milk*Cp_raw_milk*(T_past_c-T_past_d)-T_a*math.log(T_past_c/T_past_d) 
+L_past1_1=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*math.log(T_mixure_out/T_past_cent))
+L_past1_2=m_milk*Cp_raw_milk*((T_past_c-T_past_d)-T_a*math.log(T_past_c/T_past_d) )
 
 L_past1=L_past1_1+L_past1_2
 print(L_past1)
 #Past 2
 
-L_past2_1=m_milk*Cp_raw_milk*(T_milk_0-T_past_a)-T_a*math.log(T_milk_0/T_past_a) #Question which m and cp
-L_past2_2=m_milk*Cp_raw_milk*(T_past_b-T_past_c)-T_a*math.log(T_past_b/T_past_c) #Question which m and cp
+L_past2_1=m_milk*Cp_raw_milk*((T_milk_0-T_past_a)-T_a*math.log(T_milk_0/T_past_a)) #Question which m and cp
+L_past2_2=m_milk*Cp_raw_milk*((T_past_b-T_past_c)-T_a*math.log(T_past_b/T_past_c))#Question which m and cp
 
 L_past2=L_past2_1+L_past2_2
 print(L_past2)
 
 #Past 3
 
-L_past3_1=m_milk*Cp_raw_milk*(T_past_a-T_past_b)-T_a*math.log(T_past_a/T_past_b)
-L_past3_2=m_steam_past3*Cp_steam*delta_h3-T_a*delta_s3
+L_past3_1=m_milk*Cp_raw_milk*((T_past_a-T_past_b)-T_a*math.log(T_past_a/T_past_b))
+#L_past3_2=m_steam_past3*Cp_steam*delta_h3-T_a*delta_s3
 
-L_past3=L_past3_1+L_past3_2
-print(L_past3)
+#L_past3=L_past3_1+L_past3_2
+#print(L_past3)
 
 #Past 4
 
-L_past4_1=m_milk*Cp_milk*(T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk)
+L_past4_1=m_milk*Cp_raw_milk*((T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk))
 
-L_gy_past4=m_gly_past4*Cp_glywater*(T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk)#glywater temperature
+L_gy_past4=m_gly_past4*Cp_glywater*((T_past_d-T_milk)-T_a*math.log(T_past_d/T_milk))#glywater temperature
 
 L_past4=L_past4_1+L_gy_past4
 print(L_past4)
 
 #Past 5
-L_past5_1=m_int*Cp_cream*(T_cream-T_crpast_a)-T_a*math.log(T_cream/T_crpast_a)
-L_past5_2=m_cream*Cp_cream**(T_crpast_b-T_crpast_c)-T_a*math.log(T_crpast_b/T_crpast_c) 
+L_past5_1=m_int*Cp_cream*((T_cream-T_crpast_a)-T_a*math.log(T_cream/T_crpast_a))
+L_past5_2=m_cream*Cp_cream*((T_crpast_b-T_crpast_c)-T_a*math.log(T_crpast_b/T_crpast_c))
 
 L_past5=L_past5_1+L_past5_2
 print(L_past5)
 
 #Past 6
-L_past6_1=m_cream*Cp_cream_mixed*(T_crpast_x-T_crpast_b)-T_a*math.log(T_crpast_x/T_crpast_b)
-L_past6_2=m_steam_past6*Cp_steam*delta_h6-Ta*delta_s6
+L_past6_1=m_cream*Cp_cream_mixed*((T_crpast_x-T_crpast_b)-T_a*math.log(T_crpast_x/T_crpast_b))
+#L_past6_2=m_steam_past6*Cp_steam*delta_h6-Ta*delta_s6
+
+#L_past6=L_past6_1+L_past6_2
+#print(L_past6)
 
 #Past 7
 
-L_past7_1=m_cream*Cp_cream*(T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream)
+L_past7_1=m_cream*Cp_cream*((T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream))
 
-L_gy_past7=m_gly_past7*Cp_glywater*(T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream)#glywater temperature
+L_gy_past7=m_gly_past7*Cp_glywater*((T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream))#glywater temperature
 
 L_past7=L_past7_1+L_gy_past7
 print(L_past7)
 
 #Mixer
 
-L_mixer_1=m_cream*Cp_cream*(T_crpast_a-T_crpast_x)-T_a*math.log(T_crpast_a/T_crpast_x)
-L_mixer_2=m_thick*Cp_alboline*(T_thick-T_crpast_x)-T_a*math.log(T_thick/T_crpast_x)
+L_mixer_1=m_cream*Cp_cream*((T_crpast_a-T_crpast_x)-T_a*math.log(T_crpast_a/T_crpast_x))
+L_mixer_2=m_thick*Cp_alboline*((T_thick-T_crpast_x)-T_a*math.log(T_thick/T_crpast_x))
 
 L_mixer=L_mixer_1+L_mixer_2
 print(L_mixer)
@@ -98,6 +101,8 @@ for i in range(0,len(dfrecap.index)):
 
 
 #Exergy for heat exchangers
+
+Ta=298
 
 L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
 print(L_heat1)
