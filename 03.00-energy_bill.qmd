@@ -169,7 +169,7 @@ L_past2=L_past2_1+L_past2_2
 #Past 3
 
 L_past3_1=m_milk*Cp_raw_milk*((T_past_a-T_past_b)-T_a*math.log(T_past_a/T_past_b))
-L_past3_2=m_steam_past3*Cp_steam*delta_h3-T_a*delta_s3
+L_past3_2=m_steam_past3*Cp_steam*delta_h_steam-T_a*delta_s_steam
 
 L_past3=L_past3_1+L_past3_2
 #print(L_past3)
@@ -192,7 +192,7 @@ L_past5=L_past5_1+L_past5_2
 
 #Past 6
 L_past6_1=m_cream*Cp_cream_mixed*((T_crpast_x-T_crpast_b)-T_a*math.log(T_crpast_x/T_crpast_b))
-L_past6_2=m_steam_past6*Cp_steam*delta_h6-Ta*delta_s6
+L_past6_2=m_steam_past6*Cp_steam*delta_h_steam-Ta*delta_s_steam
 
 L_past6=L_past6_1+L_past6_2
 #print(L_past6)
@@ -226,7 +226,9 @@ Exergy_losses  = 'W'
 Variables_Names = ['L_Refrigeration','L_Past1','L_Past2','L_Past3','L_Past4','L_Past5','L_Past6','L_Past7','L_mixer','L_tot_past']
 Variables_Values = np.divide([L_ref,L_past1,L_past2,L_past3,L_past4,L_past5,L_past6,L_past7,L_mixer,L_tot_past],1000)
 Variables_Units =  Exergy_losses
-df_pasteurization_heat_flow = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+df = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
+HTML(df.to_html(index=False))
 
 ```
 
@@ -318,8 +320,9 @@ Exergy_losses  = 'W'
 Variables_Names = ['L_heat1','L_heat2','L_heat3','L_heat4','L_eva1','L_eva2','L_eva3','L_tot_eva']
 Variables_Values = np.divide([L_heat1,L_heat2,L_heat3,L_heat4,L_eva1,L_eva2,L_eva3,L_tot_eva],1000)
 Variables_Units =  Exergy_losses
-df_pasteurization_heat_flow = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+df_2 = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
+HTML(df_2.to_html(index=False))
 ```
 
 ```

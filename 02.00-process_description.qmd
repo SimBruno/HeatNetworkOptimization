@@ -366,17 +366,17 @@ df_5_variable = pd.DataFrame(data = {'Variable' : ['Cp_alboline','Cp_raw_milk','
 df_5_values = df_pasteurization_heat_capacities['Value']
 df_5 = pd.concat([df_5_variable,df_5_values], axis = 1)
 
-df_6_variable =  pd.DataFrame(data = {'Variable' : ['delta_s3','delta_s6']})
+df_6_variable =  pd.DataFrame(data = {'Variable' : ['delta_s_steam']})
 df_6_values = df_pasteurization_entropy['Value']
 df_6 = pd.concat([df_6_variable,df_6_values], axis = 1)
 
-df_7_variable =  pd.DataFrame(data = {'Variable' : ['delta_h3','delta_h6']})
+df_7_variable =  pd.DataFrame(data = {'Variable' : ['delta_h_steam']})
 df_7_values = df_pasteurization_enthalpy['Value']
 df_7 = pd.concat([df_7_variable,df_7_values], axis = 1)
 
 
 df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5,df_6,df_7], axis = 0, ignore_index = True)
-df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5], axis = 0, ignore_index = True)
+#df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5], axis = 0, ignore_index = True)
 
 df_pasteurization_csv.to_csv('pasteurization_process.csv',sep=';')
 ```
