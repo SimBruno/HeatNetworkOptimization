@@ -36,7 +36,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 from IPython.display import display, HTML
-#from codes_01_energy_bill.coolprop_functions import mixture
+from codes_01_energy_bill.coolprop_functions import mixture
 
 #####
 def Dtmin(dT, T1, T1v, T2, T2_prime, m2, cp2, position, pastnb):
@@ -132,11 +132,14 @@ p1_5 = 100000
 m1_5 = 0.48
 m2_5 = 0.55
 
-h1_5 = -91021.1032324004*m1_5  #from mixture with dry = 35% and wet = 65%
-h2_5 = -38880.66837888083*m2_5
+State_Cold_1_5 = mixture(T=T1_5, P=p1_5, frac_water=0.65, frac_fat=0.35)
+State_Cold_2_5 = mixture(T=T2_5, P=p1_5, frac_water=0.65, frac_fat=0.35)
 
-cp1_5 = 3470.44348
-cp2_5 = 3482.1944
+h1_5 = State_Cold_1_5["enthalpy"] * m1_5  #from mixture with dry = 35% and wet = 65%
+h2_5 = State_Cold_2_5["enthalpy"] * m2_5
+
+cp1_5 = State_Cold_1_5["cpmass"]
+cp2_5 = State_Cold_2_5["cpmass"]
 
 slope1_5 = 1/(m1_5*cp1_5)
 slope2_5 = 1/(m2_5*cp2_5)
@@ -251,6 +254,7 @@ HTML(Past5_opt.to_html(index=False))
 ### Past 1 + Past 5
 
 ```{python past1+5, echo = T, eval = T}
+from codes_01_energy_bill.coolprop_functions import mixture
 # Scenario 2: dTmin for the past1+past6
 
 #This time we know only T_cin and T_cout but nothing about the hot streams
@@ -259,19 +263,22 @@ HTML(Past5_opt.to_html(index=False))
 
 # PAST2 Intermediate HX to determine T_cin
 
-T1_2 = 333
-T2_2 = 348
+T1_2 = 333 # Milk_0 60°C
+T2_2 = 348 # Past_b 75°C
 
 p1_2 = 100000
 
-m1_2 = 7.52
-m2_2 = 7.52
+m1_2 = 7.52 # Milk_0
+m2_2 = 7.52 # Past_b
 
-h1_2 = 136414.15*m1_2  #from mixture with dry = 11.7% and wet = 88.3%
-h2_2 = 195671.23*m2_2
+State_Cold_1_2 = mixture(T=T1_2, P=p1_2, frac_water=0.883, frac_fat=0.117)
+State_Cold_2_2 = mixture(T=T2_2, P=p1_2, frac_water=0.883, frac_fat=0.117)
 
-cp1_2 = 3946.06
-cp2_2 = 3955.46
+h1_2 = State_Cold_1_2["enthalpy"] * m1_2  #from mixture with dry = 11.7% and wet = 88.3%
+h2_2 = State_Cold_2_2["enthalpy"] * m2_2
+
+cp1_2 = State_Cold_1_2["cpmass"]
+cp2_2 = State_Cold_2_2["cpmass"]
 
 #mcp_cold < mcp_hot verified
 
@@ -307,11 +314,14 @@ p1_1 = 100000
 m1_1 = 8
 m2_1 = 7.52
 
-h1_1 = -84420.13*m1_1   #from mixture function with dry = 11.7% and wet = 88.3%
-h2_1 = -18059.7680*m2_1
+State_Cold_1_1 = mixture(T=T1_1, P=p1_1, frac_water=0.883, frac_fat=0.117)
+State_Cold_2_1 = mixture(T=T2_1, P=p1_1, frac_water=0.883, frac_fat=0.117)
 
-cp1_1 = 3963.18
-cp2_1 = 3941.70
+h1_1 = State_Cold_1_1["enthalpy"] * m1_1  #from mixture with dry = 11.7% and wet = 88.3%
+h2_1 = State_Cold_2_1["enthalpy"] * m2_1
+
+cp1_1 = State_Cold_1_1["cpmass"]
+cp2_1 = State_Cold_2_1["cpmass"]
 
 #This time mcp_cold > mcp_hot --> HOW TO DO ??? Assume I didn't see it and do the same as for past6
 
@@ -333,10 +343,8 @@ T2_prime_1 = T2v_1.min()
 
 # Create trace for Cold Stream
 trace_cold = go.Scatter(x=h_1, y=T1v_1, mode='lines', name='Cold Stream')
-
 # Create trace for Hot Stream
 trace_hot = go.Scatter(x=h_1, y=T2v_1, mode='lines', name='Hot Stream')
-
 # Create layout
 layout = go.Layout(
     title='Temperature vs Enthalpy',
@@ -345,10 +353,8 @@ layout = go.Layout(
     legend=dict(x=0, y=1, traceorder='normal'),
     showlegend=True
 )
-
 # Create figure
 fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
-
 # Plot the vertical line at dTmin
 dt_1 = T2v_1 - T1v_1
 dTmin_1 = dt_1.min()
@@ -361,7 +367,6 @@ fig = fig.add_shape(
     y1=max(T1v_1[min_index_1], T2v_1[min_index_1]),
     line=dict(color='red', dash='dash')
 )
-
 # Show the figure
 fig.show()
 
