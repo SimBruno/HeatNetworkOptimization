@@ -2200,10 +2200,18 @@ HTML(df.to_html())
 ```
 
 ```{python test, echo = T, eval = T}
-State_Cold=mixture(T=277, P=100000, frac_water=0.883, frac_fat=0.117)
-print(State_Cold)
+from codes_01_energy_bill.coolprop_functions import mixture
+State_Cold6=mixture(T=277, P=100000, frac_water=0.883, frac_fat=0.117)
+print(State_Cold6)
 
-State_Hot=mixture(T=293.8, P=100000, frac_water=0.883, frac_fat=0.117)
-print(State_Hot)
+State_Hot6=mixture(T=293.8, P=100000, frac_water=0.883, frac_fat=0.117)
+print(State_Hot6)
+
+State_Cold2=mixture(T=333, P=100000, frac_water=0.883, frac_fat=0.117)
+print(State_Cold2)
+
+State_Hot2=mixture(T=348, P=100000, frac_water=0.883, frac_fat=0.117)
+print(State_Hot2)
+
 ```
 
