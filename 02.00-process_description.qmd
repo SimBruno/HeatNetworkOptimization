@@ -1406,7 +1406,31 @@ HTML(dfwe.to_html())
 
 ### Summary for the Drum Dryers section
 
-LORENZO
+This table is a summary of the characteristics of each point of this section:
+
+```{python dryer_summary, echo = T, eval = T}
+
+mass_dd6 = mass_dd5
+mass_dd7 = mass_dd6
+mass_dd12 = mass_dd11
+mass_dd13 = water_exiting
+mass_dd14 = mass_dd8
+
+Temp_dd6 = 323.15
+Temp_dd7 = Temp_dd6
+Temp_dd12 = Temp_dd11
+Temp_dd13 = 318.15
+Temp_dd14 = Temp_dd13
+
+dryer_summary = {'Position': ['1', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
+            'Mass Flow (kg/s)': [mass_dd1, mass_dd4, mass_dd5, mass_dd6, mass_dd7, mass_dd8, mass_dd9, mass_dd10, mass_dd11, mass_dd12, mass_dd13, mass_dd14],
+            'Temperature (K)': [Temp_dd1, Temp_dd4, Temp_dd5, Temp_dd6, Temp_dd7, Temp_dd8, Temp_dd9, Temp_dd10, Temp_dd11, Temp_dd12, Temp_dd13, Temp_dd14]}
+
+dfsd = pd.DataFrame(dryer_summary)
+dfsd = dfsd.set_index('Position')
+dfsd = dfsd.round(4)
+HTML(dfsd.to_html())
+```
 
 ## Cleaning in Place
 
@@ -2199,7 +2223,7 @@ df = df.round(2)
 HTML(df.to_html())
 ```
 
-```{python test, echo = T, eval = T}
+```{python test, echo = F, eval = F}
 from codes_01_energy_bill.coolprop_functions import mixture
 State_Cold6=mixture(T=277, P=100000, frac_water=0.883, frac_fat=0.117)
 print(State_Cold6)
@@ -2212,6 +2236,4 @@ print(State_Cold2)
 
 State_Hot2=mixture(T=348, P=100000, frac_water=0.883, frac_fat=0.117)
 print(State_Hot2)
-
 ```
-
