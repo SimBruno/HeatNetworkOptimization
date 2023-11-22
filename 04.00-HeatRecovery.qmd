@@ -251,6 +251,37 @@ Past5_opt = Past5_opt.round(2)
 HTML(Past5_opt.to_html(index=False))
 ```
 
+```{python testmixture, echo = T, eval = T}
+import matplotlib
+matplotlib.use('Agg')
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from codes_01_energy_bill.coolprop_functions import mixture
+
+T = np.linspace(200, 400, 200)
+enthalpy = []
+cpmass = []
+
+for i in T:
+    #State = mixture(T=i, P=100000, frac_water=0.883, frac_fat=0.117)
+    State = mixture(T=i, P=100000, frac_water=0.65, frac_fat=0.35)
+    enthalpy.append(State["enthalpy"])
+    cpmass.append(State["cpmass"])
+
+plt.plot(T, enthalpy)
+plt.title("Enthalpy vs Temperature")
+plt.grid()
+plt.show()
+
+plt.plot(T, cpmass)
+plt.title("Cpmass vs Temperature")
+plt.grid()
+plt.show()
+
+```
+
+
 ### Past 1 + Past 5
 
 ```{python past1+5, echo = T, eval = T}
@@ -263,13 +294,13 @@ from codes_01_energy_bill.coolprop_functions import mixture
 
 # PAST2 Intermediate HX to determine T_cin
 
-T1_2 = 333 # Milk_0 60°C
-T2_2 = 348 # Past_b 75°C
+T1_2 = 277 # Milk_0 4°C
+T2_2 = 343 # Past_c 70°C
 
 p1_2 = 100000
 
-m1_2 = 7.52 # Milk_0
-m2_2 = 7.52 # Past_b
+m1_2 = 8 # Milk_0
+m2_2 = 7.52 # Past_c
 
 State_Cold_1_2 = mixture(T=T1_2, P=p1_2, frac_water=0.883, frac_fat=0.117)
 State_Cold_2_2 = mixture(T=T2_2, P=p1_2, frac_water=0.883, frac_fat=0.117)
@@ -279,6 +310,8 @@ h2_2 = State_Cold_2_2["enthalpy"] * m2_2
 
 cp1_2 = State_Cold_1_2["cpmass"]
 cp2_2 = State_Cold_2_2["cpmass"]
+
+print(m1_2*cp1_2, m2_2*cp2_2)
 
 #mcp_cold < mcp_hot verified
 
