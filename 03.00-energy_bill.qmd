@@ -1,12 +1,4 @@
-```{python loadingdata, echo = T, eval = T}
-#Load csv files (dfevap, dfhx, dfrecap)
-import pandas as pd
-import numpy as np
-#Load csv files
-dfevap = pd.read_csv('dfevap.csv', sep = ',')
-dfhx = pd.read_csv('dfhx.csv', sep = ',')
-dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
-```
+
 
 ```{python evap, echo = T, eval = T}
 ```
@@ -14,7 +6,7 @@ dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
 ## Exergy analysis
 
-To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a uunit and the exergy leaving the unit. This exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
+To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a unit and the exergy leaving the unit. This exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
 
 ### Pasteurization
 
@@ -122,13 +114,14 @@ $$
 L_{mixer} = L_{mixer\_1} + L_{mixer\_2}
 $$
 
-
+#### Total
+$$
+L_{tot\_past} = L_{ref} + L_{past1} + L_{past2} + L_{past3} + L_{past4} + L_{past5} + L_{past6} + L_{past7} + L_{mixer}
+$$
 
 #### Summary of Pasteurization Exergy Results
 
 ```{python compute_pasteurisation, echo = T, eval = T}
-
-#Exergy Pasteurization
 
 import math
 import pandas as pd
@@ -149,7 +142,7 @@ L_milk_ref=m_fmilk*Cp_fmilk*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixur
 L_gy_ref=m_gly_ref*Cp_glywater*((Delta_T_Gly)-T_a*math.log(T_fmilk/T_mixure_out))#glywater temperature
 
 L_ref=L_milk_ref+L_gy_ref
-#print(L_ref)
+
 
 #Past 1
 
@@ -157,14 +150,14 @@ L_past1_1=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*math.log(T_mixure_out
 L_past1_2=m_milk*Cp_raw_milk*((T_past_c-T_past_d)-T_a*math.log(T_past_c/T_past_d) )
 
 L_past1=L_past1_1+L_past1_2
-#print(L_past1)
+
 #Past 2
 
-L_past2_1=m_milk*Cp_raw_milk*((T_past_a-T_milk_0)-T_a*math.log(T_past_a/T_milk_0)) #Question which m and cp
-L_past2_2=m_milk*Cp_raw_milk*((T_past_c-T_past_b)-T_a*math.log(T_past_c/T_past_b))#Question which m and cp
+L_past2_1=m_milk*Cp_raw_milk*((T_past_a-T_milk_0)-T_a*math.log(T_past_a/T_milk_0))  
+L_past2_2=m_milk*Cp_raw_milk*((T_past_c-T_past_b)-T_a*math.log(T_past_c/T_past_b)) 
 
 L_past2=L_past2_1+L_past2_2
-#print(L_past2)
+
 
 #Past 3
 
@@ -173,7 +166,7 @@ L_past3_1=m_milk*Cp_raw_milk*((T_past_b-T_past_a)-T_a*math.log(T_past_b/T_past_a
 L_past3_2=m_steam_past3*(delta_h_steam-T_a*delta_s_steam)
 
 L_past3=L_past3_1+L_past3_2
-#print(L_past3)
+
 
 #Past 4
 
@@ -182,21 +175,21 @@ L_past4_1=m_milk*Cp_raw_milk*((T_milk-T_past_d)-T_a*math.log(T_milk/T_past_d))
 L_gy_past4=m_gly_past4*Cp_glywater*((T_milk-T_past_d)-T_a*math.log(T_milk/T_past_d))#glywater temperature
 
 L_past4=L_past4_1+L_gy_past4
-#print(L_past4)
+
 
 #Past 5
 L_past5_1=m_int*Cp_cream*((T_crpast_a-T_cream)-T_a*math.log(T_crpast_a/T_cream))
 L_past5_2=m_cream*Cp_cream*((T_crpast_c-T_crpast_b)-T_a*math.log(T_crpast_c/T_crpast_b))
 
 L_past5=L_past5_1+L_past5_2
-#print(L_past5)
+
 
 #Past 6
 L_past6_1=m_cream*Cp_cream_mixed*((T_crpast_x-T_crpast_b)-T_a*math.log(T_crpast_x/T_crpast_b))
 L_past6_2=m_steam_past6*(delta_h_steam-Ta*delta_s_steam)
 
 L_past6=L_past6_1+L_past6_2
-#print(L_past6)
+
 
 #Past 7
 
@@ -205,7 +198,7 @@ L_past7_1=m_cream*Cp_cream*((T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream
 L_gy_past7=m_gly_past7*Cp_glywater*((T_crpast_c-T_cream)-T_a*math.log(T_crpast_c/T_cream))#glywater temperature
 
 L_past7=L_past7_1+L_gy_past7
-#print(L_past7)
+
 
 #Mixer
 
@@ -213,12 +206,12 @@ L_mixer_1=m_cream*Cp_cream*((T_crpast_a-T_crpast_x)-T_a*math.log(T_crpast_a/T_cr
 L_mixer_2=m_thick*Cp_alboline*((T_crpast_x-T_thick)-T_a*math.log(T_crpast_x/T_thick))
 
 L_mixer=L_mixer_1+L_mixer_2
-#print(L_mixer)
+
 
 #Total exergy pasteurisation section
 
 L_tot_past= L_ref+L_past1+L_past2+L_past3+L_past4+L_past5+L_past6+L_past7+L_mixer
-#print(L_tot_past)
+
 
 # Dataframe for Exergy Loss Pasteurization
 
@@ -234,23 +227,44 @@ HTML(df.to_html(index=False))
 ```
 
 
+
 ### Evaporation 
 
 #### Heat Exchanger
+$$
+L_{heat1} = m_{11}(h_{11} - T_a s_{11}) - m_{12}(h_{12} - T_a s_{12}) + m_1(h_1 - T_a s_1) - m_2(h_2 - T_a s_2)
+$$
+$$
+L_{heat2} = -m_2(h_2 - T_a s_2) + m_3(h_3 - T_a s_3) - m_{16}(h_{16} - T_a s_{16})
+$$
+$$
+L_{heat3} = -m_3(h_3 - T_a s_3) + m_4(h_4 - T_a s_4) - m_{20}(h_{20} - T_a s_{20})
+$$
+$$
+L_{heat4} = -m_4(h_4 - T_a s_4) + m_5(h_5 - T_a s_5) + m_{15}(h_{15} - T_a s_{15})
+$$
 
-$$\dot{L}_{HX}=\dot{m}_{water}(h_{fg}-T_{a}s_{fg})-Q_{HX}(1-\frac{T_{a}}{T_{c,lm}})$$
 
 #### Heat Evaporator
-
-$$\dot{L}_{evaporator}=\dot{m}_{milk}(h_{milk,in}-h_{milk,out})-\dot{m}_{milk}T_{a}(s_{milk,in}-s_{milk,out})-\dot{m}_{water}Cp_{water}[T_{out}-$$
+$$
+L_{eva1} = -m_6(h_6 - T_a s_6) + m_7(h_7 - T_a s_7) + m_{14}(h_{14} - T_a s_{14}) - m_{21}(h_{21} - T_a s_{21})
+$$
+$$
+L_{eva2} = -m_8(h_8 - T_a s_8) - m_{17}(h_{17} - T_a s_{17}) + m_{15}(h_{15} - T_a s_{15}) + m_9(h_9 - T_a s_9)
+$$
+$$
+L_{eva3} = -m_{10}(h_{10} - T_a s_{10}) + m_{18}(h_{18} - T_a s_{18}) + m_{16}(h_{16} - T_a s_{16}) + m_{11}(h_{11} - T_a s_{11})
+$$
 
 #### Splitter
-There are no exergy losses in the spliiters since they are isenthalpic
+There are no exergy losses in the splitters since they are isenthalpic
 
 
 #### Total
 
-$$\dot{L}_{evaporation}=\Sigma\dot{L}_{HX}+\Sigma\dot{L}_{evaporator}+\Sigma\dot{L}_{splitter}$$
+$$
+\dot{L}_{evaporation}=\Sigma\dot{L}_{HX}+\Sigma\dot{L}_{evaporator}+\Sigma\dot{L}_{splitter}
+$$
 
 
 #### Results Exergy Analysis Evaporation
@@ -263,16 +277,6 @@ import math
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
-
-
-
-#Load csv files (dfevap, dfhx, dfrecap)
-#import pandas as pd
-#import numpy as np
-#Load csv files
-
-#dfevap = pd.read_csv('dfevap.csv', sep = ',')
-#dfhx = pd.read_csv('dfhx.csv', sep = ',')
 
 dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
@@ -287,33 +291,31 @@ for i in range(0,len(dfrecap.index)):
 Ta=298
 
 L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
-#print(L_heat1)
-print(h16)
-print(s16)
-L_heat2= m2*(h2-Ta*s2)-m3*(h3-Ta*s3)+m16*(h16-Ta*s16)
-#print(L_heat2)
 
-L_heat3=m3*(h3-Ta*s3)-m4*(h4-Ta*s4)+m20*(h20-Ta*s20)
-#print(L_heat3)
+L_heat2= -m2*(h2-Ta*s2)+m3*(h3-Ta*s3)-m16*(h16-Ta*s16)
 
-L_heat4=m4*(h4-Ta*s4)-m5*(h5-Ta*s5)-m15*(h15-Ta*s15)
-#print(L_heat4)
+
+L_heat3=-m3*(h3-Ta*s3)+m4*(h4-Ta*s4)-m20*(h20-Ta*s20)
+
+
+L_heat4=-m4*(h4-Ta*s4)+m5*(h5-Ta*s5)+m15*(h15-Ta*s15)
+
 
 #Exergy for evaporators
 
-L_eva1=m6*(h6-Ta*s6)-m7*(h7-Ta*s7)-m14*(h14-Ta*s14)+m21*(h21-Ta*s21)
-#print(L_eva1)
+L_eva1=-m6*(h6-Ta*s6)+m7*(h7-Ta*s7)+m14*(h14-Ta*s14)-m21*(h21-Ta*s21)
 
-L_eva2=m8*(h8-Ta*s8)+m17*(h17-Ta*s17)-m15*(h15-Ta*s15)-m9*(h9-Ta*s9)
-#print(L_eva2)
 
-L_eva3=m10*(h10-Ta*s10)-m18*(h18-Ta*s18)-m19*(h19-Ta*s19)-m11*(h11-Ta*s11)
+L_eva2=-m8*(h8-Ta*s8)-m17*(h17-Ta*s17)+m15*(h15-Ta*s15)+m9*(h9-Ta*s9)
+
+
+L_eva3=-m10*(h10-Ta*s10)+m18*(h18-Ta*s18)+m16*(h16-Ta*s16)+m11*(h11-Ta*s11)
 
 
 #Total exergy evaporation section
 
 L_tot_eva= L_heat1+L_heat2+L_heat3+L_heat4+L_eva1+L_eva2+L_eva3
-#print(L_tot_eva)
+
 
 # Dataframe for Exergy Loss Evaporation
 
@@ -327,34 +329,17 @@ df_2 = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Va
 HTML(df_2.to_html(index=False))
 ```
 
-```
+### Suggested modifications
+
+From the previous calculations, one can see that the total exergy lost to the environment from the pasteurization and evaporation processes is more than 1700 kW. This value indicates that the inefficiencies in both processes are very large. For the pasteurization process, the exergy loss is especially significant in Past 3, as steam enters and leaves the system. In the evaporation part, the exergy loss is particularly high in Evaporator 1 and Evaporator 2.
+
+To decrease the overall exergy losses in the system, different strategies can be implemented. Since the exergy efficiencies are so large the best option is to improve the general energy efficiency by upgrading to more energy-efficient equipment and using insulation.
 
 
-Furthermore, we highly encourage the use of a Sankey diagram to succinctly summarize your findings. We have provided an example of how to create an interactive Sankey diagram in R using the Plotly library. You can access the necessary function in the file `./sankey_ipese.R`. The following code chunk demonstrates how to utilize this function:
 
-```{r sankey-function, echo = T, eval = T, warning = F, message=F}
-source("./sankey_ipese.R") # introduce the sankey function from the source file
-df = read.csv('atom_balance.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
-sankey_ipese(df = df, unit = 'kmol/h', title = 'Example of an interactive Sankey diagram') # replace the unit and title here
-```
+
 
 ## Energy bill
-
-> **Task Instructions**
->
->In this section, your objective is to transform the energy demand you previously calculated into utility consumption. This transformation involves the following energy vectors:
->
->- Natural gas
->- Electricity
->- Water
->
->To execute this conversion, you must explicitly state the assumptions you make during the process. For example, if you are aware of the refrigeration duty within the factory and understand that the refrigeration system operates on electricity, you will pre-determine the coefficient of performance (COP) for your refrigeration cycle. This assumption will enable you to calculate the actual electricity consumption for your processes.
->
->You can refer to the "Brewery example" in the Suivival Guide for comprehensive guidance and relevant information to facilitate this conversion process.
->
->Once you have established the energy utility demand within the dairy factory, you can proceed to calculate the energy bill. This calculation will be based on assumptions regarding energy prices in different countries or regions.
-
-First, the price of electricity (@noauthor_electricity_nodate) and natural gas (@noauthor_natural_nodate) in France and Germany has to be determined. 
 
 ```{python Price Table, echo = T, eval = T}
 #print dataframe with the price of electricity and natural gas in France and Germany
