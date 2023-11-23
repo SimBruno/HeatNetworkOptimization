@@ -14,7 +14,7 @@ dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
 ## Exergy analysis
 
-To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a uunit and the exergy leaving the unit. This exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
+To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a unit and the exergy leaving the unit. This exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
 
 ### Pasteurization
 
@@ -121,7 +121,6 @@ $$
 $$
 L_{mixer} = L_{mixer\_1} + L_{mixer\_2}
 $$
-
 
 
 #### Summary of Pasteurization Exergy Results
@@ -234,11 +233,14 @@ HTML(df.to_html(index=False))
 ```
 
 
+
 ### Evaporation 
 
 #### Heat Exchanger
 
-$$\dot{L}_{HX}=\dot{m}_{water}(h_{fg}-T_{a}s_{fg})-Q_{HX}(1-\frac{T_{a}}{T_{c,lm}})$$
+$$
+L_{heat1} = m_{11}(h_{11} - T_a s_{11}) - m_{12}(h_{12} - T_a s_{12}) + m_1(h_1 - T_a s_1) - m_2(h_2 - T_a s_2)$
+$$
 
 #### Heat Evaporator
 
@@ -264,16 +266,6 @@ import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
 
-
-
-#Load csv files (dfevap, dfhx, dfrecap)
-#import pandas as pd
-#import numpy as np
-#Load csv files
-
-#dfevap = pd.read_csv('dfevap.csv', sep = ',')
-#dfhx = pd.read_csv('dfhx.csv', sep = ',')
-
 dfrecap = pd.read_csv('dfrecap.csv', sep = ',')
 
 for i in range(0,len(dfrecap.index)):
@@ -287,25 +279,23 @@ for i in range(0,len(dfrecap.index)):
 Ta=298
 
 L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
-#print(L_heat1)
-print(h16)
-print(s16)
+
 L_heat2= m2*(h2-Ta*s2)-m3*(h3-Ta*s3)+m16*(h16-Ta*s16)
-#print(L_heat2)
+
 
 L_heat3=m3*(h3-Ta*s3)-m4*(h4-Ta*s4)+m20*(h20-Ta*s20)
-#print(L_heat3)
+
 
 L_heat4=m4*(h4-Ta*s4)-m5*(h5-Ta*s5)-m15*(h15-Ta*s15)
-#print(L_heat4)
+
 
 #Exergy for evaporators
 
 L_eva1=m6*(h6-Ta*s6)-m7*(h7-Ta*s7)-m14*(h14-Ta*s14)+m21*(h21-Ta*s21)
-#print(L_eva1)
+
 
 L_eva2=m8*(h8-Ta*s8)+m17*(h17-Ta*s17)-m15*(h15-Ta*s15)-m9*(h9-Ta*s9)
-#print(L_eva2)
+
 
 L_eva3=m10*(h10-Ta*s10)-m18*(h18-Ta*s18)-m19*(h19-Ta*s19)-m11*(h11-Ta*s11)
 
@@ -313,7 +303,7 @@ L_eva3=m10*(h10-Ta*s10)-m18*(h18-Ta*s18)-m19*(h19-Ta*s19)-m11*(h11-Ta*s11)
 #Total exergy evaporation section
 
 L_tot_eva= L_heat1+L_heat2+L_heat3+L_heat4+L_eva1+L_eva2+L_eva3
-#print(L_tot_eva)
+
 
 # Dataframe for Exergy Loss Evaporation
 
@@ -327,16 +317,7 @@ df_2 = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Va
 HTML(df_2.to_html(index=False))
 ```
 
-```
 
-
-Furthermore, we highly encourage the use of a Sankey diagram to succinctly summarize your findings. We have provided an example of how to create an interactive Sankey diagram in R using the Plotly library. You can access the necessary function in the file `./sankey_ipese.R`. The following code chunk demonstrates how to utilize this function:
-
-```{r sankey-function, echo = T, eval = T, warning = F, message=F}
-source("./sankey_ipese.R") # introduce the sankey function from the source file
-df = read.csv('atom_balance.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
-sankey_ipese(df = df, unit = 'kmol/h', title = 'Example of an interactive Sankey diagram') # replace the unit and title here
-```
 
 ## Energy bill
 
