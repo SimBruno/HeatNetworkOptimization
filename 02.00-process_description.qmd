@@ -4,13 +4,13 @@
 >
 >To provide practical solutions to our industrial partner, the dairy factory, our first task is to show that we truly grasp the problem. To a business manager, industrial processes may seem mysterious and complex, like "black boxes." However, as engineers, we need to dig into the details, using mathematics and physics to analyze and design these industrial processes.
 >
->In this section, your task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The data collected here will be instrumental in calculating exergy efficiency and energy bills in the following section. To facilitate your work, we have provided an illustrative example for the Pasteurization section below:
+>In this section, the task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The data collected here will be instrumental in calculating exergy efficiency and energy bills in the following section. 
 
 ## Pasteurisation
 
 ![Pasteurisation](Figures/pasteurisation.svg)
 
-In this section will be presented the mass and energy balances for each chemical operation of the milk pasteurisation. This pasterisation aims to produce cream and milk from fresh milk with the intergation of a thickener at some point. 
+In this section the mass and energy balances for each chemical operation of the milk pasteurisation are computed. The pasteurisation aims to produce cream and milk from fresh milk with the intergation of a thickener.
 
 
 ### Mass Flows 
@@ -70,7 +70,7 @@ Finally:
 
 ### Equations of operations 
 
-In this subsection are indicated the heat flow equations for each element of the pasteurisation. All variables are defined whether on the pasteurization scheme or in the mass flow and heat capacities sections. The $\Delta T = 5K$ is applied on Past2, between Milk_0 and Past_a and on Past 5, between crpast_c and cream. Regarding the glycolic water and the steam, the same temperatures and heat capacities as the one in the beer pasteurization process are used, and it is assumed the exact cooling or the heating are controlled by the mass flow of these elements. 
+In this subsection the heat flow equations for each element of the pasteurisation are indicated. All variables are defined on the pasteurization scheme or in the mass flow and heat capacities sections. The $\Delta T = 5K$ is applied on Past 2, between Milk_0 and Past_a and on Past 5, between crpast_c and cream. Regarding the glycolic water and the steam, the same temperatures and heat capacities as the one in the beer pasteurization process are used, and it is assumed the exact cooling or the heating are controlled by the mass flow of these elements. 
 
 #### Refrigeration
 
@@ -401,30 +401,8 @@ HTML(df_pasteurization_heat_capacities.to_html(index=False))
 
 <!---
 
-#### Results Exergy Analysis Pasteurization
 
 ```{python compute_pasteurisation_exergy, echo = F, eval = T}
-
-# Refrigeration
-
-#L_milk_refr=m_fmilk*Cp_fmilk*(T_fmilk-T_mixure_out)-T_a*log10(T_fmilk/T_mixure_out)
-#Lgw_refr
-#L_ref=L_milk_refr+L_gw_refr
-
-# Past 1
-#L_past1_1=m_fmilk*Cp_fmilk*(T_mixure_out-T_past_cent)-T_a*log10(T_mixure_out/T_past_cent)
-
-#L_past1_2=m_milk*Cp_raw_milk*(T_pastc-T_pastd)-T_a*log10(T_pastc/T_pastd)
-
-#L_past1=L_past1_1+L_past1_2
-# Past 3
-#L_past3_1=m_milk*Cp_raw_milk*(T_pasta-T_pastb)-T_a*log10(T_pasta/T_pastb)
-
-#L_past3_2=
-
-#L_past3=L_past3_1+L_past3_2
-
-```
 
 
 #### TO CONTINUE

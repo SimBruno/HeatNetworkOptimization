@@ -1,3 +1,7 @@
+---
+title: "Title"
+editor: visual
+---
 # Introduction {#intro}
 
 In the introduction, consider addressing the following questions relevant to your project:

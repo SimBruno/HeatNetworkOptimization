@@ -18,14 +18,13 @@ Starting from this chapter, you will embark on optimizing the energy efficiency 
 
 ### Past 5 only
 
-```{python past5only, echo = T, eval = T}
+```{python Dtmin fct, echo = T, eval = T}
 #The goal of this part is to determine an optimized dTmin such that costs are minimized. 
 #In all scenarios we will do the following:
 #1. Determine the area of the HX in term of the dTmin
 #2. Determine the cost of the HX in term of the the Area
 #3. Determine the cost of the HX in term of the dTmin
 
-# ##Scenario 1: dTmin for the past5 
 
 # ### Determine the area of the HX in term of the dTmin
 import matplotlib
@@ -39,7 +38,7 @@ from IPython.display import display, HTML
 from codes_01_energy_bill.coolprop_functions import mixture
 
 #####
-def Dtmin(dT, T1, T1v, T2v, T2, m2, cp2, position, pastnb):
+def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
 
     if position == 'right':
         T1_prime = T2 - dT
@@ -49,7 +48,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m2, cp2, position, pastnb):
         T2_prime = T1 + dT #T1v.max()
     
     #Find the minimum Area of the HX
-    Q = m2*cp2*(T2-T2_prime)
+    Q = m2*cp2*T2-T2_prime
     #print('Q = ', round(Q, 3), 'W')
     alpha= 1000 #W/m^2°C, assumption based on alpha_H20 since 65wt% of the stream is water 
     U = alpha/2
@@ -57,6 +56,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m2, cp2, position, pastnb):
     dtB = abs(T1-T2_prime)
     LMTD = (dtA-dtB)/np.log(dtA/dtB)
     Area = Q/(U*LMTD)
+
 
     #Find the CAPEX
 
@@ -116,13 +116,28 @@ def Dtmin(dT, T1, T1v, T2v, T2, m2, cp2, position, pastnb):
 
         OPEX_fr = OP3_fr + OP4_fr
         OPEX_ger = OP3_ger + OP4_ger
+    
+    elif pastnb == 'cip':
+        Qsteam = m1*cp1*(353-T1_prime)
+        OP_steam_cip_fr = gas_fr * Qsteam/1000 * top
+        OP_steam_cip_ger = gas_ger * Qsteam/1000 * top
+
+        Qcool = m2*cp2*(T2_prime-277)
+        Wcool = Qcool/COP
+        OP_cool_cip_fr = elec_fr * Wcool/1000 * top
+        OP_cool_cip_ger = elec_ger * Wcool/1000 * top
+
+        OPEX_fr = OP_steam_cip_fr + OP_cool_cip_fr
+        OPEX_ger = OP_steam_cip_ger + OP_cool_cip_ger
+
 
     #Find the TOTEX
     TOTEX_fr = CAPEX + OPEX_fr
     TOTEX_ger = CAPEX + OPEX_ger
 
-    return CAPEX, OPEX_fr, OPEX_ger, TOTEX_fr, TOTEX_ger, Area
-
+    return CAPEX, OPEX_fr, OPEX_ger, TOTEX_fr, TOTEX_ger, Area, T1_prime, T2_prime
+```
+```{python past5only, echo = T, eval = T}
 # Scenario 1: dTmin for the past5
 
 #In our code 1 stands for cold stream and 2 for hot stream. 
@@ -204,7 +219,7 @@ Areav_5 = []
 dt_5 = np.linspace(0.1, 30, 300)
 
 for t in dt_5:
-    CAPEX_5, OPEX_fr_5, OPEX_ger_5, TOTEX_fr_5, TOTEX_ger_5, Area_5 = Dtmin(t, T1_5, T1v_5, T2v_5, T2_5, m2_5, cp2_5, 'right', 5)
+    CAPEX_5, OPEX_fr_5, OPEX_ger_5, TOTEX_fr_5, TOTEX_ger_5, Area_5 = Dtmin(t, T1_5, T1v_5, T2v_5, T2_5, m1_5, m2_5, cp1_5, cp2_5, 'right', 5)[0:6]
     CAPEXv_5.append(CAPEX_5)
     OPEX_frv_5.append(OPEX_fr_5)
     OPEX_gerv_5.append(OPEX_ger_5)
@@ -233,7 +248,7 @@ layout = go.Layout(
 # Create figure
 fig = go.Figure(data=[trace_capex, trace_opex_france, trace_opex_germany, trace_totex_france, trace_totex_germany], layout=layout)
 
-# Mark the minima points
+# Mark the minima points for both France and Germany
 min_index_fr_5 = np.argmin(TOTEX_frv_5)
 fig = fig.add_trace(go.Scatter(x=[dt_5[min_index_fr_5]], y=[TOTEX_frv_5[min_index_fr_5]], mode='markers', marker=dict(color='blue'), name='Min TOTEX (France)'))
 
@@ -243,18 +258,26 @@ fig = fig.add_trace(go.Scatter(x=[dt_5[min_index_ger_5]], y=[TOTEX_gerv_5[min_in
 # Show the figure
 fig.show()
 
-#print the area, dt, CAPEX, OPEX, TOTEX for the minimum TOTEX
+#print the optimum values for dt, area, CAPEX, OPEX, TOTEX for both France and Germany (NB: even if we have the same CAPEX fct for both countries, the optimum CAPEX will be different in both countries because of the electricity/gas rate)
 
-dtmin_opt_5 = dt_5[min_index_fr_5]
-area_opt_5 = Areav_5[min_index_fr_5]
-CAPEX_opt_5 = CAPEXv_5[min_index_fr_5]
+dtmin_fr_opt_5 = dt_5[min_index_fr_5]
+dtmin_ger_opt_5 = dt_5[min_index_ger_5]
+area_fr_opt_5 = Areav_5[min_index_fr_5]
+area_ger_opt_5 = Areav_5[min_index_ger_5]
+CAPEX_fr_opt_5 = CAPEXv_5[min_index_fr_5]
+CAPEX_ger_opt_5 = CAPEXv_5[min_index_ger_5]
 OPEX_fr_opt_5 = OPEX_frv_5[min_index_fr_5]
-OPEX_ger_opt_5 = OPEX_gerv_5[min_index_fr_5]
+OPEX_ger_opt_5 = OPEX_gerv_5[min_index_ger_5]
 TOTEX_fr_opt_5 = TOTEX_frv_5[min_index_fr_5]
-TOTEX_ger_opt_5 = TOTEX_gerv_5[min_index_fr_5]
-Past5_opt = pd.DataFrame({'dTmin [K]': dtmin_opt_5, 'Area [m^2]': area_opt_5, 'CAPEX[€/yr]': CAPEX_opt_5, 'OPEX_fr[€/yr]': OPEX_fr_opt_5, 'OPEX_ger[€/yr]': OPEX_ger_opt_5, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_5, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_5}, index=[0])
-Past5_opt = Past5_opt.round(2)
-HTML(Past5_opt.to_html(index=False))
+TOTEX_ger_opt_5 = TOTEX_gerv_5[min_index_ger_5]
+
+Past5_opt_fr_sc1 = pd.DataFrame({'dTmin_fr[K]': dtmin_fr_opt_5, 'Area_fr[m^2]': area_fr_opt_5, 'CAPEX_fr[€/yr]': CAPEX_fr_opt_5, 'OPEX_fr[€/yr]': OPEX_fr_opt_5, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_5}, index=[0])
+Past5_opt_fr_sc1 = Past5_opt_fr_sc1.round(2)
+HTML(Past5_opt_fr_sc1.to_html(index=False))
+
+Past5_opt_ger_sc1 = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_5, 'Area_ger[m^2]': area_ger_opt_5, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_5, 'OPEX_ger[€/yr]': OPEX_ger_opt_5, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_5}, index=[0])
+Past5_opt_ger_sc1 = Past5_opt_ger_sc1.round(2)
+HTML(Past5_opt_ger_sc1.to_html(index=False))
 ```
 
 ```{python testmixture, echo = F, eval = F}
@@ -290,15 +313,19 @@ plt.show()
 
 ### Past 1 + Past 5
 
+This time we know only $T_{c,in}$ and $T_{c,out}$ but nothing about the hot streams.
+We can't reuse the exact same method as for past5 where we knew $T_{h,in}$ and $T_{c,in}$
+We will then first need to determine $T_{h,in}$ from the Past2 ∆T (assumed here at 5K for simplicity). We end up with a $T_{past,c} = 70°C$ which will be $T_{h,in}$ of past1.
+Another important assumption in this scenario is to assume for past1 that $T_{c,out}=T_{past,out} \ne 60°C$. Indeed, we will instead determine this temperature from the ∆Tmin optimization of past1.
+From this new $T_{c,out}$, and because both past1 and past5 are linked by this flow we will recompute the ∆Tmin optimization of past5. Overall we will be able to compare (for both France and Germany scenario) which scenario is the most cost efficient.
+
 ```{python past1+5, echo = T, eval = T}
 from codes_01_energy_bill.coolprop_functions import mixture
-# Scenario 2: dTmin for the past1+past6
+# Scenario 2: dTmin for the past1+past5
 
-#This time we know only T_cin and T_cout but nothing about the hot streams
-#We can't reuse the exact same method as for past6 where we knew T_hin and T_cin
-#We will first determine T_cin from the Past2 HX on which we can reuse the same method as for past6
-
-# PAST1 
+####################################
+############## PAST1 ##############
+####################################
 
 T1_1 = 277
 T2_1 = 343
@@ -378,20 +405,13 @@ Areav_1 = []
 dt_1 = np.linspace(10, 65, 500)
 
 for t in dt_1:
-    CAPEX_1, OPEX_fr_1, OPEX_ger_1, TOTEX_fr_1, TOTEX_ger_1, Area_1 = Dtmin(t, T1_1, T1v_1, T2v_1, T2_1, m2_1, cp2_1, 'left', 1)
+    CAPEX_1, OPEX_fr_1, OPEX_ger_1, TOTEX_fr_1, TOTEX_ger_1, Area_1 = Dtmin(t, T1_1, T1v_1, T2v_1, T2_1, m1_1, m2_1, cp1_1, cp2_1, 'left', 1)[0:6]
     CAPEXv_1.append(CAPEX_1)
     OPEX_frv_1.append(OPEX_fr_1)
     OPEX_gerv_1.append(OPEX_ger_1)
     TOTEX_frv_1.append(TOTEX_fr_1)
     TOTEX_gerv_1.append(TOTEX_ger_1)
     Areav_1.append(Area_1)
-
-min_index_fr_1 = np.argmin(TOTEX_frv_1)
-#plt.plot(dt_1[min_index_fr_1], TOTEX_frv_1[min_index_fr_1], 'bo')
-min_index_ger_1 = np.argmin(TOTEX_gerv_1)
-#plt.plot(dt_1[min_index_ger_1], TOTEX_gerv_1[min_index_ger_1], 'ro')
-#plt.show()
-
 
 #plot the results with respect to the dt values
 
@@ -424,50 +444,123 @@ fig = fig.add_trace(go.Scatter(x=[dt_1[min_index_ger_1]], y=[TOTEX_gerv_1[min_in
 # Show the figure
 fig.show()
 
-dtmin_opt_1_fr = dt_1[min_index_fr_1]
-dtmin_opt_1_ger = dt_1[min_index_ger_1]
-area_opt_1_fr = Areav_1[min_index_fr_1]
-area_opt_1_ger = Areav_1[min_index_ger_1]
-CAPEX_opt_1_fr = CAPEXv_1[min_index_fr_1]
-CAPEX_opt_1_ger = CAPEXv_1[min_index_ger_1]
+dtmin_fr_opt_1 = dt_1[min_index_fr_1]
+dtmin_ger_opt_1 = dt_1[min_index_ger_1]
+area_fr_opt_1 = Areav_1[min_index_fr_1]
+area_ger_opt_1 = Areav_1[min_index_ger_1]
+CAPEX_fr_opt_1 = CAPEXv_1[min_index_fr_1]
+CAPEX_ger_opt_1 = CAPEXv_1[min_index_ger_1]
 OPEX_fr_opt_1 = OPEX_frv_1[min_index_fr_1]
 OPEX_ger_opt_1 = OPEX_gerv_1[min_index_ger_1]
 TOTEX_fr_opt_1 = TOTEX_frv_1[min_index_fr_1]
 TOTEX_ger_opt_1 = TOTEX_gerv_1[min_index_ger_1]
 
-Past1_opt_fr = pd.DataFrame({'dTmin_fr[K]': dtmin_opt_1_fr, 'Area_fr[m^2]': area_opt_1_fr, 'CAPEX_fr[€/yr]': CAPEX_opt_1_fr, 'OPEX_fr[€/yr]': OPEX_fr_opt_1, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_1}, index=[0])
-Past1_opt_fr = Past1_opt_fr.round(2)
-HTML(Past1_opt_fr.to_html(index=False))
+Past1_opt_fr_sc2 = pd.DataFrame({'dTmin_fr[K]': dtmin_fr_opt_1, 'Area_fr[m^2]': area_fr_opt_1, 'CAPEX_fr[€/yr]': CAPEX_fr_opt_1, 'OPEX_fr[€/yr]': OPEX_fr_opt_1, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_1}, index=[0])
+Past1_opt_fr_sc2 = Past1_opt_fr_sc2.round(2)
+HTML(Past1_opt_fr_sc2.to_html(index=False))
 
-Past1_opt_ger = pd.DataFrame({'dTmin_ger[K]': dtmin_opt_1_ger, 'Area_ger[m^2]': area_opt_1_ger, 'CAPEX_ger[€/yr]': CAPEX_opt_1_ger, 'OPEX_ger[€/yr]': OPEX_ger_opt_1, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_1}, index=[0])
-Past1_opt_ger = Past1_opt_ger.round(2)
-HTML(Past1_opt_ger.to_html(index=False))
-```
+Past1_opt_ger_sc2 = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_1, 'Area_ger[m^2]': area_ger_opt_1, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_1, 'OPEX_ger[€/yr]': OPEX_ger_opt_1, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_1}, index=[0])
+Past1_opt_ger_sc2 = Past1_opt_ger_sc2.round(2)
+HTML(Past1_opt_ger_sc2.to_html(index=False))
 
-```{python past1+5_plot, echo = F, eval = F}	
+####################################
+############## PAST5 ##############
+####################################
+
+T1_prime_1_fr = Dtmin(dtmin_fr_opt_1, T1_1, T1v_1, T2v_1, T2_1, m1_1, m2_1, cp1_1, cp2_1, 'left', 1)[6]
+T1_5 = T1_prime_1_fr #J'ai checké c'est 67°C donc bien inferieur au 70°C de T_hin=70° de past1 et bien inferieur au T_hint=75°C de past5
+#Would be the same if we used dtmin_ger_opt_1 since T1_prime_1_ger = T1_prime_1_fr = T1v.max()
+
+
+T2_5 = 348
+
+p1_1 = 100000
+
+m1_5 = 0.48
+m2_5 = 0.55
+
+State_Cold_1_5 = mixture(T=T1_5, P=p1_5, frac_water=0.65, frac_fat=0.35)
+State_Cold_2_5 = mixture(T=T2_5, P=p1_5, frac_water=0.65, frac_fat=0.35)
+
+h1_5 = State_Cold_1_5["enthalpy"] * m1_5  #from mixture with dry = 35% and wet = 65%
+h2_5 = State_Cold_2_5["enthalpy"] * m2_5
+
+cp1_5 = State_Cold_1_5["cpmass"]
+cp2_5 = State_Cold_2_5["cpmass"]
+
+slope1_5 = 1/(m1_5*cp1_5)
+slope2_5 = 1/(m2_5*cp2_5)
+
+#Plot the two lines with T on the y-axis and h on the x-axis
+#h is the enthalpy of the stream between h1 and h2
+N = 100
+h_5 = np.linspace(h1_5, h2_5, N)
+
+C1_5 = T1_5 - slope1_5*h1_5
+T1v_5 = slope1_5*h_5 + C1_5
+
+C2_5 = T2_5 - slope2_5*h2_5
+T2v_5 = slope2_5*h_5 + C2_5
+
+T2_prime_5 = T2v_5.min()
+
+# Create trace for Cold Stream
+trace_cold = go.Scatter(x=h_5, y=T1v_5, mode='lines', name='Cold Stream')
+# Create trace for Hot Stream
+trace_hot = go.Scatter(x=h_5, y=T2v_5, mode='lines', name='Hot Stream')
+# Create layout
+layout = go.Layout(
+    title='Temperature vs Enthalpy',
+    xaxis=dict(title='Enthalpy (J)'),
+    yaxis=dict(title='Temperature (K)'),
+    legend=dict(x=0, y=1, traceorder='normal'),
+    showlegend=True
+)
+# Create figure
+fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
+# Plot the vertical line at dTmin
+dt_5 = T2v_5 - T1v_5
+dTmin_5 = dt_5.min()
+min_index_5 = dt_5.argmin()
+fig.add_shape(
+    type='line',
+    x0=h_5[min_index_5],
+    x1=h_5[min_index_5],
+    y0=min(T1v_5[min_index_5], T2v_5[min_index_5]),
+    y1=max(T1v_5[min_index_5], T2v_5[min_index_5]),
+    line=dict(color='red', dash='dash')
+)
+
+print('dTmin =', round(dTmin_5, 3), 'K at h =', round(h_5[min_index_5], 3), 'kJ/kg')
+
+#Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
+
+CAPEXv_5 = []
+OPEX_frv_5 = []
+OPEX_gerv_5 = []
+TOTEX_frv_5 = []
+TOTEX_gerv_5 = []
+Areav_5 = []
+
+dt_5 = np.linspace(0.1, 30, 300)
+
+for t in dt_5:
+    CAPEX_5, OPEX_fr_5, OPEX_ger_5, TOTEX_fr_5, TOTEX_ger_5, Area_5 = Dtmin(t, T1_5, T1v_5, T2v_5, T2_5, m1_5, m2_5, cp1_5, cp2_5, 'right', 5)[0:6]
+    CAPEXv_5.append(CAPEX_5)
+    OPEX_frv_5.append(OPEX_fr_5)
+    OPEX_gerv_5.append(OPEX_ger_5)
+    TOTEX_frv_5.append(TOTEX_fr_5)
+    TOTEX_gerv_5.append(TOTEX_ger_5)
+    Areav_5.append(Area_5)
 
 #plot the results with respect to the dt values
 
-dt_15 = np.linspace(0, 30, 300)
-CAPEXv_15 = []
-OPEX_frv_15 = []
-OPEX_gerv_15 = []
-TOTEX_frv_15 = []
-TOTEX_gerv_15 = []
-
-for i in range(0, len(dt_15)):
-    CAPEXv_15.append(CAPEXv_1[i] + CAPEXv_5[i])
-    OPEX_frv_15.append(OPEX_frv_1[i] + OPEX_frv_5[i])
-    OPEX_gerv_15.append(OPEX_gerv_1[i] + OPEX_gerv_5[i])
-    TOTEX_frv_15.append(TOTEX_frv_1[i] + TOTEX_frv_5[i])
-    TOTEX_gerv_15.append(TOTEX_gerv_1[i] + TOTEX_gerv_5[i])
-
 # Create traces for each cost component
-trace_capex = go.Scatter(x=dt_15, y=CAPEXv_15, mode='lines', name='CAPEX', line=dict(color='black'))
-trace_opex_france = go.Scatter(x=dt_15, y=OPEX_frv_15, mode='lines', name='OPEX (France)', line=dict(color='blue'))
-trace_opex_germany = go.Scatter(x=dt_15, y=OPEX_gerv_15, mode='lines', name='OPEX (Germany)', line=dict(color='red'))
-trace_totex_france = go.Scatter(x=dt_15, y=TOTEX_frv_15, mode='lines', name='TOTEX (France)', line=dict(color='blue', dash='dash'))
-trace_totex_germany = go.Scatter(x=dt_15, y=TOTEX_gerv_15, mode='lines', name='TOTEX (Germany)', line=dict(color='red', dash='dash'))
+trace_capex = go.Scatter(x=dt_5, y=CAPEXv_5, mode='lines', name='CAPEX', line=dict(color='black'))
+trace_opex_france = go.Scatter(x=dt_5, y=OPEX_frv_5, mode='lines', name='OPEX (France)', line=dict(color='blue'))
+trace_opex_germany = go.Scatter(x=dt_5, y=OPEX_gerv_5, mode='lines', name='OPEX (Germany)', line=dict(color='red'))
+trace_totex_france = go.Scatter(x=dt_5, y=TOTEX_frv_5, mode='lines', name='TOTEX (France)', line=dict(color='blue', dash='dash'))
+trace_totex_germany = go.Scatter(x=dt_5, y=TOTEX_gerv_5, mode='lines', name='TOTEX (Germany)', line=dict(color='red', dash='dash'))
 
 # Create layout
 layout = go.Layout(
@@ -482,35 +575,226 @@ layout = go.Layout(
 fig = go.Figure(data=[trace_capex, trace_opex_france, trace_opex_germany, trace_totex_france, trace_totex_germany], layout=layout)
 
 # Mark the minima points
-min_index_fr_15 = np.argmin(TOTEX_frv_15)
-fig = fig.add_trace(go.Scatter(x=[dt_15[min_index_fr_15]], y=[TOTEX_frv_15[min_index_fr_15]], mode='markers', marker=dict(color='blue'), name='Min TOTEX (France)'))
+min_index_fr_5 = np.argmin(TOTEX_frv_5)
+fig = fig.add_trace(go.Scatter(x=[dt_5[min_index_fr_5]], y=[TOTEX_frv_5[min_index_fr_5]], mode='markers', marker=dict(color='blue'), name='Min TOTEX (France)'))
 
-min_index_ger_15 = np.argmin(TOTEX_gerv_15)
-fig = fig.add_trace(go.Scatter(x=[dt_15[min_index_ger_15]], y=[TOTEX_gerv_15[min_index_ger_15]], mode='markers', marker=dict(color='red'), name='Min TOTEX (Germany)'))
+min_index_ger_5 = np.argmin(TOTEX_gerv_5)
+fig = fig.add_trace(go.Scatter(x=[dt_5[min_index_ger_5]], y=[TOTEX_gerv_5[min_index_ger_5]], mode='markers', marker=dict(color='red'), name='Min TOTEX (Germany)'))
 
 # Show the figure
 fig.show()
 
-## Combining PAST1 and PAST5
-dtmin_opt_15 = dtmin_opt_1 + dtmin_opt_5
-area_opt_15 = area_opt_1 + area_opt_5
-CAPEX_opt_15 = CAPEX_opt_1 + CAPEX_opt_5
+#print the area, dt, CAPEX, OPEX, TOTEX for the minimum TOTEX
+
+dtmin_fr_opt_5 = dt_5[min_index_fr_5]
+dtmin_ger_opt_5 = dt_5[min_index_ger_5]
+area_fr_opt_5 = Areav_5[min_index_fr_5]
+area_ger_opt_5 = Areav_5[min_index_ger_5]
+CAPEX_fr_opt_5 = CAPEXv_5[min_index_fr_5]
+CAPEX_ger_opt_5 = CAPEXv_5[min_index_ger_5]
+OPEX_fr_opt_5 = OPEX_frv_5[min_index_fr_5]
+OPEX_ger_opt_5 = OPEX_gerv_5[min_index_ger_5]
+TOTEX_fr_opt_5 = TOTEX_frv_5[min_index_fr_5]
+TOTEX_ger_opt_5 = TOTEX_gerv_5[min_index_ger_5]
+
+Past5_opt_fr_sc2 = pd.DataFrame({'dTmin_fr[K]': dtmin_fr_opt_5, 'Area_fr[m^2]': area_fr_opt_5, 'CAPEX_fr[€/yr]': CAPEX_fr_opt_5, 'OPEX_fr[€/yr]': OPEX_fr_opt_5, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_5}, index=[0])
+Past5_opt_fr_sc2 = Past5_opt_fr_sc2.round(2)
+HTML(Past5_opt_fr_sc2.to_html(index=False))
+
+Past5_opt_ger_sc2 = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_5, 'Area_ger[m^2]': area_ger_opt_5, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_5, 'OPEX_ger[€/yr]': OPEX_ger_opt_5, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_5}, index=[0])
+Past5_opt_ger_sc2 = Past5_opt_ger_sc2.round(2)
+HTML(Past5_opt_ger_sc2.to_html(index=False))
+
+####################################
+############## PAST1 + PAST5 ##############
+####################################
+
+#Summarize the value for the overall optimum CAPEX, OPEX, and TOTEX of the two pasteurizers
+
+
+CAPEX_fr_opt_15 = CAPEX_fr_opt_1 + CAPEX_fr_opt_5
+CAPEX_ger_opt_15 = CAPEX_ger_opt_1 + CAPEX_ger_opt_5
 OPEX_fr_opt_15 = OPEX_fr_opt_1 + OPEX_fr_opt_5
 OPEX_ger_opt_15 = OPEX_ger_opt_1 + OPEX_ger_opt_5
 TOTEX_fr_opt_15 = TOTEX_fr_opt_1 + TOTEX_fr_opt_5
 TOTEX_ger_opt_15 = TOTEX_ger_opt_1 + TOTEX_ger_opt_5
-Past15_opt = pd.DataFrame({'dTmin [K]': dtmin_opt_15, 'Area [m^2]': area_opt_15, 'CAPEX[€/yr]': CAPEX_opt_15, 'OPEX_fr[€/yr]': OPEX_fr_opt_15, 'OPEX_ger[€/yr]': OPEX_ger_opt_15, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_15, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_15}, index=[0])
-Past15_opt = Past15_opt.round(2)
-HTML(Past15_opt.to_html(index=False))
+
+Overall_opt_fr_sc2 = pd.DataFrame({'CAPEX_tot_fr[€/yr]': CAPEX_fr_opt_15, 'OPEX_tot_fr[€/yr]': OPEX_fr_opt_15, 'TOTEX_tot_fr[€/yr]': TOTEX_fr_opt_15}, index=[0])
+Overall_opt_fr_sc2 = Overall_opt_fr_sc2.round(2)
+HTML(Overall_opt_fr_sc2.to_html(index=False))
+
+Overall_opt_ger_sc2 = pd.DataFrame({'CAPEX_tot_ger[€/yr]': CAPEX_ger_opt_15, 'OPEX_tot_ger[€/yr]': OPEX_ger_opt_15, 'TOTEX_tot_ger[€/yr]': TOTEX_ger_opt_15}, index=[0])
+Overall_opt_ger_sc2 = Overall_opt_ger_sc2.round(2)
+HTML(Overall_opt_ger_sc2.to_html(index=False))
 ```
 
 ### Past 5 + recovery HEX
+In this scenario we have to estimate if it is worth to recover heat from past5 and use it to preheat another HX in this pasteurization stage. 
+Past5 is already used to preheat past6 (thanks to crpast_a flow which then becomes cr_past_x). Thus there is no improvement possible here. Then past1 entering flow (past_c) is already preheated by past 2 and past 3. 
+Remaining HX are for cooling and thus we don't want to preheat their incoming flows. 
 
-Past 5 + recovery HEX
+It appears heat recovery is already well used in this system and we will assume it is not worth to divert hot flows from past5 to preheat another flow. 
 
 ### Cleaning in Place
 
-Cleaning in Place
+Now we will only focus on another part of the process (the cleaning in place) and we will try to optimize the heat recovery. We look for the heat exchanger in this process. There is one used to heat thanks to use of steam between flows CIP2 and CIP3/10, and there is one used to cool with glycolic water between flows CIP6 and CIP7.
+We could try to reduce both heat and cooling demand by connecting these two HX differently. 
+In chapter 2 when deermining heat and mass balances, we had determined the following relations between the flows temperatures:
+- T_cip6=75°C > T_cip2=60°C
+
+We could thus imagine a system where CIP6 flow is first used to preheat CIP2 to CIP2' (with T_cip2' > T_cip2) and the exiting flows called CIP6' (such that T_cip6'< T_cip6) is then used to be cooled where CIP6 was previously. Hence we would have a system with less cooling required since T_cip6'< T_cip6, and with also less heating required since T_cip2' > T_cip2.
+
+Let's try to apply the method used for the pasterization:
+
+```{python cip_heat_recovery, echo = T, eval = T}
+from pyxosmose.state import State
+
+T1_cip = 343  #T_cip2 in CH2
+T2_cip = 348  #T_cip6 in CH2
+
+p1_cip = 100000
+
+m1_cip = 4 #m_cip2 in CH2
+m2_cip = 1.2 #m_cip6 in CH2
+
+
+
+State_Cold_1_cip = State(pair='TP', fluid='water', temperature=T1_cip, pressure=p1_cip)
+State_Cold_1_cip.StateCalc()
+State_Cold_1_cip = State_Cold_1_cip.__dict__ 
+
+State_Cold_2_cip = State(pair='TP', fluid='water', temperature=T2_cip, pressure=p1_cip)
+State_Cold_2_cip.StateCalc()
+State_Cold_2_cip = State_Cold_2_cip.__dict__
+
+h1_cip = State_Cold_1_cip["enthalpy"] * m1_cip  #from mixture with dry = 35% and wet = 65%
+h2_cip = State_Cold_2_cip["enthalpy"] * m2_cip
+
+cp1_cip = State_Cold_1_cip["cpmass"]
+cp2_cip = State_Cold_2_cip["cpmass"]
+
+slope1_cip = 1/(m1_cip*cp1_cip)
+slope2_cip = 1/(m2_cip*cp2_cip)
+
+#Plot the two lines with T on the y-axis and h on the x-axis
+#h is the enthalpy of the stream between h1 and h2
+N = 100
+h_cip = np.linspace(h1_cip, h2_cip, N)
+
+C1_cip = T1_cip - slope1_cip*h1_cip
+T1v_cip = slope1_cip*h_cip + C1_cip
+
+C2_cip = T2_cip - slope2_cip*h2_cip
+T2v_cip = slope2_cip*h_cip + C2_cip
+
+T2_prime_cip = T2v_cip.min()
+
+# Create trace for Cold Stream
+trace_cold = go.Scatter(x=h_cip, y=T1v_cip, mode='lines', name='Cold Stream')
+# Create trace for Hot Stream
+trace_hot = go.Scatter(x=h_cip, y=T2v_cip, mode='lines', name='Hot Stream')
+# Create layout
+layout = go.Layout(
+    title='Temperature vs Enthalpy',
+    xaxis=dict(title='Enthalpy (J)'),
+    yaxis=dict(title='Temperature (K)'),
+    legend=dict(x=0, y=1, traceorder='normal'),
+    showlegend=True
+)
+# Create figure
+fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
+# Plot the vertical line at dTmin
+dt_cip = T2v_cip - T1v_cip
+dTmin_cip = dt_cip.min()
+min_index_cip = dt_cip.argmin()
+fig.add_shape(
+    type='line',
+    x0=h_cip[min_index_cip],
+    x1=h_cip[min_index_cip],
+    y0=min(T1v_cip[min_index_cip], T2v_cip[min_index_cip]),
+    y1=max(T1v_cip[min_index_cip], T2v_cip[min_index_cip]),
+    line=dict(color='red', dash='dash')
+)
+
+print('dTmin =', round(dTmin_cip, 3), 'K at h =', round(h_cip[min_index_cip], 3), 'kJ/kg')
+
+#Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
+
+CAPEXv_cip = []
+OPEX_frv_cip = []
+OPEX_gerv_cip = []
+TOTEX_frv_cip = []
+TOTEX_gerv_cip = []
+Areav_cip = []
+
+dt_cip = np.linspace(0.1, 30, 300)
+
+for t in dt_cip:
+    CAPEX_cip, OPEX_fr_cip, OPEX_ger_cip, TOTEX_fr_cip, TOTEX_ger_cip, Area_cip = Dtmin(t, T1_cip, T1v_cip, T2v_cip, T2_cip, m1_cip, m2_cip, cp1_cip, cp2_cip, 'left', 'cip')[0:6]
+    CAPEXv_cip.append(CAPEX_cip)
+    OPEX_frv_cip.append(OPEX_fr_cip)
+    OPEX_gerv_cip.append(OPEX_ger_cip)
+    TOTEX_frv_cip.append(TOTEX_fr_cip)
+    TOTEX_gerv_cip.append(TOTEX_ger_cip)
+    Areav_cip.append(Area_cip)
+
+#plot the results with respect to the dt values
+
+# Create traces for each cost component
+trace_capex = go.Scatter(x=dt_cip, y=CAPEXv_cip, mode='lines', name='CAPEX', line=dict(color='black'))
+trace_opex_france = go.Scatter(x=dt_cip, y=OPEX_frv_cip, mode='lines', name='OPEX (France)', line=dict(color='blue'))
+trace_opex_germany = go.Scatter(x=dt_cip, y=OPEX_gerv_cip, mode='lines', name='OPEX (Germany)', line=dict(color='red'))
+trace_totex_france = go.Scatter(x=dt_cip, y=TOTEX_frv_cip, mode='lines', name='TOTEX (France)', line=dict(color='blue', dash='dash'))
+trace_totex_germany = go.Scatter(x=dt_cip, y=TOTEX_gerv_cip, mode='lines', name='TOTEX (Germany)', line=dict(color='red', dash='dash'))
+
+# Create layout
+layout = go.Layout(
+    title='Costs vs dTmin',
+    xaxis=dict(title='dTmin (K)'),
+    yaxis=dict(title='Costs (€)'),
+    legend=dict(x=0, y=-0.2, traceorder='normal', orientation='h'),
+    showlegend=True
+)
+
+# Create figure
+fig = go.Figure(data=[trace_capex, trace_opex_france, trace_opex_germany, trace_totex_france, trace_totex_germany], layout=layout)
+
+# Mark the minima points for both France and Germany
+min_index_fr_cip = np.argmin(TOTEX_frv_cip)
+fig = fig.add_trace(go.Scatter(x=[dt_cip[min_index_fr_cip]], y=[TOTEX_frv_cip[min_index_fr_cip]], mode='markers', marker=dict(color='blue'), name='Min TOTEX (France)'))
+
+min_index_ger_cip = np.argmin(TOTEX_gerv_cip)
+fig = fig.add_trace(go.Scatter(x=[dt_cip[min_index_ger_cip]], y=[TOTEX_gerv_cip[min_index_ger_cip]], mode='markers', marker=dict(color='red'), name='Min TOTEX (Germany)'))
+
+# Show the figure
+fig.show()
+
+#print the optimum values for dt, area, CAPEX, OPEX, TOTEX for both France and Germany (NB: even if we have the same CAPEX fct for both countries, the optimum CAPEX will be different in both countries because of the electricity/gas rate)
+
+dtmin_fr_opt_cip = dt_cip[min_index_fr_cip]
+dtmin_ger_opt_cip = dt_cip[min_index_ger_cip]
+area_fr_opt_cip = Areav_cip[min_index_fr_cip]
+area_ger_opt_cip = Areav_cip[min_index_ger_cip]
+CAPEX_fr_opt_cip = CAPEXv_cip[min_index_fr_cip]
+CAPEX_ger_opt_cip = CAPEXv_cip[min_index_ger_cip]
+OPEX_fr_opt_cip = OPEX_frv_cip[min_index_fr_cip]
+OPEX_ger_opt_cip = OPEX_gerv_cip[min_index_ger_cip]
+TOTEX_fr_opt_cip = TOTEX_frv_cip[min_index_fr_cip]
+TOTEX_ger_opt_cip = TOTEX_gerv_cip[min_index_ger_cip]
+
+CIP_opt_fr = pd.DataFrame({'dTmin_fr[K]': dtmin_fr_opt_cip, 'Area_fr[m^2]': area_fr_opt_cip, 'CAPEX_fr[€/yr]': CAPEX_fr_opt_cip, 'OPEX_fr[€/yr]': OPEX_fr_opt_cip, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_cip}, index=[0])
+CIP_opt_fr = CIP_opt_fr.round(2)
+HTML(CIP_opt_fr.to_html(index=False))
+
+CIP_opt_ger = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_cip, 'Area_ger[m^2]': area_ger_opt_cip, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_cip, 'OPEX_ger[€/yr]': OPEX_ger_opt_cip, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_cip}, index=[0])
+CIP_opt_ger = CIP_opt_ger.round(2)
+HTML(CIP_opt_ger.to_html(index=False))
+
+```
+
+By comparing these costs with the one computed in Chapter 3 (Energy Bill), we can see.... (TODO)
+
+<!---
 
 ## Minimum energy requirement
 
@@ -616,7 +900,7 @@ plt.show()
 figure.savefig("composite_curves.png", format="png", dpi=600)
 ```
 
-
+--->
 
 
 
