@@ -48,7 +48,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
         T2_prime = T1 + dT #T1v.max()
     
     #Find the minimum Area of the HX
-    Q = m2*cp2*T2-T2_prime
+    Q = m2*cp2*(T2-T2_prime)
     #print('Q = ', round(Q, 3), 'W')
     alpha= 1000 #W/m^2°C, assumption based on alpha_H20 since 65wt% of the stream is water 
     U = alpha/2
@@ -62,7 +62,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
 
     CEPCI2019=603.1 
     CEPCI1998=389.5 #https://personalpages.manchester.ac.uk/staff/tom.rodgers/Interactive_graphs/CEPCI.html?reactors/CEPCI/index.html
-    K1=3.6788 #sl 12 T4.1 assumption flat plate HX
+    K1=3.6788 #sl 12 T4.1 assumption spiral plate HX
     K2=0.4412
     FBM=4.74 #assumption fluid sl 10 T4.1
     i=0.05 #sl 8 T4.2
@@ -176,7 +176,6 @@ T1v_5 = slope1_5*h_5 + C1_5
 C2_5 = T2_5 - slope2_5*h2_5
 T2v_5 = slope2_5*h_5 + C2_5
 
-T2_prime_5 = T2v_5.min()
 
 # Create trace for Cold Stream
 trace_cold = go.Scatter(x=h_5, y=T1v_5, mode='lines', name='Cold Stream')
@@ -358,7 +357,6 @@ T1v_1 = slope1_1*h_1 + C1_1
 C2_1 = T2_1 - slope2_1*h2_1
 T2v_1 = slope2_1*h_1 + C2_1
 
-T2_prime_1 = T2v_1.min()
 
 # Create trace for Cold Stream
 trace_cold = go.Scatter(x=h_1, y=T1v_1, mode='lines', name='Cold Stream')
@@ -502,7 +500,6 @@ T1v_5 = slope1_5*h_5 + C1_5
 C2_5 = T2_5 - slope2_5*h2_5
 T2v_5 = slope2_5*h_5 + C2_5
 
-T2_prime_5 = T2v_5.min()
 
 # Create trace for Cold Stream
 trace_cold = go.Scatter(x=h_5, y=T1v_5, mode='lines', name='Cold Stream')
@@ -649,7 +646,7 @@ Let's try to apply the method used for the pasterization:
 ```{python cip_heat_recovery, echo = T, eval = T}
 from pyxosmose.state import State
 
-T1_cip = 343  #T_cip2 in CH2
+T1_cip = 333  #T_cip2 in CH2
 T2_cip = 348  #T_cip6 in CH2
 
 p1_cip = 100000
@@ -687,7 +684,6 @@ T1v_cip = slope1_cip*h_cip + C1_cip
 C2_cip = T2_cip - slope2_cip*h2_cip
 T2v_cip = slope2_cip*h_cip + C2_cip
 
-T2_prime_cip = T2v_cip.min()
 
 # Create trace for Cold Stream
 trace_cold = go.Scatter(x=h_cip, y=T1v_cip, mode='lines', name='Cold Stream')
