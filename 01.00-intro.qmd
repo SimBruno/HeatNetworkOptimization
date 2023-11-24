@@ -1,8 +1,15 @@
 ---
-title: "Title"
+title: "Group 6/F: Process Integration and Optimization for a Dairy Factory"
 editor: visual
 ---
 # Introduction {#intro}
+| Name           | Sciper |
+|----------------|--------|
+|  Simon BRUNO   | 310348 |
+| Corentin JAIRE | 310573 |
+|  Lina KUHLMANN | 312893 |
+| Lorenzo PRECHT | 310969 |
+| Valentine REHN | 342655 |
 
 In the introduction, consider addressing the following questions relevant to your project:
 
