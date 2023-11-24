@@ -94,8 +94,8 @@ $${#eq-past_past1}
 
 $$
 \begin{align*}
-    \dot Q_{past2} &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Milk{\_}0} - T_{Past{\_}a}) \\
-    &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Past{\_}c} - T_{Past{\_}b})
+    \dot Q_{past2} &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Past{\_}a} - T_{Milk{\_}0}) \\
+    &= \dot m_{Milk} \cdot c_{p,Raw~Milk} \cdot (T_{Past{\_}b} - T_{Past{\_}c})
 \end{align*}
 $${#eq-past_past2}
 
@@ -130,8 +130,8 @@ $${#eq-past_past4}
 
 $$
 \begin{align*}
-    \dot Q_{past5} &= \dot m_{Intern} \cdot c_{p,Cream~ac} \cdot (T_{cream{\_}0} - T_{crpast{\_}a}) \\
-    &= \dot m_{Cream} \cdot c_{p,Cream} \cdot (T_{crpast{\_}c} - T_{crpast{\_}b})
+    \dot Q_{past5} &= \dot m_{Intern} \cdot c_{p,Cream~ac} \cdot (T_{crpast{\_}a} - T_{cream{\_}0}) \\
+    &= \dot m_{Cream} \cdot c_{p,Cream} \cdot (T_{crpast{\_}b} - T_{crpast{\_}c})
 \end{align*}
 $${#eq-past_past5}
 
@@ -190,7 +190,7 @@ Cp_cream_mixed = (m_int/m_cream)*Cp_cream + (m_thick/m_cream)*Cp_alboline
 
 # Temperatures (K)
 
-T_a=25+273
+T_a=25+273.15
 T_fmilk = 6+273.15
 T_mixure_out = 4+273.15
 T_past_cent = 60+273.15
@@ -217,11 +217,11 @@ T_steam_out = 110 + 273.15
 
 # Temperatures computation
 
-T_past_c = 5 + T_past_b
-T_past_a = T_past_c - T_past_b + T_milk_0
-T_past_d = - (( m_fmilk / m_milk ) * ( Cp_fmilk / Cp_raw_milk ) * (T_past_cent - T_mixure_out)) + T_past_c
+T_past_c = -5 + T_past_b
+T_past_a = T_past_b - T_past_c + T_milk_0 
+T_past_d = - (( m_fmilk / m_milk ) * ( Cp_fmilk / Cp_raw_milk ) * (T_past_cent- T_mixure_out)) + T_past_c
 T_crpast_a = (( m_cream / m_int ) * ( Cp_cream_mixed / Cp_cream ) * 5) + T_cream_0
-T_crpast_c = (( m_int / m_cream ) * ( Cp_cream / Cp_cream_mixed ) * (T_crpast_a - T_cream_0)) + T_crpast_b
+T_crpast_c = (( m_int / m_cream ) * ( Cp_cream / Cp_cream_mixed ) * (-T_crpast_a + T_cream_0)) + T_crpast_b
 T_crpast_x = ((Cp_alboline*m_thick)*T_thick + (Cp_cream*m_int)*T_crpast_a) / ((Cp_alboline*m_thick)+(Cp_cream*m_int))
 
 # Heat flows computation
