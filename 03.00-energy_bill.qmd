@@ -156,6 +156,9 @@ L_past1=L_past1_1+L_past1_2
 L_past2_1=m_milk*Cp_raw_milk*((T_past_a-T_milk_0)-T_a*np.log(T_past_a/T_milk_0))  
 L_past2_2=m_milk*Cp_raw_milk*((T_past_c-T_past_b)-T_a*np.log(T_past_c/T_past_b)) 
 
+L_past2_1=m_milk*Cp_raw_milk*((T_milk_0-T_past_a)-T_a*np.log(T_milk_0/T_past_a))  
+L_past2_2=m_milk*Cp_raw_milk*((T_past_b-T_past_c)-T_a*np.log(T_past_b/T_past_c)) 
+
 L_past2=L_past2_1+L_past2_2
 
 
@@ -335,6 +338,11 @@ From the previous calculations, one can see that the total exergy lost to the en
 
 To decrease the overall exergy losses in the system, different strategies can be implemented. Since the exergy efficiencies are so large the best option is to improve the general energy efficiency by upgrading to more energy-efficient equipment and using insulation.
 
+```{r sankey-function, echo = T, eval = T, warning = F, message=F}
+source("./sankey_ipese.R") # introduce the sankey function from the source file
+df = read.csv('atom_balance.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
+sankey_ipese(df = df, unit = 'kmol/h', title = 'Example of an interactive Sankey diagram') # replace the unit and title here
+```
 
 
 

@@ -248,6 +248,11 @@ m_gly_past7 = Q_past7 / ( Cp_glywater * (T_glywater_out-T_glywater_in) )
 delta_s_steam = 7.343e3 - 1.418e3
 delta_h_steam = 2880.8e3 - 461.368e3
 
+s_steam_in=7343
+s_steam_out=1418
+h_steam_in=28880800
+h_steam_out=461368
+
 
 #DATAFRAMES
 
