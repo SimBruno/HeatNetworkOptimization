@@ -1,451 +1,407 @@
 ---
+
 title: "Brewery Process"
+
 output: html_document
+
 venv: ../venv
+
 ---
 
-# Brewery Process {-}
+
+
+# Dairy Process {-}
+
+
+
 
 
 <!--   -- Co2 generation during wort fermentation 15g per pint where 1 pint (500 mL) -->
+
 <!--   -- https://www.theguardian.com/environment/green-living-blog/2010/jun/04/carbon-footprint-beer -->
+
 <!--   -- https://www.mdpi.com/2071-1050/10/11/4191 -->
+
 <!--   -- https://www.pureairemonitoring.com/brewers-safely-capture-and-reuse-carbon-dioxide/ -->
+
 <!--   -- https://craftpeak-cooler-uploads.s3.amazonaws.com/deya-brewing-company/2020-CO2e-Analysis-Report.pdf -->
+
 <!--   -- https://www.ikegger.com/blogs/ikeggerworld/how-much-co2-is-produced-during-fermentation -->
+
 <!--   -- Fermentation yields 3x CO2 than actually needed (including brewing, canning, and bottling) -->
+
 <!--   -- Carbonation level between 2.5 and 4 volumes (5–8 g/l). Most bottled beers on the market to the higher carbonation, 3 volumes is on the high end for most styles -->
+
 <!--   --https://lifefermented.wordpress.com/2014/01/22/how-much-co2-is-produced-from-brewing, https://beerandbrewing.com/dictionary/iKSxvCoDdk/ -->
 
 
+
+
+
 <!-- Carbonation level between 2.5 and 4 volumes (5–8 g/l). Most bottled beers on the market at the higher carbonation < 3 volumes REF https://lifefermented.wordpress.com/2014/01/22/how-much-co2-is-produced-from-brewing, https://beerandbrewing.com/dictionary/iKSxvCoDdk/ -->
+
 
 
 ```{rosmose breweryprocess}
 ! OSMOSE ET breweryprocess
 ```
 
-
-
+<!-- dfdsdfgdsfsdf -->
 
 ```{rosmose} 
-beer_massflow_ref = 19.0793 [kg/s] # Nominal capacity for sizing multiplier definition  
-beer_massflow_act = 30 [kg/s] # Actual capacity for sizing multiplier definition  https://www.the-top-twenty.com/the-top-20-biggest-brewery-companies-in-the-world/
-maltflow_ref  = 2.5969 [kg/s] # Malt https://www.mdpi.com/2071-1050/10/11/4191
-cornflow_ref  = 0.2197 [kg/s] # Corn
-waterflow_ref  = 19.6276 [kg/s] # Water
-sodaflow_ref  = 0.3816 [kg/s] # Soda
-huskflow_ref  = 0.7583 [kg/s] #  Almost dry spent grain to the biodigestion process
-CO2_from_ferm  = 0.0373 [kg_CO2ferm/kg_beer] # 0.0185 kg/0.5 L = 0.0373 kg/L = 30 kg/m3
-CO2_excess_factor = 0.667 [kg_CO2_excess/kg_CO2ferm] # Fermentation yields 3x CO2 than actually needed (including brewing, canning, and bottling)
-beer_density = 1060 [kg/m3] # Beer density http://brewwiki.com/index.php/Specific_gravity
-water_density =  1000 [kg/m3] #
-CO2_density = 0.0019 [kg/m3] #
-ethanol_density = 790 [kg/m3] #
-dt_min  = 2 [K] #
-n = 40.0 [yr] #lifetime of a plant
-i = 0.06 [-] #interest rate
-CEPCI_2020 = 596.2 [-] # actual CEPCI
-CEPCI_2020 = 596.2 [-] # CEPCI 2008
+fresh_milk_massflow_ref = 8 [kg/s] # Nominal capacity for sizing multiplier definition  
+#beer_massflow_act = 30 [kg/s] # Actual capacity for sizing multiplier definition  https://www.the-top-twenty.com/the-top-20-biggest-brewery-companies-in-the-world/
+cream_flow_ref  = 0.55 [kg/s] # Cream
+milk_flow_ref  = 7.52 [kg/s] # Milk
+thickener_flow_ref  = 0.07 [kg/s] # Thickener
+wastewater_flow_ref  = 1 [kg/s] # Wastewater
+whey_flow_ref  =  1.52 [kg/s] #  Whey production
+concentrated_milk_flow_ref = 1.32 [kg/s] # Concentrated milk production
+steam_evap_flow_ref = 0.0366 [kg/s] # Steam needed to evaporate the milk
+water_dryers_flow_ref = 0.63 [kg/s] # Water exiting the drum dryers
+make_up_water_flow_ref = 1.2 [kg/s] # Water added in the cleaning in place phase
+bottle_flow_rate_ref = 6.6412698 [kg/s] # Mass of the bottles cleaned per second
+water_to_lake_flow_ref = 1.2 [kg/s] # Water released into the lake after the cleaning in place
+air_cold_storage_flow_ref = 100 [kg/s] #Air
+hot_water_flow_ref = 1 [kg/s] # Hot water
+discharge_flow_ref = 21 [kg/s] # Wastewater discharge
+sludge_flow_ref = 0.1174 [kg/s] # Sludge produced
+aroma_flow_ref = 0.0304 [kg/s] #Aroma added
+water_rivella_6_flow_ref = 1.102024 [kg/s] #Water obtained from the Rivella production phase
+water_rivella_11_flow_ref = 0.044838 [kg/s] # Water used to produce green Rivella
+fruit_sugar_flow_ref =  0.044838 [kg/s] # Fruit sugar used to produce green Rivella
+sugar_flow_ref = 0.183087 [kg/s] # Sugar used to produce red Rivella
+water_rivella_18_flow_ref = 0.026155 [kg/s] # Water used to produce red Rivella
+bio_degradable_waste_flow_ref = 0.1174 [kg/s] # Biodegradable waste produced in the digester phase
+biogas_flow_ref = 0.0014 [kg/s] # Biogas produced in the digester phase
+waste_water_digester_flow_ref = 0.0876 [kg/s] # Wastewater produced in the digester phase
+super_heat_steam_flow_ref = 0.7244 [kg/s] #Superheated steam used in the digester phase
+#add slightly super heat steam when corrected
+dryed_digestate_flow_ref = 0.0156 [kg/s] # Dryed digestate produced in the digester phase
+slightly_super_heated_steam = 0.7372 [kg/s] # Slightly superheated steam produced in the digester phase
+water_density =  1000 [kg/m3] # Water density
+CO2_density = 0.0019 [kg/m3] # CO2 density
+powder_dryers_flow_ref = 0.69 [kg/s] # Powdered milk production in the drum dryers phase
+dt_min  = 5 [K] #
+#n = 40.0 [yr] #lifetime of a plant
+#i = 0.06 [-] #interest rate
+#CEPCI_2020 = 596.2 [-] # actual CEPCI
+#CEPCI_2020 = 596.2 [-] # CEPCI 2008
 ```
 
 The calculated parameters are defined as follows:
 
-
 ```{rosmose} 
-mult_brew   = %beer_massflow_act%/%beer_massflow_ref% [-] # Sizing multiplier
-beer_volflow  = %beer_massflow_ref%/%beer_density%*3600 [m3/h] # referece beer volumetric flow
-maltflow  = %maltflow_ref%*3600 [kg/h] # Malt
-cornflow  = %cornflow_ref%*3600 [kg/h] # Corn
-water_volflow = %waterflow_ref%/%water_density%*3600 [m3/h] # Water
-sodaflow  = %sodaflow_ref%*3600 [kg/h] # Soda
-husk_waste = %huskflow_ref%*3600 [kg/h] # Husk spent grain to the biodigestion process
-CO2_excess = %CO2_from_ferm%*%CO2_excess_factor%*%beer_massflow_ref%*3600 [kg/h]
+#mult_brew   = %beer_massflow_act%/%beer_massflow_ref% [-] # Sizing multiplier
+#beer_volflow  = %beer_massflow_ref%/%beer_density%*3600 [m3/h] # referece beer volumetric flow
+#maltflow  = %maltflow_ref%*3600 [kg/h] # Malt
+#cornflow  = %cornflow_ref%*3600 [kg/h] # Corn
+#water_volflow = %waterflow_ref%/%water_density%*3600 [m3/h] # Water
+#sodaflow  = %sodaflow_ref%*3600 [kg/h] # Soda
+#husk_waste = %huskflow_ref%*3600 [kg/h] # Husk spent grain to the biodigestion process
+#CO2_excess = %CO2_from_ferm%*%CO2_excess_factor%*%beer_massflow_ref%*3600 [kg/h]
+
+#fresh_milk_massflow = %fresh_milk_massflow_ref%*3600 [kg/h]
+#cream_flow = %cream_flow_ref%*3600 [kg/h]
+
+#milk_flow = %milk_flow_ref%*3600 [kg/h]
+
 ```
 
-
-**Brewery Process ET Layers**
+**Dairy Process ET Layers:**
 
 ```{rosmose}
 : OSMOSE LAYERS breweryprocess
 
 |Layer      |Display name   |shortname  |Unit       |Color  |
 |:----------|:--------------|:----------|:----------|:------|
-|ELEC       |Electricity    |elec       |kW         |yellow |
-|NATGAS     |Gas            |ng         |kW         |green  |
-|BEER       |Beer           |beer       |m3/h       |white  |
-|HUSK       |Husk           |husk       |kg/h       |black  |  
-|MALT       |Malt           |malt       |kg/h       |grey   |
-|SODA       |Soda           |soda       |kg/h       |black  |
-|CORN       |Corn           |corn       |kg/h       |green  |  
-|WATER      |Water          |water      |m3/h       |blue   |
-|CO2        |CO2            |co2        |kg/h       |red    |  
+|FRESH_MILK |Fresh Milk     |fresh_milk |kg/s       |white  |
+|CREAM      |Cream          |cream      |kg/s       |black  |  
+|MILK       |Milk           |milk       |kg/s       |grey   |
+|THICKENER  |Thickener      |thickener  |kg/s       |black  |
+|WASTEWATER |Wastewater     |wastewater |kg/s       |green  |  
+|WHEY       |Whey           |whey       |kg/s       |blue   |
+|CONC_MILK  |Conc. Milk     |conc. milk |kg/s       |red    |  
+|STEAM_EVAP |Steam Evap.    |steam evap.|kg/s       |orange |
+|WATER_DRY  |Water Dryers   |water dry. |kg/s       |cyan   |
+|MAKE_UP_WAT|Make up Water  |makeup wat.|kg/s       |purple |
+|BOTTLE     |Bottle         |bottle     |kg/s       |beige  |
+|LAKE_WATER |Lake Water     |lake water |kg/s       |pink   |
+|COLD_AIR   |Cold Air       |cold air   |kg/s       |scarlet|
+|HOT_WATER  |Hot Water      |hot water  |kg/s       |olive  |
+|DISCHARGE  |Discharge      |discharge  |kg/s       |brown  |
+|SLUDGE     |Sludge         |sludge     |kg/s       |lime   |
+|AROMA      |Aroma          |aroma      |kg/s       |coral  |
+|WATER6     |Water Riv. 6   |water r. 6 |kg/s       |sienna |
+|WATER11    |Water Riv. 11  |water r. 11|kg/s       |azure  |
+|FRUIT SUGAR|Fruit Sugar    |fruit sugar|kg/s       |navy   |
+|SUGAR      |Sugar          |sugar      |kg/s       |yellow |
+|WATER18    |Water Riv. 18  |water r. 18|kg/s       |tan    |
+|DEG_WASTE  |Biodeg. Waste  |deg. waste |kg/s       |magenta|
+|BIOGAS     |Biogas         |biogas     |kg/s       |cyan   |
+|DIG. WASTE |Digester Waste |dig. waste |kg/s       |skyblue|
+|SUP. H. ST.|Superheat Steam|sup. h. st.|kg/s       |violet |
+|DIGESTATE  |Dryed Digestate|digestate  |kg/s       |maroon |
+|SL. STEAM  |Slight Heat St.|sl. steam  |kg/s       |thistle|
 ```
 
 ## Brewery Process Units {-}
 
-The brewery process contains the following units
+The dairy process contains the following units
 
 ```{rosmose}
 : OSMOSE UNIT breweryprocess
 
 |unit name      |type   |
 |:--------------|:------|
-|HotPart_Batch1 |Process|
-|HotPart_Batch2 |Process|
-|HotPart_Batch3 |Process|
-|ColdPart_Batch1|Process|
-|ColdPart_Batch2|Process|
-|ColdPart_Batch3|Process|
-|ColdPart_Batch4|Process|
-|Bottle_Clean   |Process|
-|MassBrewery    |Process| 
+|Pasteurisation |Process|
+|Evaporation    |Process|
+|Drum_Dryers    |Process|
+|Cleaning_Place |Process|
+|Cold_Storage   |Process|
+|Hot_Water      |Process|
+|Wastewater     |Process|
+|Rivella        |Process|
+|Digester       |Process| 
 ```
 
 
 
 
 
-
-
-
-
-
-## Hot part Batch 1 {-}
-
+## Pasteurisation {-}
 
 ```{rosmose}
-: OSMOSE UNIT_PARAM HotPart_Batch1
+: OSMOSE UNIT_PARAM Pasteurisation
+|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
+|:----|:----|:----|:----|:---|:---|:---|:---|
+|0    |0    |0    |0    |0   |0   |1   |1   |
+```
+
+**Pasteurization Streams**
+
+<!--DTmin is 5
+Hin is 0 if it is heating up
+Hout is 0 if it is cooling down
+H is mdot*Q-->
+
+The heat Streams:
+
+```{rosmose}
+: OSMOSE HEAT_STREAMS Pasteurisation
+#All H in kJ/kg/s
+#: OSMOSE HEAT_STREAMS HotPart_Batch1
+|name         |Tin   |Tout   |Hin     |Hout    |DT min/2|alpha|
+|:------------|:-----|:------|:-------|:-------|:-------|:----|
+|Fresh_Milk   |6.00  |60.00  |0       |13049.84|2.5     |1    |
+|Cream_0      |60.00 |4.00   |60.465  |0       |2.5     |1    |
+|Milk         |60.00 |4.00   |14182.87|0       |2.5     |1    |
+```
+
+## Evaporation {-}
+
+```{rosmose}
+: OSMOSE UNIT_PARAM Evaporation
 
 |cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
 |:----|:----|:----|:----|:---|:---|:---|:---|
 |0    |0    |0    |0    |0   |0   |1   |1   |
 ```
 
-**Hot part Batch 1 Streams**
-
-<!-- The mass streams are: -->
-
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS HotPart_Batch1 -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
+**Evaporation Streams**
 
 
 The heat Streams:
 
 ```{rosmose}
-: OSMOSE HEAT_STREAMS HotPart_Batch1
-
-|name         |Tin   |Tout   |Hin    |Hout   |DT min/2|alpha|
-|:------------|:-----|:------|:------|:------|:-------|:----|
-|Water_MAK1   |15.00 |51.50  |0      |369.90 |2       |1    |
-|MAK_Heating1 |48.00 |65.00  |0      |188.60 |2       |1    |
-|Water_MAT2   |15.00 |54.50  |0      |823.60 |2       |1    |
-|MAT_Heating2 |48.00 |65.00  |0      |420.10 |2       |1    |
-```
-
-
-
-
-
-
-
-
-
-
-## Hot part Batch 2 {-}
-
-
-```{rosmose}
-: OSMOSE UNIT_PARAM HotPart_Batch2
-
-|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
-|:----|:----|:----|:----|:---|:---|:---|:---|
-|0    |0    |0    |0    |0   |0   |1   |1   |
-```
-
-**Hot part Batch 2 Streams**
-
-<!-- The mass streams are: -->
-
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS HotPart_Batch2 -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
-
-
-The heat Streams:
-
-```{rosmose}
-: OSMOSE HEAT_STREAMS HotPart_Batch2
+: OSMOSE HEAT_STREAMS Evaporation
 
 |name                |Tin    |Tout  |Hin   |Hout    |DT min/2 |alpha|
 |:-------------------|:------|:-----|:-----|:-------|:--------|:----|
-|MAT_and_MAK         |65.00	 |75.00 |0.00  |368.40  |2        |1    |
-|Water_Filter_and_CIP|15.00  |80.00 |0.00  |1608.9  |2        |1    |
-|WOK_Boiling         |78.00  |105.00|0.00  |1662.90 |2        |1    |   
-|WOK_Evaporation     |105.00 |105.00|0.00  |3319.80 |2        |1    |
-|Vapour_Cond1        |105.00 |100.00|17.2  |0.00    |1        |1    |
-|Vapour_Cond2        |100.00 |100.00|3487.9|0.00    |2        |1    |  
-|Vapour_Cond3        |100.00 |25.00 |482.8 |0.00    |2        |1    |  
+|Milk_5              |4.00   |65.00 |0.00  |5975.218|2.5      |1    |
+|Milk_8              |65.00  |70.00 |0.00  |333.332 |2.5      |1    |
+|Milk_10             |70.00  |65.00 |961.29|0.00    |2.5      |1    |   
+|Concentrated_Milk   |65.00  |4.00  |771.94|0.00    |2.5      |1    |
 ```
 
-
-
-
-
-## Hot part Batch 3 {-}
-
+## Drum Dryers {-}
 
 ```{rosmose}
-: OSMOSE UNIT_PARAM HotPart_Batch3
+: OSMOSE UNIT_PARAM Drum_Dryers
 
 |cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
 |:----|:----|:----|:----|:---|:---|:---|:---|
 |0    |0    |0    |0    |0   |0   |1   |1   |
 ```
 
-**Hot part Batch 3 Streams**
-
-<!-- The mass streams are: -->
-
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS HotPart_Batch3 -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
-
+**Drum Dryers Streams**
 
 The heat Streams:
 
 ```{rosmose}
-: OSMOSE HEAT_STREAMS HotPart_Batch3
-
+: OSMOSE HEAT_STREAMS Drum_Dryers
 |name        |Tin   |Tout |Hin    |Hout    |DT min/2 |alpha|
 |:-----------|:-----|:----|:------|:-------|:--------|:----|
-|Centrifuge  |5     |80.00|0.00   |857.90  |2        |1    |
-|Wort_Cooling|102.50|10.00|5434.60|0.00    |2        |1    | 
+|Final_powder|4.00  |50.00|0.00   |127.527 |2.5      |1    |
+|Water_1     |4.00  |45.00|0.00   |156.894 |2.5      |1    | 
+|Water_2     |100.00|45.00|15.583 |0.00    |2.5      |1    |
 ```
 
 
 
-
-
-
-
-
-## Cold part Batch 1 {-}
-
+## Cleaning in Place {-}
 
 ```{rosmose}
-: OSMOSE UNIT_PARAM ColdPart_Batch1
-
+: OSMOSE UNIT_PARAM Cleaning_Place
 |cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
 |:----|:----|:----|:----|:---|:---|:---|:---|
 |0    |0    |0    |0    |0   |0   |1   |1   |
 ```
 
-**Cold part Batch 1 Streams**
-
-<!-- The mass streams are: -->
-
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch1 -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
+**Cleaning in Place Streams**
 
 
 The heat Streams:
 
 ```{rosmose}
-: OSMOSE HEAT_STREAMS ColdPart_Batch1
-
+: OSMOSE HEAT_STREAMS Cleaning_Place
 |name        |Tin  |Tout |Hin    |Hout    |DT min/2 |alpha|
 |:-----------|:----|:----|:------|:-------|:--------|:----|
-|Fermentation|10.00|10.00|534.80 |0.00    |2        |1    |
+|Bottles     |25.00|40.00|0.00   |555.718 |2.5      |1    |
+|Lake Water  |25.00|30.00|0.00   |291.004 |2.5      |1    |
 ```
 
 
+## Cold Storage {-}
 
 
 
-
-
-
-
-
-
-## Cold part Batch 2 {-}
 
 
 ```{rosmose}
-: OSMOSE UNIT_PARAM ColdPart_Batch2
-
+: OSMOSE UNIT_PARAM Cold_Storage
 |cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
 |:----|:----|:----|:----|:---|:---|:---|:---|
 |0    |0    |0    |0    |0   |0   |1   |1   |
 ```
 
-**Cold part Batch 2 Streams**
 
-<!-- The mass streams are: -->
 
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch2 -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
-
+**Cold Storage Streams**
 
 The heat Streams:
 
 ```{rosmose}
-: OSMOSE HEAT_STREAMS ColdPart_Batch2
-
+: OSMOSE HEAT_STREAMS Cold_Storage
 |name     |Tin  |Tout |Hin   |Hout |DT min/2 |alpha|
 |:--------|:----|:----|:-----|:----|:--------|:----|
-|Cooling  |10.00|6.00 |233.80|0.00 |2        |1    |
-|Maturing |6.00 |6.00 |425.50|0.00 |2        |1    | 
+|Air      |0.00 |-5.00|500.00|0.00 |2.5      |1    |
 ```
 
 
-
-
-
-
-
-
-## Cold part Batch 3 {-}
-
+## Hot Water {-}
 
 ```{rosmose}
-: OSMOSE UNIT_PARAM ColdPart_Batch3
+: OSMOSE UNIT_PARAM Hot_Water
 
 |cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
 |:----|:----|:----|:----|:---|:---|:---|:---|
 |0    |0    |0    |0    |0   |0   |1   |1   |
 ```
 
-**Cold part Batch 3 Streams**
-
-<!-- The mass streams are: -->
-
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch3 -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
 
 
-
+**Hot Water Streams**
 
 The heat Streams:
 
 ```{rosmose}
-: OSMOSE HEAT_STREAMS ColdPart_Batch3
-
+: OSMOSE HEAT_STREAMS Hot_Water
 |name    |Tin |Tout|Hin   |Hout  |DT min/2 |alpha|
 |:-------|:---|:---|:-----|:-----|:--------|:----|
-|Chilling|6.00|1.00|714.50|0.00  |2        |1    |
-|Chillage|1.00|1.00|427.70|0.00  |2        |1    |
-
-
+|Water   |15.0|55.0|0.00  |167.25|2.5      |1    |
 
 ```
 
 
-
-
-
-## Cold part Batch 4 {-}
-
+## Rivella Production {-}
 
 ```{rosmose}
-: OSMOSE UNIT_PARAM ColdPart_Batch4
-
+: OSMOSE UNIT_PARAM Rivella
 |cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
 |:----|:----|:----|:----|:---|:---|:---|:---|
 |0    |0    |0    |0    |0   |0   |1   |1   |
 ```
 
-**Cold part Batch 4 Streams**
-
-<!-- The mass streams are: -->
-
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS ColdPart_Batch4 -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
-
+**Rivella Production Streams**
 
 The heat Streams:
 
 ```{rosmose}
-: OSMOSE HEAT_STREAMS ColdPart_Batch4
-
+: OSMOSE HEAT_STREAMS Rivella
 |name          |Tin   |Tout |Hin    |Hout    |DT min/2 |alpha|
 |:-------------|:-----|:----|:------|:-------|:--------|:----|
-|Beer_preheat  |1.00  |15.00|0.00   |822.05  |2        |1    |
-|Pasteurization|15.00 |80.00|0.00   |4854.05 |2        |1    | 
-|ColdBath      |70.00 |5.00 |4858.40|0.00    |2        |1    | 
+|Fruit Sugar   |25.00 |10.00|0.5699 |0.00    |2.5      |1    |
+|H2O_green     |25.00 |10.00|0.5699 |0.00    |2.5      |1    | 
+|Whey_8        |50.00 |10.00|1.7099 |0.00    |2.5      |1    | 
+|Whey_17       |50.00 |10.00|5.2482 |0.00    |2.5      |1    |
+|H2O_red       |25.00 |10.00|0.4373 |0.00    |2.5      |1    |
+|Sugar         |25.00 |10.00|3.0615 |0.00    |2.5      |1    |
+|Whey_1        |3.85  |50.00|0.00   |287.139 |2.5      |1    |
+|Water_CIP     |3.85  |100.0|0.00   |686.251 |2.5      |1    |         
 ```
 
-
-
-
-
-## Bottle Cleaning {-}
-
+## Digester {-}
 
 ```{rosmose}
-: OSMOSE UNIT_PARAM Bottle_Clean
-
+: OSMOSE UNIT_PARAM Digester
 |cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
 |:----|:----|:----|:----|:---|:---|:---|:---|
 |0    |0    |0    |0    |0   |0   |1   |1   |
 ```
 
-**Cold part Bottle Cleaning**
-
-<!-- The mass streams are: -->
-
-<!-- ```{rosmose} -->
-<!-- : OSMOSE RESOURCE_STREAMS Bottle_Clean -->
-
-<!-- |layer      |direction|value                | -->
-<!-- |:----------|:--------|:--------------------| -->
-<!-- ``` -->
-
+**Digester**
 
 The heat Streams:
 
 ```{rosmose}
-: OSMOSE HEAT_STREAMS Bottle_Clean
-
+: OSMOSE HEAT_STREAMS Digester
 |name             |Tin  |Tout |Hin   |Hout    |DT min/2 |alpha|
 |:----------------|:----|:----|:-----|:-------|:--------|:----|
-|BathRinse        |65.00|85.00|0.00  |251.90  |2        |1    | 
-|PreRinse         |40.00|60.00|0.00  |472.80  |2        |1    |
-|Soda_Bath        |15.00|85.00|0.00  |39.80   |2        |1    |
-|Water_Bath       |15.00|85.00|0.00  |1287.10 |2        |1    |
-|Vapour_Pre_rinse |15.00|60.00|0.00  |29.30   |2        |1    |
-|Water_Final_rinse|35.00|60.00|0.00  |399.34  |2        |1    |
-|BathRinse_Out    |85.00|60.00|472.70|0.00    |2        |1    | 
-|PreRinse_Out     |40.00|20.00|713.70|0.00    |2        |1    |  
-|CIP              |15.00|80.00|0.00  |1841.1  |2        |1    |  
+|Biogas           |20.00|55.00|0.00  |0.1507  |2.5      |1    | 
+|Wastewater       |20.00|55.00|0.00  |9.4265  |2.5      |1    |
+|Superheat_steam  |150.0|130.0|20.829|0.00    |2.5      |1    |
+|Steam            |20.00|130.0|0.00  |1.7454  |2.5      |1    |
+|Dryed Digestate  |20.00|100.0|0.00  |2.1273  |2.5      |1    |
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
