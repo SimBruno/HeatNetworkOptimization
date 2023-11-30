@@ -819,6 +819,8 @@ HTML(CIP_opt_ger.to_html(index=False))
 
 ```
 
+We can observe that the optimum dT is 45K which brings CIP1 to 70°C instead of 25°C. Thus compared to the case without optimization CIP2 will be hotter than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require less steam to heat up until 80°C.
+
 ### To be done:
 By comparing these costs with the one computed in Chapter 3 (Energy Bill), we can see.... (TODO for all scenarios)
 
