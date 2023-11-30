@@ -653,23 +653,28 @@ It appears heat recovery is already well used in this system and we will assume 
 ### Cleaning in Place
 
 Now we will only focus on another part of the process (the cleaning in place) and we will try to optimize the heat recovery. We look for the heat exchanger in this process. There is one used to heat thanks to use of steam between flows CIP2 and CIP3/10, and there is one used to cool with glycolic water between flows CIP6 and CIP7.
-We could try to reduce both heat and cooling demand by connecting these two HX differently. 
-In chapter 2 when deermining heat and mass balances, we had determined the following relations between the flows temperatures:
-- T_cip6=75°C > T_cip2=60°C
+We could try to use the second one (between CIP6 and CIP7) to preheat the flow cip1 with is currently at 25°C and which need to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
 
-We could thus imagine a system where CIP6 flow is first used to preheat CIP2 to CIP2' (with T_cip2' > T_cip2) and the exiting flows called CIP6' (such that T_cip6'< T_cip6) is then used to be cooled where CIP6 was previously. Hence we would have a system with less cooling required since T_cip6'< T_cip6, and with also less heating required since T_cip2' > T_cip2.
+NB: We could have tried the same by preheating the CIP2 for it to be closer to CIP3 temperature of 80°C. However the gap would have been lowered (only 20°C difference compared to 35°C for the chosen solution) and thus the heat recovery would have been less efficient.
+ 
+In chapter 2 when deermining heat and mass balances, we had determined the following relations between the flows temperatures:
+- T_cip6=75°C > T_cip1=25°C
+
+The new HX will placed such that CIP6 flow is first used to preheat CIP1 to CIP1' (with T_cip1' > T_cip1) and the exiting flows called CIP6' (such that T_cip6'< T_cip6) is then used to be cooled where CIP6 was previously. Hence we would have a system with less cooling required since T_cip6'< T_cip6, and with also less heating required since T_cip1' > T_cip1.
+
+**AAAAAAADDDDDDDD ILLLLLLUUUSSSSSTRTATION** 
 
 Let's try to apply the method used for the pasterization:
 
 ```{python cip_heat_recovery, echo = T, eval = T}
 from pyxosmose.state import State
 
-T1_cip = 333  #T_cip2 in CH2
+T1_cip = 298  #T_cip1 in CH2
 T2_cip = 348  #T_cip6 in CH2
 
 p1_cip = 100000
 
-m1_cip = 4 #m_cip2 in CH2
+m1_cip = 1.2 #m_cip2 in CH2
 m2_cip = 1.2 #m_cip6 in CH2
 
 
@@ -685,8 +690,14 @@ State_Cold_2_cip = State_Cold_2_cip.__dict__
 h1_cip = State_Cold_1_cip["enthalpy"] * m1_cip  #from mixture with dry = 35% and wet = 65%
 h2_cip = State_Cold_2_cip["enthalpy"] * m2_cip
 
+print('h1 =', round(h1_cip, 3), 'kJ/kg')
+print('h2 =', round(h2_cip, 3), 'kJ/kg')
+
 cp1_cip = State_Cold_1_cip["cpmass"]
 cp2_cip = State_Cold_2_cip["cpmass"]
+
+print('cp1 =', round(cp1_cip, 3), 'kJ/kg.K')
+print('cp2 =', round(cp2_cip, 3), 'kJ/kg.K')
 
 slope1_cip = 1/(m1_cip*cp1_cip)
 slope2_cip = 1/(m2_cip*cp2_cip)
@@ -720,7 +731,9 @@ fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
 # Plot the vertical line at dTmin
 dt_cip = T2v_cip - T1v_cip
 dTmin_cip = dt_cip.min()
+
 min_index_cip = dt_cip.argmin()
+
 fig.add_shape(
     type='line',
     x0=h_cip[min_index_cip],
@@ -741,10 +754,10 @@ TOTEX_frv_cip = []
 TOTEX_gerv_cip = []
 Areav_cip = []
 
-dt_cip = np.linspace(0.1, 30, 300)
+dt_cip = np.linspace(5, 60)
 
 for t in dt_cip:
-    CAPEX_cip, OPEX_fr_cip, OPEX_ger_cip, TOTEX_fr_cip, TOTEX_ger_cip, Area_cip = Dtmin(t, T1_cip, T1v_cip, T2v_cip, T2_cip, m1_cip, m2_cip, cp1_cip, cp2_cip, 'left', 'cip')[0:6]
+    CAPEX_cip, OPEX_fr_cip, OPEX_ger_cip, TOTEX_fr_cip, TOTEX_ger_cip, Area_cip = Dtmin(t, T1_cip, T1v_cip, T2v_cip, T2_cip, m1_cip, m2_cip, cp1_cip, cp2_cip, 'right', 'cip')[0:6]
     CAPEXv_cip.append(CAPEX_cip)
     OPEX_frv_cip.append(OPEX_fr_cip)
     OPEX_gerv_cip.append(OPEX_ger_cip)
