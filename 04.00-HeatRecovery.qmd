@@ -69,6 +69,8 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
         T1_prime = T1v.max()
         T2_prime = T1 + dT #T1v.max()
     
+    print('T2 = ', round(T2, 3), 'K')
+    print('T2_prime = ', round(T2_prime, 3), 'K')
     #Find the minimum Area of the HX
     Q = m2*cp2*(T2-T2_prime)
     #print('Q = ', round(Q, 3), 'W')
@@ -78,6 +80,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
     dtB = abs(T1-T2_prime)
     LMTD = (dtA-dtB)/np.log(dtA/dtB)
     Area = Q/(U*LMTD)
+    
 
 
     #Find the CAPEX
@@ -140,17 +143,49 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
         OPEX_ger = OP3_ger + OP4_ger
     
     elif pastnb == 'cip':
-        Qsteam = m1*cp1*(353-T1_prime)
+
+        t_cip5 = 348
+        t_cip2 = T1_prime
+        t_cip1 = T1_prime
+        m_cip2 = 4 
+        m_cip1 = m1
+        m_cip1 = m_cip2*(t_cip2-t_cip5)/(t_cip1-t_cip5) 
+        m_cip5 = m_cip2-m_cip1
+
+        Qsteam = m_cip2*cp1*(353-t_cip2)
         OP_steam_cip_fr = gas_fr * Qsteam/1000 * top
         OP_steam_cip_ger = gas_ger * Qsteam/1000 * top
 
-        Qcool = m2*cp2*(T2_prime-277)
+        Qcool = m2*cp2*(T2_prime-303)
         Wcool = Qcool/COP
         OP_cool_cip_fr = elec_fr * Wcool/1000 * top
         OP_cool_cip_ger = elec_ger * Wcool/1000 * top
 
         OPEX_fr = OP_steam_cip_fr + OP_cool_cip_fr
         OPEX_ger = OP_steam_cip_ger + OP_cool_cip_ger
+
+    elif pastnb == 'HX':
+
+        tpasta = 273+65.9
+        cppasta = 3400
+        mpastx = 0.55
+        mpasta = 0.48
+        cppastx = 3498.64
+        tpastx = (tpasta*mpasta*cppasta+T1_prime*m1*cp1)/(mpastx*cppastx)
+
+        Qpast6 = mpastx*cppastx*(348-tpastx)
+
+        OP6_fr = gas_fr * Qpast6/1000 * top
+        OP6_ger = gas_ger * Qpast6/1000 * top
+
+        Qpast4 = m2*cp2*(T2_prime-277)  #T7 = 4°C = 277K
+        Wpast4 = Qpast4/COP
+
+        OP4_fr = elec_fr * Wpast4/1000 * top  
+        OP4_ger = elec_ger * Wpast4/1000 * top 
+
+        OPEX_fr = OP6_fr + OP4_fr
+        OPEX_ger = OP6_ger + OP4_ger
 
 
     #Find the TOTEX
@@ -644,14 +679,163 @@ HTML(Overall_opt_ger_sc2.to_html(index=False))
 ```
 
 ### Past 5 + recovery HEX
-In this scenario we have to estimate if it is worth to recover heat from past5 and use it to preheat another HX in this pasteurization stage. 
-Past5 is already used to preheat past6 (thanks to crpast_a flow which then becomes cr_past_x). Thus there is no improvement possible here. Then past1 entering flow (past_c) is already preheated by past 2 and past 3. 
-Remaining HX are for cooling and thus we don't want to preheat their incoming flows. 
 
-It appears heat recovery is already well used in this system and we will assume it is not worth to divert hot flows from past5 to preheat another flow. 
+**ADD EXPLANATION**
+
+We fix crpast_b to 75°C so we don't reoptimize on past5
+
+
+```{python past5 & HX recovery, echo = T, eval = T}
+from pyxosmose.state import State
+
+T1_hx = 277  #T_cip1 in CH2
+T2_hx = 283.8  #T_cip6 in CH2
+
+p1_hx = 100000
+
+m1_hx = 0.07 #m_cip2 in CH2
+m2_hx = 7.52 #m_cip6 in CH2
+
+State_Cold_1_hx = mixture(T=T1_hx, P=p1_hx, frac_water=0.5, frac_fat=0.5)
+State_Cold_2_hx = mixture(T=T2_hx, P=p1_hx, frac_water=0.883, frac_fat=0.117)
+
+
+h1_hx = State_Cold_1_hx["enthalpy"] * m1_hx  
+h2_hx = State_Cold_2_hx["enthalpy"] * m2_hx
+
+print('h1 =', round(h1_hx, 3), 'kJ/kg')
+print('h2 =', round(h2_hx, 3), 'kJ/kg')
+
+cp1_hx = State_Cold_1_hx["cpmass"]
+cp2_hx = State_Cold_2_hx["cpmass"]
+
+print('cp1 =', round(cp1_hx, 3), 'kJ/kg.K')
+print('cp2 =', round(cp2_hx, 3), 'kJ/kg.K')
+
+slope1_hx = 1/(m1_hx*cp1_hx)
+slope2_hx = 1/(m2_hx*cp2_hx)
+
+#Plot the two lines with T on the y-axis and h on the x-axis
+#h is the enthalpy of the stream between h1 and h2
+N = 100
+h_hx = np.linspace(h1_hx, h2_hx, N)
+
+C1_hx = T1_hx - slope1_hx*h1_hx
+T1v_hx = slope1_hx*h_hx + C1_hx
+print('T1v =', (T1v_hx), 'K')
+C2_hx = T2_hx - slope2_hx*h2_hx
+T2v_hx = slope2_hx*h_hx + C2_hx
+print('T2v =',(T2v_hx), 'K')   
+
+
+# Create trace for Cold Stream
+trace_cold = go.Scatter(x=h_hx, y=T1v_hx, mode='lines', name='Cold Stream')
+# Create trace for Hot Stream
+trace_hot = go.Scatter(x=h_hx, y=T2v_hx, mode='lines', name='Hot Stream')
+# Create layout
+layout = go.Layout(
+    title='Temperature vs Enthalpy',
+    xaxis=dict(title='Enthalpy (J)'),
+    yaxis=dict(title='Temperature (K)'),
+    legend=dict(x=0, y=1, traceorder='normal'),
+    showlegend=True
+)
+# Create figure
+fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
+# Plot the vertical line at dTmin
+dt_hx = T2v_hx - T1v_hx
+dTmin_hx = dt_hx.min()
+
+min_index_hx = dt_hx.argmin()
+
+fig.add_shape(
+    type='line',
+    x0=h_hx[min_index_hx],
+    x1=h_hx[min_index_hx],
+    y0=min(T1v_hx[min_index_hx], T2v_hx[min_index_hx]),
+    y1=max(T1v_hx[min_index_hx], T2v_hx[min_index_hx]),
+    line=dict(color='red', dash='dash')
+)
+
+print('dTmin =', round(dTmin_hx, 3), 'K at h =', round(h_hx[min_index_hx], 3), 'kJ/kg')
+
+#Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
+
+CAPEXv_hx = []
+OPEX_frv_hx = []
+OPEX_gerv_hx = []
+TOTEX_frv_hx = []
+TOTEX_gerv_hx = []
+Areav_hx = []
+
+dt_hx = np.linspace(5, 60)
+
+for t in dt_hx:
+    CAPEX_hx, OPEX_fr_hx, OPEX_ger_hx, TOTEX_fr_hx, TOTEX_ger_hx, Area_hx = Dtmin(t, T1_hx, T1v_hx, T2v_hx, T2_hx, m1_hx, m2_hx, cp1_hx, cp2_hx, 'right', 'HX')[0:6]
+    CAPEXv_hx.append(CAPEX_hx)
+    OPEX_frv_hx.append(OPEX_fr_hx)
+    OPEX_gerv_hx.append(OPEX_ger_hx)
+    TOTEX_frv_hx.append(TOTEX_fr_hx)
+    TOTEX_gerv_hx.append(TOTEX_ger_hx)
+    Areav_hx.append(Area_hx)
+
+#plot the results with respect to the dt values
+
+# Create traces for each cost component
+trace_capex = go.Scatter(x=dt_hx, y=CAPEXv_hx, mode='lines', name='CAPEX', line=dict(color='black'))
+trace_opex_france = go.Scatter(x=dt_hx, y=OPEX_frv_hx, mode='lines', name='OPEX (France)', line=dict(color='blue'))
+trace_opex_germany = go.Scatter(x=dt_hx, y=OPEX_gerv_hx, mode='lines', name='OPEX (Germany)', line=dict(color='red'))
+trace_totex_france = go.Scatter(x=dt_hx, y=TOTEX_frv_hx, mode='lines', name='TOTEX (France)', line=dict(color='blue', dash='dash'))
+trace_totex_germany = go.Scatter(x=dt_hx, y=TOTEX_gerv_hx, mode='lines', name='TOTEX (Germany)', line=dict(color='red', dash='dash'))
+
+# Create layout
+layout = go.Layout(
+    title='Costs vs dTmin',
+    xaxis=dict(title='dTmin (K)'),
+    yaxis=dict(title='Costs (€)'),
+    legend=dict(x=0, y=-0.2, traceorder='normal', orientation='h'),
+    showlegend=True
+)
+
+# Create figure
+fig = go.Figure(data=[trace_capex, trace_opex_france, trace_opex_germany, trace_totex_france, trace_totex_germany], layout=layout)
+
+# Mark the minima points for both France and Germany
+min_index_fr_hx = np.argmin(TOTEX_frv_hx)
+fig = fig.add_trace(go.Scatter(x=[dt_hx[min_index_fr_hx]], y=[TOTEX_frv_hx[min_index_fr_hx]], mode='markers', marker=dict(color='blue'), name='Min TOTEX (France)'))
+
+min_index_ger_hx = np.argmin(TOTEX_gerv_hx)
+fig = fig.add_trace(go.Scatter(x=[dt_hx[min_index_ger_hx]], y=[TOTEX_gerv_hx[min_index_ger_hx]], mode='markers', marker=dict(color='red'), name='Min TOTEX (Germany)'))
+
+# Show the figure
+fig.show()
+
+#print the optimum values for dt, area, CAPEX, OPEX, TOTEX for both France and Germany (NB: even if we have the same CAPEX fct for both countries, the optimum CAPEX will be different in both countries because of the electricity/gas rate)
+
+dtmin_fr_opt_hx = dt_hx[min_index_fr_hx]
+dtmin_ger_opt_hx = dt_hx[min_index_ger_hx]
+area_fr_opt_hx = Areav_hx[min_index_fr_hx]
+area_ger_opt_hx = Areav_hx[min_index_ger_hx]
+CAPEX_fr_opt_hx = CAPEXv_hx[min_index_fr_hx]
+CAPEX_ger_opt_hx = CAPEXv_hx[min_index_ger_hx]
+OPEX_fr_opt_hx = OPEX_frv_hx[min_index_fr_hx]
+OPEX_ger_opt_hx = OPEX_gerv_hx[min_index_ger_hx]
+TOTEX_fr_opt_hx = TOTEX_frv_hx[min_index_fr_hx]
+TOTEX_ger_opt_hx = TOTEX_gerv_hx[min_index_ger_hx]
+
+HX_opt_fr = pd.DataFrame({'dTmin_fr[K]': dtmin_fr_opt_hx, 'Area_fr[m^2]': area_fr_opt_hx, 'CAPEX_fr[€/yr]': CAPEX_fr_opt_hx, 'OPEX_fr[€/yr]': OPEX_fr_opt_hx, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_hx}, index=[0])
+HX_opt_fr = HX_opt_fr.round(2)
+HTML(HX_opt_fr.to_html(index=False))
+
+HX_opt_ger = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_hx, 'Area_ger[m^2]': area_ger_opt_hx, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_hx, 'OPEX_ger[€/yr]': OPEX_ger_opt_hx, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_hx}, index=[0])
+HX_opt_ger = HX_opt_ger.round(2)
+HTML(HX_opt_ger.to_html(index=False))
+
+```
 
 ### Cleaning in Place
 
+**CHANGE THE TEXT-TEXT-TETXT**
 Now we will only focus on another part of the process (the cleaning in place) and we will try to optimize the heat recovery. We look for the heat exchanger in this process. There is one used to heat thanks to use of steam between flows CIP2 and CIP3/10, and there is one used to cool with glycolic water between flows CIP6 and CIP7.
 We could try to use the second one (between CIP6 and CIP7) to preheat the flow cip1 with is currently at 25°C and which need to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
 
