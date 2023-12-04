@@ -38,6 +38,90 @@ Four different scenarios will be considered:
 
 The three first scenari focus on the pasterization process whereas the later is about the CIP process.
 
+### General Method
+
+#### Initialisation
+First, the T-h diagram of the cold and hot streams is plotted to determined if the dTmin is on the left or right of the diagram (i.e. if the dTmin is between the inlet and outlet temperatures of the cold stream or the hot stream). This will influence in the following formulas of CAPEX.
+
+In the case of $h_1 < h_2$. The equation of T-h diagram is:
+
+$$
+T_{cold}(h) = \frac{h}{m_1 c_{p,1}} + T_{1} - \frac{h_1}{m_1 c_{p,1}}
+$${#eq-slope_cold}
+
+$$
+T_{hot}(h) = \frac{h}{m_2 c_{p,2}} + T_{2} - \frac{h_2}{m_2 c_{p,2}}
+$${#eq-slope_hot}
+
+Then, the dTmin is graphically determined on the right or on the left as the minimum difference between the two curves.
+
+If dTmin is on the right:
+$$
+T_{cold,out} = T_{hot,in} - dT
+$${#eq-right1}
+$$
+T_{cold,in} = T_{cold}(h_1)
+$${#eq-right2}
+
+If dTmin is on the left:
+$$
+T_{cold,out} = T_{cold}(h_2)
+$${#eq-left1}
+$$
+T_{cold,in} = T_{cold,in} + dT
+$${#eq-left2}
+
+#### Investement cost (CAPEX)
+
+The heat exchanger area needs to be computed to get the CAPEX. 
+
+$$
+A_{ex} = \frac{Q_{ex}}{U \cdot LMTD}
+$${#eq-Aex}
+
+where:
+
+- Qex is the heat exchanged between the two streams
+
+$$
+Q = m_{cold} \cdot c_{p,c} \cdot (T_{c,in}-T_{c,out})
+  = m_{hot} \cdot c_{p,h} \cdot (T_{h,out}-T_{h,in})
+$${#eq-Q}
+
+- U, the total heat transfer coefficient, is assumed to be the half of the heat transfer coefficient of water ($1000 W/m^2K$) since the heat exchanger thickness is way smaller than 1 meter.
+$$
+U = \frac{\alpha}{2}
+$${#eq-U}
+
+- LMTD, the logarithmic mean temperature difference, is computed as follow:
+
+$$
+LMTD = \frac{(T_{h,in}-T_{c,out})-(T_{c,in}-T_{h,out})}{\ln(\frac{T_{h,in}-T_{c,out}}{T_{c,in}-T_{h,out}})}
+$$
+
+Knowing the heat exchanger area, the CAPEX can be computed as follow:
+
+$$
+CAPEX = F_{BM} \cdot C_p \cdot e \cdot a_n
+$${#eq-CAPEX}
+
+where:
+
+- $F_{BM}$ is the bare module factor, which is assumed to be 4.74 since a fluid flows in the heat exchanger (Slide 10, T4.1)
+
+- $C_p$ is the cost of the heat exchanger, which is computed as follow: $$C_p = \frac{I_t}{I_{t,ref}} \cdot 10^{k_1+k_2 \cdot \log(A_{ex})}$${#eq-Cp}
+    - $I_t = 603.1$ is the investment cost index of the year of interest (2019) @noauthor_fluid_nodate
+    - $I_{t,ref} = 389.5$ is the investment cost index of the reference year (1998) @noauthor_fluid_nodate
+    - $k_1 = 3.6788$ and $k_2 = 0.4412$ are the constants of the equation (Slide 12, T4.1) for a spiral plate heat exchanger. This type of heat exchanger is assumed because of the area range.
+
+- $e$ is the exchange rate between the us dollar and the euro. It is assumed to be 0.92 €/$.
+
+- $a_n$ is the annualization factor, which is computed as follow: $$a_n = \frac{i(1+i)^n}{(1+i)^n-1} $${#eq-a_n}
+    - $i = 0.05$ is the interest rate (Slide 8, T4.2)
+    - $n = 20$ is the lifetime of the heat exchanger
+
+#### Operating cost (OPEX)
+
 
 ### Past 5 only
 
@@ -74,14 +158,12 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
     #Find the minimum Area of the HX
     Q = m2*cp2*(T2-T2_prime)
     #print('Q = ', round(Q, 3), 'W')
-    alpha= 1000 #W/m^2°C, assumption based on alpha_H20 since 65wt% of the stream is water 
+    alpha= 1000 #W/m^2°C, assumption based on alpha_H20
     U = alpha/2
     dtA = abs(T2-T1_prime)  # to be sure we have a positive value in the ln() of the LMTD
     dtB = abs(T1-T2_prime)
     LMTD = (dtA-dtB)/np.log(dtA/dtB)
     Area = Q/(U*LMTD)
-    
-
 
     #Find the CAPEX
 
@@ -194,6 +276,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
 
     return CAPEX, OPEX_fr, OPEX_ger, TOTEX_fr, TOTEX_ger, Area, T1_prime, T2_prime
 ```
+
 ```{python past5only, echo = T, eval = T}
 # Scenario 1: dTmin for the past5
 
