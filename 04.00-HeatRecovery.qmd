@@ -20,6 +20,7 @@ Starting from this chapter, you will embark on optimizing the energy efficiency 
 
 The goal of this part is to determine an optimized dTmin such that costs are minimized. 
 In all scenarios we will do the following:
+
 - Determine the area of the HX in term of the dTmin
 - Determine the cost of the HX in term of the the Area
 - Determine the cost of the HX in term of the dTmin
@@ -29,6 +30,7 @@ The costs will be computed for both France and Germany and will be composed of C
 The idea is too be able to determine if this optimized dTmin enables costs reduction compared to the assumed ∆Tmin of 5K in the Mass/Energy Balances and Energy Bill.
 
 Four different scenarios will be considered:
+
 - Past 5 only
 - Past 1 + Past 5 combined
 - An addditional heat recovery for pasteurization
@@ -36,6 +38,96 @@ Four different scenarios will be considered:
 
 The three first scenari focus on the pasterization process whereas the later is about the CIP process.
 
+### General Method
+
+#### Initialisation
+First, the T-h diagram of the cold and hot streams is plotted to determined if the dTmin is on the left or right of the diagram (i.e. if the dTmin is between the inlet and outlet temperatures of the cold stream or the hot stream). This will influence in the following formulas of CAPEX.
+
+In the case of $h_1 < h_2$. The equation of T-h diagram is:
+
+$$
+T_{cold}(h) = \frac{h}{m_1 c_{p,1}} + T_{1} - \frac{h_1}{m_1 c_{p,1}}
+$${#eq-slope_cold}
+
+$$
+T_{hot}(h) = \frac{h}{m_2 c_{p,2}} + T_{2} - \frac{h_2}{m_2 c_{p,2}}
+$${#eq-slope_hot}
+
+Then, the dTmin is graphically determined on the right or on the left as the minimum difference between the two curves.
+
+If dTmin is on the right:
+$$
+T_{cold,out} = T_{hot,in} - dT
+$${#eq-right1}
+$$
+T_{cold,in} = T_{cold}(h_1)
+$${#eq-right2}
+
+If dTmin is on the left:
+$$
+T_{cold,out} = T_{cold}(h_2)
+$${#eq-left1}
+$$
+T_{cold,in} = T_{cold,in} + dT
+$${#eq-left2}
+
+#### Investement cost (CAPEX)
+
+The heat exchanger area needs to be computed to get the CAPEX. 
+
+$$
+A_{ex} = \frac{Q_{ex}}{U \cdot LMTD}
+$${#eq-Aex}
+
+where:
+
+- Qex is the heat exchanged between the two streams
+
+$$
+Q = m_{cold} \cdot c_{p,c} \cdot (T_{c,in}-T_{c,out})
+  = m_{hot} \cdot c_{p,h} \cdot (T_{h,out}-T_{h,in})
+$${#eq-Q}
+
+- U, the total heat transfer coefficient, is assumed to be the half of the heat transfer coefficient of water ($1000 W/m^2K$) since the heat exchanger thickness is way smaller than 1 meter.
+$$
+U = \frac{\alpha}{2}
+$${#eq-U}
+
+- LMTD, the logarithmic mean temperature difference, is computed as follow:
+
+$$
+LMTD = \frac{(T_{h,in}-T_{c,out})-(T_{c,in}-T_{h,out})}{\ln(\frac{T_{h,in}-T_{c,out}}{T_{c,in}-T_{h,out}})}
+$$
+
+Knowing the heat exchanger area, the CAPEX can be computed as follow:
+
+$$
+CAPEX = F_{BM} \cdot C_p \cdot e \cdot a_n
+$${#eq-CAPEX}
+
+where:
+
+- $F_{BM}$ is the bare module factor, which is assumed to be 4.74 since a fluid flows in the heat exchanger (Slide 10, T4.1)
+
+- $C_p$ is the cost of the heat exchanger, which is computed as follow: $$C_p = \frac{I_t}{I_{t,ref}} \cdot 10^{k_1+k_2 \cdot \log(A_{ex})}$${#eq-Cp}
+    - $I_t = 603.1$ is the investment cost index of the year of interest (2019) @noauthor_fluid_nodate
+    - $I_{t,ref} = 389.5$ is the investment cost index of the reference year (1998) @noauthor_fluid_nodate
+    - $k_1 = 3.6788$ and $k_2 = 0.4412$ are the constants of the equation (Slide 12, T4.1) for a spiral plate heat exchanger. This type of heat exchanger is assumed because of the area range.
+
+- $e = 0.92 €/\$$ is the exchange rate between us dollar and euro.
+
+- $a_n$ is the annualization factor, which is computed as follow: $$a_n = \frac{i(1+i)^n}{(1+i)^n-1} $${#eq-a_n}
+    - $i = 0.05$ is the interest rate (Slide 8, T4.2)
+    - $n = 20$ is the lifetime of the heat exchanger
+
+#### Operating cost (OPEX)
+
+water is in closed loop -> capex (but small compared to the heat exchanger cost so we neglect it)
+
+heating: $$c_{gas} \cdot Q_{HEX} \cdot t_{op}$${#eq-heating}
+assumption: $\eta_{boiler} = 1$
+
+cooling: $$c_{elec} \cdot \frac{Q_{HEX}}{COP} \cdot t_{op}$${#eq-cooling}
 
 ### Past 5 only
 
@@ -72,14 +164,12 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
     #Find the minimum Area of the HX
     Q = m2*cp2*(T2-T2_prime)
     #print('Q = ', round(Q, 3), 'W')
-    alpha= 1000 #W/m^2°C, assumption based on alpha_H20 since 65wt% of the stream is water 
+    alpha= 1000 #W/m^2°C, assumption based on alpha_H20
     U = alpha/2
     dtA = abs(T2-T1_prime)  # to be sure we have a positive value in the ln() of the LMTD
     dtB = abs(T1-T2_prime)
     LMTD = (dtA-dtB)/np.log(dtA/dtB)
     Area = Q/(U*LMTD)
-    
-
 
     #Find the CAPEX
 
@@ -192,6 +282,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
 
     return CAPEX, OPEX_fr, OPEX_ger, TOTEX_fr, TOTEX_ger, Area, T1_prime, T2_prime
 ```
+
 ```{python past5only, echo = T, eval = T}
 # Scenario 1: dTmin for the past5
 
@@ -328,38 +419,6 @@ Past5_opt_ger_sc1 = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_5, 'Area_ger[m^2
 Past5_opt_ger_sc1 = Past5_opt_ger_sc1.round(2)
 HTML(Past5_opt_ger_sc1.to_html(index=False))
 ```
-
-<!---
-```{python testmixture, echo = F, eval = F}
-import matplotlib
-matplotlib.use('Agg')
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from codes_01_energy_bill.coolprop_functions import mixture
-
-T = np.linspace(200, 400, 200)
-enthalpy = []
-cpmass = []
-
-for i in T:
-    State = mixture(T=i, P=100000, frac_water=0.883, frac_fat=0.117)
-    #State = mixture(T=i, P=100000, frac_water=0.65, frac_fat=0.35)
-    enthalpy.append(State["enthalpy"])
-    cpmass.append(State["cpmass"])
-
-plt.plot(T, enthalpy)
-plt.title("Enthalpy vs Temperature")
-plt.grid()
-plt.show()
-
-plt.plot(T, cpmass)
-plt.title("Cpmass vs Temperature")
-plt.grid()
-plt.show()
-
-```
---->
 
 ### Past 1 + Past 5
 
@@ -678,10 +737,11 @@ HTML(Overall_opt_ger_sc2.to_html(index=False))
 
 ### Past 5 + recovery HEX
 
-**ADD EXPLANATION**
+The only possibility to recover heat in the pasteurisation section is by adding a new heat exchanger to preheat the thickener with the ouput milk flow. The following figure illustrate the location of this new heat exchanger.
 
-We fix crpast_b to 75°C so we don't reoptimize on past5
+![Pasteurisation](Figures/Recovery.jpg)
 
+Assumption: crpast_b is fixed to 75°C. This assumption allows that past5 does not need to be reoptimized.
 
 ```{python past5 & HX recovery, echo = T, eval = T}
 from pyxosmose.state import State
@@ -700,20 +760,26 @@ State_Cold_2_hx = mixture(T=T2_hx, P=p1_hx, frac_water=0.883, frac_fat=0.117)
 h1_hx = State_Cold_1_hx["enthalpy"] * m1_hx  
 h2_hx = State_Cold_2_hx["enthalpy"] * m2_hx
 
-print('h1 =', round(h1_hx, 3), 'kJ/kg')
-print('h2 =', round(h2_hx, 3), 'kJ/kg')
+print(' h1 =', round(h1_hx, 3), 'kJ/kg', '\n',
+       'h2 =', round(h2_hx, 3), 'kJ/kg')
+```
 
+In this case, $h_1 > h_2$. The equation of T-h diagram is then:
+
+$$
+T_{cold}(h) = -\frac{h}{m_1 c_{p,1}} + T_{1} + \frac{h_1}{m_1 c_{p,1}}
+$${#eq-slope_cold}
+
+$$
+T_{hot}(h) = -\frac{h}{m_2 c_{p,2}} + T_{2} + \frac{h_2}{m_2 c_{p,2}}
+$${#eq-slope_hot}
+
+```{python past5 & HX recovery 2, echo = T, eval = T}
 cp1_hx = State_Cold_1_hx["cpmass"]
 cp2_hx = State_Cold_2_hx["cpmass"]
 
-print('cp1 =', round(cp1_hx, 3), 'kJ/kg.K')
-print('cp2 =', round(cp2_hx, 3), 'kJ/kg.K')
-
 slope1_hx = 1/(m1_hx*cp1_hx)
 slope2_hx = 1/(m2_hx*cp2_hx)
-
-print('slope1 =', slope1_hx, 'K/J')
-print('slope2 =', slope2_hx, 'K/J')
 
 #Plot the two lines with T on the y-axis and h on the x-axis
 #h is the enthalpy of the stream between h1 and h2
@@ -726,7 +792,6 @@ if h1_hx < h2_hx:
     C2_hx = T2_hx - slope2_hx*h2_hx
     T2v_hx = slope2_hx*h_hx + C2_hx 
 else:
-    print('h1_hx > h2_hx')
     h_hx = np.linspace(h2_hx, h1_hx, N)
     C1_hx = T1_hx + slope1_hx*h1_hx
     T1v_hx = -slope1_hx*h_hx + C1_hx
@@ -743,8 +808,8 @@ layout = go.Layout(
     title='Temperature vs Enthalpy',
     xaxis=dict(title='Enthalpy (J)'),
     yaxis=dict(title='Temperature (K)'),
-    legend=dict(x=0, y=1, traceorder='normal'),
-    showlegend=False
+    legend=dict(x=1, y=1, traceorder='normal'),
+    showlegend=True
 )
 # Create figure
 fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
@@ -763,81 +828,13 @@ fig.add_shape(
     line=dict(color='red', dash='dash')
 )
 
-print('dTmin =', round(dTmin_hx, 3), 'K at h =', round(h_hx[min_index_hx], 3), 'kJ/kg')
-
-#Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
-
-CAPEXv_hx = []
-OPEX_frv_hx = []
-OPEX_gerv_hx = []
-TOTEX_frv_hx = []
-TOTEX_gerv_hx = []
-Areav_hx = []
-
-dt_hx = np.linspace(5, 60)
-
-for t in dt_hx:
-    CAPEX_hx, OPEX_fr_hx, OPEX_ger_hx, TOTEX_fr_hx, TOTEX_ger_hx, Area_hx = Dtmin(t, T1_hx, T1v_hx, T2v_hx, T2_hx, m1_hx, m2_hx, cp1_hx, cp2_hx, 'right', 'HX')[0:6]
-    CAPEXv_hx.append(CAPEX_hx)
-    OPEX_frv_hx.append(OPEX_fr_hx)
-    OPEX_gerv_hx.append(OPEX_ger_hx)
-    TOTEX_frv_hx.append(TOTEX_fr_hx)
-    TOTEX_gerv_hx.append(TOTEX_ger_hx)
-    Areav_hx.append(Area_hx)
-
-#plot the results with respect to the dt values
-
-# Create traces for each cost component
-trace_capex = go.Scatter(x=dt_hx, y=CAPEXv_hx, mode='lines', name='CAPEX', line=dict(color='black'))
-trace_opex_france = go.Scatter(x=dt_hx, y=OPEX_frv_hx, mode='lines', name='OPEX (France)', line=dict(color='blue'))
-trace_opex_germany = go.Scatter(x=dt_hx, y=OPEX_gerv_hx, mode='lines', name='OPEX (Germany)', line=dict(color='red'))
-trace_totex_france = go.Scatter(x=dt_hx, y=TOTEX_frv_hx, mode='lines', name='TOTEX (France)', line=dict(color='blue', dash='dash'))
-trace_totex_germany = go.Scatter(x=dt_hx, y=TOTEX_gerv_hx, mode='lines', name='TOTEX (Germany)', line=dict(color='red', dash='dash'))
-
-# Create layout
-layout = go.Layout(
-    title='Costs vs dTmin',
-    xaxis=dict(title='dTmin (K)'),
-    yaxis=dict(title='Costs (€)'),
-    legend=dict(x=0, y=-0.2, traceorder='normal', orientation='h'),
-    showlegend=True
-)
-
-# Create figure
-fig = go.Figure(data=[trace_capex, trace_opex_france, trace_opex_germany, trace_totex_france, trace_totex_germany], layout=layout)
-
-# Mark the minima points for both France and Germany
-min_index_fr_hx = np.argmin(TOTEX_frv_hx)
-fig = fig.add_trace(go.Scatter(x=[dt_hx[min_index_fr_hx]], y=[TOTEX_frv_hx[min_index_fr_hx]], mode='markers', marker=dict(color='blue'), name='Min TOTEX (France)'))
-
-min_index_ger_hx = np.argmin(TOTEX_gerv_hx)
-fig = fig.add_trace(go.Scatter(x=[dt_hx[min_index_ger_hx]], y=[TOTEX_gerv_hx[min_index_ger_hx]], mode='markers', marker=dict(color='red'), name='Min TOTEX (Germany)'))
-
-# Show the figure
-fig.show()
-
-#print the optimum values for dt, area, CAPEX, OPEX, TOTEX for both France and Germany (NB: even if we have the same CAPEX fct for both countries, the optimum CAPEX will be different in both countries because of the electricity/gas rate)
-
-dtmin_fr_opt_hx = dt_hx[min_index_fr_hx]
-dtmin_ger_opt_hx = dt_hx[min_index_ger_hx]
-area_fr_opt_hx = Areav_hx[min_index_fr_hx]
-area_ger_opt_hx = Areav_hx[min_index_ger_hx]
-CAPEX_fr_opt_hx = CAPEXv_hx[min_index_fr_hx]
-CAPEX_ger_opt_hx = CAPEXv_hx[min_index_ger_hx]
-OPEX_fr_opt_hx = OPEX_frv_hx[min_index_fr_hx]
-OPEX_ger_opt_hx = OPEX_gerv_hx[min_index_ger_hx]
-TOTEX_fr_opt_hx = TOTEX_frv_hx[min_index_fr_hx]
-TOTEX_ger_opt_hx = TOTEX_gerv_hx[min_index_ger_hx]
-
-HX_opt_fr = pd.DataFrame({'dTmin_fr[K]': dtmin_fr_opt_hx, 'Area_fr[m^2]': area_fr_opt_hx, 'CAPEX_fr[€/yr]': CAPEX_fr_opt_hx, 'OPEX_fr[€/yr]': OPEX_fr_opt_hx, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_hx}, index=[0])
-HX_opt_fr = HX_opt_fr.round(2)
-HTML(HX_opt_fr.to_html(index=False))
-
-HX_opt_ger = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_hx, 'Area_ger[m^2]': area_ger_opt_hx, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_hx, 'OPEX_ger[€/yr]': OPEX_ger_opt_hx, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_hx}, index=[0])
-HX_opt_ger = HX_opt_ger.round(2)
-HTML(HX_opt_ger.to_html(index=False))
-
+print(' m_cold =', m1_hx, 'kg/s', '\n',
+       'm_hot =', m2_hx, 'kg/s', '\n',
+       'slope_cold =', slope1_hx, 'K/J', '\n',
+       'slope_hot =', slope2_hx, 'K/J')
 ```
+
+The cold line is over the hot line, which does not make sense in a thermodynamic point of view. This is due to the high difference between the two slopes. This is explained by the difference in mass flow. The thickener flow is about 100 times smaller than the output milk flow. It is not profitable to preheat the thickener with the output milk flow. There is no other place to use a recovery heat exchanger so no heat recovery is possible in the pasteurisation section.
 
 ### Cleaning in Place
 
