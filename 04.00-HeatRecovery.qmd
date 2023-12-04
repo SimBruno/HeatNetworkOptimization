@@ -69,8 +69,6 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
         T1_prime = T1v.max()
         T2_prime = T1 + dT #T1v.max()
     
-    print('T2 = ', round(T2, 3), 'K')
-    print('T2_prime = ', round(T2_prime, 3), 'K')
     #Find the minimum Area of the HX
     Q = m2*cp2*(T2-T2_prime)
     #print('Q = ', round(Q, 3), 'W')
@@ -699,7 +697,6 @@ m2_hx = 7.52 #m_cip6 in CH2
 State_Cold_1_hx = mixture(T=T1_hx, P=p1_hx, frac_water=0.5, frac_fat=0.5)
 State_Cold_2_hx = mixture(T=T2_hx, P=p1_hx, frac_water=0.883, frac_fat=0.117)
 
-
 h1_hx = State_Cold_1_hx["enthalpy"] * m1_hx  
 h2_hx = State_Cold_2_hx["enthalpy"] * m2_hx
 
@@ -715,17 +712,26 @@ print('cp2 =', round(cp2_hx, 3), 'kJ/kg.K')
 slope1_hx = 1/(m1_hx*cp1_hx)
 slope2_hx = 1/(m2_hx*cp2_hx)
 
+print('slope1 =', slope1_hx, 'K/J')
+print('slope2 =', slope2_hx, 'K/J')
+
 #Plot the two lines with T on the y-axis and h on the x-axis
 #h is the enthalpy of the stream between h1 and h2
 N = 100
-h_hx = np.linspace(h1_hx, h2_hx, N)
 
-C1_hx = T1_hx - slope1_hx*h1_hx
-T1v_hx = slope1_hx*h_hx + C1_hx
-print('T1v =', (T1v_hx), 'K')
-C2_hx = T2_hx - slope2_hx*h2_hx
-T2v_hx = slope2_hx*h_hx + C2_hx
-print('T2v =',(T2v_hx), 'K')   
+if h1_hx < h2_hx:
+    h_hx = np.linspace(h1_hx, h2_hx, N)
+    C1_hx = T1_hx - slope1_hx*h1_hx
+    T1v_hx = slope1_hx*h_hx + C1_hx
+    C2_hx = T2_hx - slope2_hx*h2_hx
+    T2v_hx = slope2_hx*h_hx + C2_hx 
+else:
+    print('h1_hx > h2_hx')
+    h_hx = np.linspace(h2_hx, h1_hx, N)
+    C1_hx = T1_hx + slope1_hx*h1_hx
+    T1v_hx = -slope1_hx*h_hx + C1_hx
+    C2_hx = T2_hx + slope2_hx*h2_hx
+    T2v_hx = -slope2_hx*h_hx + C2_hx
 
 
 # Create trace for Cold Stream
@@ -738,7 +744,7 @@ layout = go.Layout(
     xaxis=dict(title='Enthalpy (J)'),
     yaxis=dict(title='Temperature (K)'),
     legend=dict(x=0, y=1, traceorder='normal'),
-    showlegend=True
+    showlegend=False
 )
 # Create figure
 fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
