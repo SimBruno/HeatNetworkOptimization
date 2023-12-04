@@ -427,6 +427,7 @@ We can't reuse the exact same method as for past5 where we knew $T_{h,in}$ and $
 We will then first need to determine $T_{h,in}$ from the Past2 ∆T (assumed here at 5K for simplicity). We end up with a $T_{past,c} = 70°C$ which will be $T_{h,in}$ of past1.
 Another important assumption in this scenario is to assume for past1 that $T_{c,out}=T_{past-cent,out} \ne 60°C$. Indeed, we will instead determine this temperature from the ∆Tmin optimization of past1.
 From this new $T_{c,out}$, and because both past1 and past5 are linked by this flow we will recompute the ∆Tmin optimization of past5.
+
 #### Past 1 optimization
 
 ```{python past1+5_past1, echo = T, eval = T}
@@ -498,7 +499,7 @@ fig = fig.add_shape(
 # Show the figure
 fig.show()
 
-print('dTmin = ', round(dTmin_1,3), 'K at h = ', round(h_1[min_index_1],3), 'kJ/kg')
+#print('dTmin = ', round(dTmin_1,3), 'K at h = ', round(h_1[min_index_1],3), 'kJ/kg')
 
 #This time the the dTmin is on the left of the curves and thus dTmin = T_hout-T_cin (instead of T_hin-Tcout as in past6)
 
@@ -575,7 +576,7 @@ HTML(Past1_opt_ger_sc2.to_html(index=False))
 
 The first graph show dT is on the left and thus we will use the corresponding equation presented at the beginning of this section
 
-The optimisation gives a dTmin which varies between Germany and France (WHYYYYYYY????). This leads to different CAPEX and OPEX for both countries
+The optimisation gives a dTmin which varies between Germany and France. This leads to different CAPEX and OPEX for both countries
 
 For the OPEX we needed to inlude the costs of past3 (heating) and past 4 (cooling). 
 Past 3 equation becomes the following: $Q_{past3} = m_{hot}*cp_{hot}*(T_{past2,out}-348)$ where $m_{hot}$ is the flow coming out of past2. Past 4 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
@@ -908,14 +909,12 @@ State_Cold_2_cip = State_Cold_2_cip.__dict__
 h1_cip = State_Cold_1_cip["enthalpy"] * m1_cip  #from mixture with dry = 35% and wet = 65%
 h2_cip = State_Cold_2_cip["enthalpy"] * m2_cip
 
-print('h1 =', round(h1_cip, 3), 'kJ/kg')
-print('h2 =', round(h2_cip, 3), 'kJ/kg')
+
 
 cp1_cip = State_Cold_1_cip["cpmass"]
 cp2_cip = State_Cold_2_cip["cpmass"]
 
-print('cp1 =', round(cp1_cip, 3), 'kJ/kg.K')
-print('cp2 =', round(cp2_cip, 3), 'kJ/kg.K')
+
 
 slope1_cip = 1/(m1_cip*cp1_cip)
 slope2_cip = 1/(m2_cip*cp2_cip)
@@ -961,7 +960,7 @@ fig.add_shape(
     line=dict(color='red', dash='dash')
 )
 
-print('dTmin =', round(dTmin_cip, 3), 'K at h =', round(h_cip[min_index_cip], 3), 'kJ/kg')
+#print('dTmin =', round(dTmin_cip, 3), 'K at h =', round(h_cip[min_index_cip], 3), 'kJ/kg')
 
 #Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
 
