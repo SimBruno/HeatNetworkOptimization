@@ -114,7 +114,7 @@ where:
     - $I_{t,ref} = 389.5$ is the investment cost index of the reference year (1998) @noauthor_fluid_nodate
     - $k_1 = 3.6788$ and $k_2 = 0.4412$ are the constants of the equation (Slide 12, T4.1) for a spiral plate heat exchanger. This type of heat exchanger is assumed because of the area range.
 
-- $e$ is the exchange rate between the us dollar and the euro. It is assumed to be 0.92 €/$.
+- $e = 0.92 €/\$$ is the exchange rate between us dollar and euro.
 
 - $a_n$ is the annualization factor, which is computed as follow: $$a_n = \frac{i(1+i)^n}{(1+i)^n-1} $${#eq-a_n}
     - $i = 0.05$ is the interest rate (Slide 8, T4.2)
@@ -122,6 +122,12 @@ where:
 
 #### Operating cost (OPEX)
 
+water is in closed loop -> capex (but small compared to the heat exchanger cost so we neglect it)
+
+heating: $$c_{gas} \cdot Q_{HEX} \cdot t_{op}$${#eq-heating}
+assumption: $\eta_{boiler} = 1$
+
+cooling: $$c_{elec} \cdot \frac{Q_{HEX}}{COP} \cdot t_{op}$${#eq-cooling}
 
 ### Past 5 only
 
