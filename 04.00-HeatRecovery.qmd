@@ -425,10 +425,11 @@ HTML(Past5_opt_ger_sc1.to_html(index=False))
 This time we know only $T_{c,in}$ and $T_{c,out}$ but nothing about the hot streams.
 We can't reuse the exact same method as for past5 where we knew $T_{h,in}$ and $T_{c,in}$
 We will then first need to determine $T_{h,in}$ from the Past2 ∆T (assumed here at 5K for simplicity). We end up with a $T_{past,c} = 70°C$ which will be $T_{h,in}$ of past1.
-Another important assumption in this scenario is to assume for past1 that $T_{c,out}=T_{past,out} \ne 60°C$. Indeed, we will instead determine this temperature from the ∆Tmin optimization of past1.
-From this new $T_{c,out}$, and because both past1 and past5 are linked by this flow we will recompute the ∆Tmin optimization of past5. Overall we will be able to compare (for both France and Germany scenario) which scenario is the most cost efficient.
+Another important assumption in this scenario is to assume for past1 that $T_{c,out}=T_{past-cent,out} \ne 60°C$. Indeed, we will instead determine this temperature from the ∆Tmin optimization of past1.
+From this new $T_{c,out}$, and because both past1 and past5 are linked by this flow we will recompute the ∆Tmin optimization of past5.
+#### Past 1 optimization
 
-```{python past1+5, echo = T, eval = T}
+```{python past1+5_past1, echo = T, eval = T}
 from codes_01_energy_bill.coolprop_functions import mixture
 # Scenario 2: dTmin for the past1+past5
 
@@ -570,6 +571,22 @@ HTML(Past1_opt_fr_sc2.to_html(index=False))
 Past1_opt_ger_sc2 = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_1, 'Area_ger[m^2]': area_ger_opt_1, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_1, 'OPEX_ger[€/yr]': OPEX_ger_opt_1, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_1}, index=[0])
 Past1_opt_ger_sc2 = Past1_opt_ger_sc2.round(2)
 HTML(Past1_opt_ger_sc2.to_html(index=False))
+```
+
+The first graph show dT is on the left and thus we will use the corresponding equation presented at the beginning of this section
+
+The optimisation gives a dTmin which varies between Germany and France (WHYYYYYYY????). This leads to different CAPEX and OPEX for both countries
+
+For the OPEX we needed to inlude the costs of past3 (heating) and past 4 (cooling). 
+Past 3 equation becomes the following: $Q_{past3} = m_{hot}*cp_{hot}*(T_{past2,out}-348)$ where $m_{hot}$ is the flow coming out of past2. Past 4 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
+Of course the heating OPEX (past 3) will use gas costs whereas the cooling OPEX (past 4) will use electricity costs and consider a COP of 3 as in energy bill. Both processes again assume the same operating time as for Energy Bill.
+
+#### Past 5 optimization
+
+Now we reperform the same as above but for past 5. This time because both past 1 and past 5 are connected we will assume $T_{cold,in,past5}=T_{hot,out,past1}$
+
+
+```{python past1+5_past5, echo = T, eval = T}
 
 ####################################
 ############## PAST5 ##############
@@ -711,7 +728,21 @@ HTML(Past5_opt_fr_sc2.to_html(index=False))
 Past5_opt_ger_sc2 = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_5, 'Area_ger[m^2]': area_ger_opt_5, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_5, 'OPEX_ger[€/yr]': OPEX_ger_opt_5, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_5}, index=[0])
 Past5_opt_ger_sc2 = Past5_opt_ger_sc2.round(2)
 HTML(Past5_opt_ger_sc2.to_html(index=False))
+```
 
+The first graph show dT is on the right and thus we will use the corresponding equation presented at the beginning of this section
+
+For the OPEX we needed to inlude the costs of past 6 (heating) and past 7 (cooling). 
+Past 6 equation becomes the following: $Q_{past6} = m_{hot}*cp_{hot}*(T_{hot,in,past5}-T_{cold,out,past5})$ where $m_{hot}$ is the flow coming out of past5. Past 7 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
+Of course the heating OPEX (past 6) will use gas costs whereas the cooling OPEX (past 7) will use electricity costs and consider a COP of 3 as in energy bill. Both processes again assume the same operating time as for Energy Bill.
+
+The optimisation gives a dTmin for past 5 of 6.3K leading to an area of 5.21$m^2$ and a larger TOTEX in Germany than France because of the higher price of electricity in Germany (both CAPEX are the same but OPEX vary). COmpared to case where only past5 were optimized we have a higher dTmin but a lower Area and thus lower costs. Considering only the costs of past5, it may seem more interesting to optimize past1 and past5 simultaneously. However we have to look at the whole picture and don't forget that past1 was also optimized (thus consider total costs of both past1 and past5).
+
+#### Both costs combined 
+
+Finaly, let's combine both costs from past 1 and past 5 to get the overall CAPEX, OPEX, and TOTEX for the two pasteurizers. This total costs will then be comapred to the energy bill without optimization over dTmin. 
+
+```{python past1+5_overall, echo = T, eval = T}
 ####################################
 ############## PAST1 + PAST5 ##############
 ####################################
@@ -838,18 +869,18 @@ The cold line is over the hot line, which does not make sense in a thermodynamic
 
 ### Cleaning in Place
 
-**CHANGE THE TEXT-TEXT-TETXT**
-Now we will only focus on another part of the process (the cleaning in place) and we will try to optimize the heat recovery. We look for the heat exchanger in this process. There is one used to heat thanks to use of steam between flows CIP2 and CIP3/10, and there is one used to cool with glycolic water between flows CIP6 and CIP7.
+Now let's only focus on another part of the process (the cleaning in place) and try to optimize the heat recovery. After looking for the heat exchanger in this process one can observe there is one used to heat thanks to use of steam between flows CIP2 and CIP3/10, and there is also one used to cool with glycolic water between flows CIP6 and CIP7.
 We could try to use the second one (between CIP6 and CIP7) to preheat the flow cip1 with is currently at 25°C and which need to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
 
-NB: We could have tried the same by preheating the CIP2 for it to be closer to CIP3 temperature of 80°C. However the gap would have been lowered (only 20°C difference compared to 35°C for the chosen solution) and thus the heat recovery would have been less efficient.
+NB: The same could have been done by preheating the CIP2 for it to be closer to CIP3 temperature of 80°C. However the gap would have been lowered (only 20°C difference compared to 35°C for the chosen solution) and thus the heat recovery would have been less efficient.
  
-In chapter 2 when deermining heat and mass balances, we had determined the following relations between the flows temperatures:
-- T_cip6=75°C > T_cip1=25°C
+In chapter 2 when deermining heat and mass balances, the following relation had been determined between the flows temperatures:
 
-The new HX will placed such that CIP6 flow is first used to preheat CIP1 to CIP1' (with T_cip1' > T_cip1) and the exiting flows called CIP6' (such that T_cip6'< T_cip6) is then used to be cooled where CIP6 was previously. Hence we would have a system with less cooling required since T_cip6'< T_cip6, and with also less heating required since T_cip1' > T_cip1.
+- $T_cip6=75°C > T_{cip1}=25°C$
 
-**AAAAAAADDDDDDDD ILLLLLLUUUSSSSSTRTATION** 
+The new HX will placed such that CIP6 flow is first used to preheat CIP1 to CIP1' (with $T_{cip1'} > T_{cip1}$) and the exiting flows called CIP6' (such that $T_{cip6'}< T_{cip6}$) is then used to be cooled where CIP6 was previously. Hence, a system with less cooling is required since $T_{cip6'}< T_{cip6}$, as well as with also less heating required since $T_{cip1'} > T_{cip1}$.
+
+![Optimized CIP](Figures/CIPoptimized.png)
 
 Let's try to apply the method used for the pasterization:
 
@@ -1006,7 +1037,11 @@ HTML(CIP_opt_ger.to_html(index=False))
 
 ```
 
-We can observe that the optimum dT is 45K which brings CIP1 to 70°C instead of 25°C. Thus compared to the case without optimization CIP2 will be hotter than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require less steam to heat up until 80°C.
+In this scenario the OPEX is dependent on the the cooling and heating HX of the CIP process. First  new flows are redetermined for m_cip1 and m_cip5 such that $m_{cip1} = m_{cip2}*\frac{T_{cip2}-T_{cip5}}{T_{cip1}-T_{cip5}}$ and $m_{cip5}=m_{cip2}-m_{cip1}$ where $T_{cip1}$=$T_{cip2}$=$T_{cold,out,newHX}$ the new exiting temperature cip1' hotter than cip1 from the task2.
+From this, $Q_{steam} = m_{cip2}*cp1*(353-T_{cip2})$ and $Q_{cooling} = m_{hot,newHX}*cp_{hot,newHX}*(T_{hot,out,newHX}-303)$ 
+
+
+It can be observed that the optimum dT is 24°C which brings CIP1' to ($75-24=51°C$) instead of 25°C. Thus compared to the case without optimization CIP2 will be cooler than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require more steam to heat up until 80°C. This doesn't seem to be efficient. This will check by comparing the costs with the Energy Bill.
 
 ### To be done:
 By comparing these costs with the one computed in Chapter 3 (Energy Bill), we can see.... (TODO for all scenarios)
