@@ -1042,8 +1042,89 @@ From this, $Q_{steam} = m_{cip2}*cp1*(353-T_{cip2})$ and $Q_{cooling} = m_{hot,n
 
 It can be observed that the optimum dT is 24°C which brings CIP1' to ($75-24=51°C$) instead of 25°C. Thus compared to the case without optimization CIP2 will be cooler than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require more steam to heat up until 80°C. This doesn't seem to be efficient. This will check by comparing the costs with the Energy Bill.
 
-### To be done:
-By comparing these costs with the one computed in Chapter 3 (Energy Bill), we can see.... (TODO for all scenarios)
+### Comparison with non-optimalized case:
+
+In each case presented above, optimized dTmin have been selected to reduce cost of the considered system. But then even by selecting this minimum cost, is this heat recovery optimization really worth it? To check this, comparison will now be made with the non-optimized cases from the Energy Bill.
+
+The following table sumarize the cost for the optimized (with heat recovery) and non-optimized (without heat recovery) OPEX for each process. The costs are given for both France and Germany. Only OPEX are considered since in the Energy Bill only OPEX were computed so it is not possible to compare CAPEX and TOTEX.
+
+
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-fpwh{background-color:#32cb00;border-color:inherit;text-align:center;vertical-align:top}
+.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+.tg .tg-rh1i{background-color:#cb0000;border-color:inherit;color:#333333;text-align:center;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-1jni{background-color:#cb0000;border-color:inherit;text-align:center;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-0pky"></th>
+    <th class="tg-0pky">Non optimized OPEX <span style="font-weight:400;font-style:normal;text-decoration:none">[€/yr]</span> (Task3)</th>
+    <th class="tg-0pky">Optimized OPEX [€/yr] (w/ heat recovery)</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-c3ow" colspan="3">Scenario 1: Past5 only</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">France</td>
+    <td class="tg-c3ow">59944.08</td>
+    <td class="tg-fpwh">44419.74</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Germany</td>
+    <td class="tg-c3ow">87121.35</td>
+    <td class="tg-fpwh">68745.31</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow" colspan="3">Scenario 2: Past1+Past5</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">France</td>
+    <td class="tg-c3ow">305650.42</td>
+    <td class="tg-1jni">520170.36</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Germany</td>
+    <td class="tg-c3ow">374421.76</td>
+    <td class="tg-rh1i">665505.52</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow" colspan="3">Scenario 3: Past5+ new HX</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">France</td>
+    <td class="tg-c3ow">-</td>
+    <td class="tg-c3ow">Not possible</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Germany</td>
+    <td class="tg-c3ow">-</td>
+    <td class="tg-c3ow">Not possible </td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow" colspan="3">Scenario 4: CIP</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">France</td>
+    <td class="tg-c3ow">287303.02</td>
+    <td class="tg-1jni">316820.95</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Germany</td>
+    <td class="tg-c3ow">335652.89</td>
+    <td class="tg-fpwh">311564.64</td>
+  </tr>
+</tbody>
+</table>
 
 
 ## Minimum energy requirement
