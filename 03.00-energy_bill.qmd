@@ -121,6 +121,13 @@ $$
 
 #### Summary of Pasteurization Exergy Results
 
+```{r}
+path <- file.path('./venv/Scripts/python.exe')
+library(reticulate)
+use_python(path)
+
+```
+
 ```{python compute_pasteurisation, echo = T, eval = T}
 
 import math
@@ -168,7 +175,7 @@ L_past3_1=m_milk*Cp_raw_milk*((T_past_b-T_past_a)-T_a*np.log(T_past_b/T_past_a))
 
 L_past3_2=m_steam_past3*(delta_h_steam-T_a*delta_s_steam)
 
-L_past3=L_past3_1+L_past3_2
+L_past3=L_past3_1#L_past3_2-
 
 
 #Past 4
@@ -224,7 +231,7 @@ Variables_Names = ['L_Refrigeration','L_Past1','L_Past2','L_Past3','L_Past4','L_
 Variables_Values = np.divide([L_ref,L_past1,L_past2,L_past3,L_past4,L_past5,L_past6,L_past7,L_mixer,L_tot_past],1000)
 Variables_Units =  Exergy_losses
 df = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
-
+display(df)
 HTML(df.to_html(index=False))
 
 ```
@@ -329,7 +336,8 @@ Variables_Values = np.divide([L_heat1,L_heat2,L_heat3,L_heat4,L_eva1,L_eva2,L_ev
 Variables_Units =  Exergy_losses
 df_2 = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
-HTML(df_2.to_html(index=False))
+display(df_2)
+display(HTML(df_2.to_html(index=False)))
 ```
 
 ### Suggested modifications
