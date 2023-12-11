@@ -427,7 +427,7 @@ x = 42
 
 ## Evaporation
 
-![Evaporation](Figures/Evaporation.svg)
+![Evaporation](Figures/evap.png)
 
 The evaporator section receives milk from pasteurisation. This milk can be seen as a mixture of water and fat. The aim of this section is to increase the fat proportion from $11.7\% wt.$ to $50\% wt.$ by evaporating water. It is composed of heat-exchanger (HEX), 3 evaporators, 2 splitters and a processing module. 
 
@@ -451,9 +451,10 @@ Given data:
 
 Assumptions:
 
-- $m_{14}$ = 1.6 kg/s
-- $m_{15}$ = 1.28 kg/s
-- $m_{16}$ = 0.8 kg/s
+- $m_{14}$ = 1.6 kg/s  ajusted by the user to limit the number of unknowns based on given values on our project description
+- $m_{15}$ = 1.28 kg/s fixed by the user for the same reason
+- $m_{16}$ = 0.8 kg/s  fixed by the user for the same reason
+
 
 ```{python fatincreasedef, echo = T, eval = T}
 
@@ -742,7 +743,7 @@ print(f'mHEX4 = m19 = {m19:.3f} (kg/s)\n'
 
 Before doing any calculation, it is noticeable that $m_{19}$, i.e. the hot flow through HEX4, is very small. The heating capacity is therefore too small to ensure the required heating. In order to reduce the cost of the system, it is preferable to remove HEX4. 
 To compute the temperature steps and the heating capacity, the following method is used:
-
+fatincreasedef
 - Assume some temperature steps between the 3 HEX.
 - Compute the heating capacity of each HEX, by being aware that $T_{\text{hot,out}} \geq T_{\text{cold,in}}$ condition is satisfied.
 - Adapt the temperature steps with the heating capacity of each HEX, to satisfy the previous condition.
@@ -1028,27 +1029,21 @@ T23=T21
 p23=p21
 State_e23 = mixture(T=T23, P=p23, frac_water=p_water_23, frac_fat=p_fat_23) # this is a dictionary!!
 
+#Exit flows of 3 HXs 
 
-Ttest2=T16
-ptest2=p16
-State_test2 = State(pair='TP', fluid='water', temperature=Ttest2, pressure=ptest2) 
-State_test2.StateCalc()
+Texit2= T16-(Q2/(cp16*m16))
+pexit2=p16
+State_exit2 = State(pair='TP', fluid='water', temperature=Texit2, pressure=pexit2) 
+State_exit2.StateCalc()
 # And print the dictionary for revision
-State_test2 = State_test2.__dict__
+State_exit2 = State_exit2.__dict__
 
-Ttest3=T20
-ptest3=p20
-State_test3 = State(pair='TP', fluid='water', temperature=Ttest3, pressure=ptest3) 
-State_test3.StateCalc()
+Texit3= T20-(Q3/(cp20*m20))
+pexit3=p20
+State_exit3 = State(pair='TP', fluid='water', temperature=Texit3, pressure=pexit3) 
+State_exit3.StateCalc()
 # And print the dictionary for revision
-State_test3 = State_test3.__dict__
-
-Ttest4=T19
-ptest4=p19
-State_test4 = State(pair='TP', fluid='water', temperature=Ttest4, pressure=ptest4) 
-State_test4.StateCalc()
-# And print the dictionary for revision
-State_test4 = State_test4.__dict__
+State_exit3 = State_exit3.__dict__
 
 #Exctraction of entropy
 s1=State_e1["entropy"]
@@ -1074,9 +1069,9 @@ s20=State_e20["entropy"]
 s21=State_e21["entropy"]
 s22=State_e22["entropy"]
 s23=State_e23["entropy"]
-stest2=State_test2["entropy"]
-stest3=State_test3["entropy"]
-stest4=State_test4["entropy"]
+sexit2=State_exit2["entropy"]
+sexit3=State_exit3["entropy"]
+
 
 h1=State_e1["enthalpy"]
 h2=State_e2["enthalpy"]
@@ -1101,9 +1096,9 @@ h20=State_e20["enthalpy"]
 h21=State_e21["enthalpy"]
 h22=State_e22["enthalpy"]
 h23=State_e23["enthalpy"]
-htest2=State_test2["enthalpy"]
-htest3=State_test3["enthalpy"]
-htest4=State_test4["enthalpy"]
+hexit2=State_exit2["enthalpy"]
+hexit3=State_exit3["enthalpy"]
+
 
 m2=m1
 m13=m12
@@ -1112,19 +1107,19 @@ m18=m_w3
 m21 = m_21
 m22 = m_22
 m23 = m_23
-mtest2=m16
-mtest3=m20
-mtest4=m19
+mexit2=m16
+mexit3=m20
+
 
 #Recap
 #Print in a dataframe: Temperature, Pressure, Mass flow, Enthalpy, Entropy for each point (i.e. 1 to 23)
 
-datarecap = {'Point': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20','21', '22', '23', 'test2', 'test3', 'test4'],
-        'Temperature (K)': [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10,T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,T21, T22, T23,Ttest2, Ttest3, Ttest4],
-        'Pressure (Pa)': [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,p21, p22, p23,ptest2, ptest3, ptest4],
-        'Mass flow (kg/s)': [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10,m11, m12, m13, m14, m15, m16, m17, m18, m19, m20,m21, m22, m23,mtest2, mtest3, mtest4],
-        'Enthalpy (J/mol)': [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10,h11, h12, h13, h14, h15, h16, h17, h18, h19, h20,h21, h22, h23,htest2, htest3, htest4],
-        'Entropy (J/K)': [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10,s11, s12, s13, s14, s15, s16, s17, s18, s19, s20,s21, s22, s23,stest2, stest3, stest4]}
+datarecap = {'Point': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20','21', '22', '23', 'exit2', 'exit3'],
+        'Temperature (K)': [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10,T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,T21, T22, T23,Texit2, Texit3],
+        'Pressure (Pa)': [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,p21, p22, p23,pexit2, pexit3],
+        'Mass flow (kg/s)': [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10,m11, m12, m13, m14, m15, m16, m17, m18, m19, m20,m21, m22, m23,mexit2, mexit3],
+        'Enthalpy (J/mol)': [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10,h11, h12, h13, h14, h15, h16, h17, h18, h19, h20,h21, h22, h23, hexit2, hexit3],
+        'Entropy (J/K)': [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10,s11, s12, s13, s14, s15, s16, s17, s18, s19, s20,s21, s22, s23, sexit2, sexit3]}
 dfrecap = pd.DataFrame(datarecap)
 dfrecap = dfrecap.set_index('Point')
 dfrecap = dfrecap.round(2)
