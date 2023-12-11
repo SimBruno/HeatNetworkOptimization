@@ -122,20 +122,26 @@ where:
 
 #### Operating cost (OPEX)
 
-water is in closed loop -> capex (but small compared to the heat exchanger cost so we neglect it)
+Operating cost depends on three factors:
 
-heating: $$c_{gas} \cdot Q_{HEX} \cdot t_{op}$${#eq-heating}
-assumption: $\eta_{boiler} = 1$
+- Natural gas consumption for heating: $$c_{heating} = c_{gas} \cdot Q_{HEX} \cdot t_{op}$${#eq-heating}
+    - $c_{gas} = 0.08 €/kWh$ is the price of natural gas in France and Germany
+    - $Q_{HEX}$ is the heat exchanged between the two streams
+    - $t_{op} = 24 \cdot 0.95 \cdot 365 h/year$ is the operating time of the heat exchanger
+    - Assumption: $\eta_{boiler} = 1$
 
-cooling: $$c_{elec} \cdot \frac{Q_{HEX}}{COP} \cdot t_{op}$${#eq-cooling}
+- Electricity consumption for cooling: $$c_{cooling} = c_{elec} \cdot \frac{Q_{HEX}}{COP} \cdot t_{op}$${#eq-cooling}
+    - $c_{elec} = 0.12 €/kWh$ is the price of electricity in France, $0.21 €/kWh$ in Germany
+    - $Q_{HEX}$ is the heat exchanged between the two streams
+    - $COP = 3.5$ is the coefficient of performance of the heat pump
+
+- Water consumption. However, water is considered as being used in a closed loop. Therefore, the cost in not considered in operation cost. It is neglected in CAPEX since the cost is small compared to the heat exchanger cost.
 
 ### Past 5 only
 
-Here past 5 costs is optimized with respect to dTmin. 
-In our code 1 stands for cold stream and 2 for hot stream. 
-When we have a T#number it is related to the entrance of te stream and _prime relate to the exiting
-The _Number stands for the past number
-Example: T2_prime_2 stands for the T_hout of the past2 HX, T1_5 stands for the T_cin of the past5 HX
+Here, Past 5 heat exchanger cost is optimized with respect to dTmin. In the following code, 1 stands for cold stream, and 2 for hot stream. When there is a T_#number, it is related to the entrance of the stream and _prime relate to the exiting. The _Number stands for the past number. Example: T2_prime_2 stands for the T_hout of the past2 HX, T1_5 stands for the T_cin of the past5 HX.
+
+In this case, $T_{c,in} = 333K$ and $T_{h,in} = 348K$ are known. 
 
 
 ```{python Dtmin fct, echo = T, eval = T}
@@ -345,7 +351,7 @@ fig.add_shape(
     line=dict(color='red', dash='dash')
 )
 
-print('dTmin =', round(dTmin_5, 3), 'K at h =', round(h_5[min_index_5], 3), 'kJ/kg')
+#print('dTmin =', round(dTmin_5, 3), 'K at h =', round(h_5[min_index_5], 3), 'kJ/kg')
 
 #Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
 
@@ -419,6 +425,10 @@ Past5_opt_ger_sc1 = pd.DataFrame({'dTmin_ger[K]': dtmin_ger_opt_5, 'Area_ger[m^2
 Past5_opt_ger_sc1 = Past5_opt_ger_sc1.round(2)
 HTML(Past5_opt_ger_sc1.to_html(index=False))
 ```
+
+The T-h diagram shows that the dTmin is on the right of the curves. This determines the equations to use for the CAPEX.
+
+The minimum value of TOTEX is graphically determined and is reported in the previous tables. The first table is for France and the second one for Germany.
 
 ### Past 1 + Past 5
 
@@ -656,7 +666,7 @@ fig.add_shape(
     line=dict(color='red', dash='dash')
 )
 
-print('dTmin =', round(dTmin_5, 3), 'K at h =', round(h_5[min_index_5], 3), 'kJ/kg')
+#print('dTmin =', round(dTmin_5, 3), 'K at h =', round(h_5[min_index_5], 3), 'kJ/kg')
 
 #Redo the CAPEX/OPEX/TOTEX for different dT and plot the results
 
