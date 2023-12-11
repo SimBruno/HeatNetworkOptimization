@@ -381,7 +381,7 @@ Now, let list all the assumptions used to computed the energy bill:
 
 |                     |            Heating            |           Cooling           |
 |:-------------------:|:-----------------------------:|:---------------------------:|
-|    Pasteurization   |        Qpast_3, Qpast_6       | Qpast_ref, Qpast_4, Qpast_5 |
+|    Pasteurization   |        Qpast_3, Qpast_6       | Qpast_ref, Qpast_4, Qpast_7 |
 |     Evaporation     |           Qevap_st1           |           Qevap_5           |
 |        Dryer        |       Qdry_hx1, Qdry_hx2      |          Qdry_cool          |
 |       Cleaning      |          Qclean_heat          |         Qclean_cool         |
@@ -406,12 +406,12 @@ top = 24*0.95*365 #h/year
 
 #Pasterization
 Qpast_ref = 60416 #W    
-Qpast_4 = 3863424 #W  #A changer 
-Qpast_5 = 16344 #W    #A changer
-Qpast_3 = 285.76 #W   #A changer
-Qpast_6 = 16643 #W    #A changer
+Qpast_4 = 194370 #W  
+Qpast_7 = 127000 #W    
+Qpast_3 = 285760 #W   
+Qpast_6 = 35610 #W    
 
-Qpast_cool = Qpast_ref + Qpast_4 + Qpast_5
+Qpast_cool = Qpast_ref + Qpast_4 + Qpast_7
 Qpast_heat = Qpast_3 + Qpast_6 
 
 #Evap
@@ -458,4 +458,20 @@ OPEXheat_ger = Qheat_tot*0.001 * gas_gr * top
 OPEX = pd.DataFrame({'France (M€/y)':[OPEXcool_fr/1e6, OPEXheat_fr/1e6, OPEXcool_fr/1e6 + OPEXheat_fr/1e6], 'Germany (M€/y)':[OPEXcool_ger/1e6, OPEXheat_ger/1e6, OPEXcool_ger/1e6 + OPEXheat_ger/1e6]}, index = ['Cooling', 'Heating', 'Total'])
 OPEX = OPEX.round(3)
 HTML(OPEX.to_html())
+
+
+#OPEX_past_5_fr = Qpast_6*0.001 * gas_fr * top + (Qpast_7/COP)*0.001 * elec_fr * top
+#OPEX_past_5_ger = Qpast_6*0.001 * gas_gr * top + (Qpast_7/COP)*0.001 * elec_ger * top
+#print('OPEX_past_5_fr', OPEX_past_5_fr)
+#print('OPEX_past_5_ger', OPEX_past_5_ger)
+
+#OPEX_past1_5_fr = (Qpast_6+Qpast_3)*0.001 * gas_fr * top + ((Qpast_7+Qpast_4)/COP)*0.001 * elec_fr * top
+#OPEX_past1_5_ger = (Qpast_6+Qpast_3)*0.001 * gas_gr * top + ((Qpast_7+Qpast_4)/COP)*0.001 * elec_ger * top
+#print('OPEX_past1_5_fr', OPEX_past1_5_fr)
+#print('OPEX_past1_5_ger', OPEX_past1_5_ger)
+
+#OPEX_CIP_fr = (Qclean_heat)*0.001 * gas_fr * top + ((Qclean_cool)/COP)*0.001 * elec_fr * top
+#OPEX_CIP_ger = (Qclean_heat)*0.001 * gas_gr * top + ((Qclean_cool)/COP)*0.001 * elec_ger * top
+#print('OPEX_CIP_fr', OPEX_CIP_fr)
+#print('OPEX_CIP_ger', OPEX_CIP_ger)
 ```
