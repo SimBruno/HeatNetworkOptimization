@@ -121,10 +121,10 @@ $$
 
 #### Summary of Pasteurization Exergy Results
 
-```{r}
-path <- file.path('./venv/Scripts/python.exe')
-library(reticulate)
-use_python(path)
+```{r path}
+#path <- file.path('./venv/Scripts/python.exe')
+#library(reticulate)
+#use_python(path)
 
 ```
 

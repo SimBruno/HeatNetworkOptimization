@@ -23,7 +23,6 @@ In all scenarios we will do the following:
 
 - Determine the area of the HX in term of the dTmin
 - Determine the cost of the HX in term of the the Area
-- Determine the cost of the HX in term of the dTmin
 
 The costs will be computed for both France and Germany and will be composed of CAPEX and OPEX.
 
@@ -41,7 +40,7 @@ The three first scenari focus on the pasterization process whereas the later is 
 ### General Method
 
 #### Initialisation
-First, the T-h diagram of the cold and hot streams is plotted to determined if the dTmin is on the left or right of the diagram (i.e. if the dTmin is between the inlet and outlet temperatures of the cold stream or the hot stream). This will influence in the following formulas of CAPEX.
+First, the T-h diagram of the cold and hot streams is plotted to determined if the dTmin is on the left or right of the diagram (i.e. between $T_{hot,in}$ and $T_{cold,out}$ or between $T_{hot,out}$ and $T_{cold,in}$). This will influence in the following formulas of CAPEX.
 
 In the case of $h_1 < h_2$. The equation of T-h diagram is:
 
@@ -139,7 +138,9 @@ Operating cost depends on three factors:
 
 ### Past 5 only
 
-Here, Past 5 heat exchanger cost is optimized with respect to dTmin. In the following code, 1 stands for cold stream, and 2 for hot stream. When there is a T_#number, it is related to the entrance of the stream and _prime relate to the exiting. The _Number stands for the past number. Example: T2_prime_2 stands for the T_hout of the past2 HX, T1_5 stands for the T_cin of the past5 HX.
+Here, Past 5 heat exchanger cost is optimized with respect to dTmin. In the following code, 1 stands for cold stream, and 2 for hot stream. When there is a T_#number, it is related to the entrance of the stream and _prime relate to the exiting. The _Number stands for the past number. 
+
+Example: T2_prime_2 stands for the $T_{hot,out}$ of the past2 HX, T1_5 stands for the $T_{cold,in}$ of the past5 HX.
 
 In this case, $T_{c,in} = 333K$ and $T_{h,in} = 348K$ are known. 
 
@@ -432,11 +433,11 @@ The minimum value of TOTEX is graphically determined and is reported in the prev
 
 ### Past 1 + Past 5
 
-This time we know only $T_{c,in}$ and $T_{c,out}$ but nothing about the hot streams.
-We can't reuse the exact same method as for past5 where we knew $T_{h,in}$ and $T_{c,in}$
-We will then first need to determine $T_{h,in}$ from the Past2 ∆T (assumed here at 5K for simplicity). We end up with a $T_{past,c} = 70°C$ which will be $T_{h,in}$ of past1.
-Another important assumption in this scenario is to assume for past1 that $T_{c,out}=T_{past-cent,out} \ne 60°C$. Indeed, we will instead determine this temperature from the ∆Tmin optimization of past1.
-From this new $T_{c,out}$, and because both past1 and past5 are linked by this flow we will recompute the ∆Tmin optimization of past5.
+This time only $T_{c,in}$ and $T_{c,out}$ are known but nothing about the hot streams is mentionned.
+The exact same method as for past5 can't be reused since there $T_{h,in}$ and $T_{c,in}$ were known.
+Then one first need to determine $T_{h,in}$ from the Past2 ∆T (assumed here at 5K for simplicity). This gives $T_{past,c} = 70°C$ which will be $T_{h,in}$ of past1.
+Another important assumption in this scenario is to assume for past1 that $T_{c,out}=T_{past-cent,out} \ne 60°C$. Indeed, this temperature will instead be determined from the ∆Tmin optimization of past1.
+From this new $T_{c,out}$, and because both past1 and past5 are linked by this flow, the ∆Tmin optimization of past5 will be recomputed.
 
 #### Past 1 optimization
 
@@ -584,17 +585,17 @@ Past1_opt_ger_sc2 = Past1_opt_ger_sc2.round(2)
 HTML(Past1_opt_ger_sc2.to_html(index=False))
 ```
 
-The first graph show dT is on the left and thus we will use the corresponding equation presented at the beginning of this section
+The first graph show dT is on the left and thus the corresponding equation presented at the beginning of this section are used.
 
-The optimisation gives a dTmin which varies between Germany and France. This leads to different CAPEX and OPEX for both countries
+The optimisation gives a dTmin which varies between Germany and France. This leads to different CAPEX and OPEX for both countries.
 
-For the OPEX we needed to inlude the costs of past3 (heating) and past 4 (cooling). 
+For the OPEX, the costs of past3 (heating) and past 4 (cooling) were to be inluded. 
 Past 3 equation becomes the following: $Q_{past3} = m_{hot}*cp_{hot}*(T_{past2,out}-348)$ where $m_{hot}$ is the flow coming out of past2. Past 4 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
-Of course the heating OPEX (past 3) will use gas costs whereas the cooling OPEX (past 4) will use electricity costs and consider a COP of 3 as in energy bill. Both processes again assume the same operating time as for Energy Bill.
+Of course the heating OPEX (past 3) will use gas costs whereas the cooling OPEX (past 4) will use electricity costs and consider a COP of 3 as in the energy bill section. Both processes again assume the same operating time as for Energy Bill.
 
 #### Past 5 optimization
 
-Now we reperform the same as above but for past 5. This time because both past 1 and past 5 are connected we will assume $T_{cold,in,past5}=T_{hot,out,past1}$
+Now the same as above is reperformed but for past 5. This time because both past 1 and past 5 are connected it is assumed $T_{cold,in,past5}=T_{hot,out,past1}$
 
 
 ```{python past1+5_past5, echo = T, eval = T}
@@ -741,13 +742,13 @@ Past5_opt_ger_sc2 = Past5_opt_ger_sc2.round(2)
 HTML(Past5_opt_ger_sc2.to_html(index=False))
 ```
 
-The first graph show dT is on the right and thus we will use the corresponding equation presented at the beginning of this section
+The first graph show dT is on the right and thus the corresponding equation presented at the beginning of this section is used.
 
-For the OPEX we needed to inlude the costs of past 6 (heating) and past 7 (cooling). 
+For the OPEX the costs of past 6 (heating) and past 7 (cooling) were to be included. 
 Past 6 equation becomes the following: $Q_{past6} = m_{hot}*cp_{hot}*(T_{hot,in,past5}-T_{cold,out,past5})$ where $m_{hot}$ is the flow coming out of past5. Past 7 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
 Of course the heating OPEX (past 6) will use gas costs whereas the cooling OPEX (past 7) will use electricity costs and consider a COP of 3 as in energy bill. Both processes again assume the same operating time as for Energy Bill.
 
-The optimisation gives a dTmin for past 5 of 6.3K leading to an area of 5.21$m^2$ and a larger TOTEX in Germany than France because of the higher price of electricity in Germany (both CAPEX are the same but OPEX vary). COmpared to case where only past5 were optimized we have a higher dTmin but a lower Area and thus lower costs. Considering only the costs of past5, it may seem more interesting to optimize past1 and past5 simultaneously. However we have to look at the whole picture and don't forget that past1 was also optimized (thus consider total costs of both past1 and past5).
+The optimisation gives a dTmin for past 5 of 6.3K leading to an area of 5.21$m^2$ and a larger TOTEX in Germany than France because of the higher price of electricity in Germany (both CAPEX are the same but OPEX vary). Compared to case where only past5 were optimized, it presents a higher dTmin but a lower Area and thus lower costs. Considering only the costs of past5, it may seem more interesting to optimize past1 and past5 simultaneously. However one have to look at the whole picture and don't forget that past1 was also optimized (thus consider total costs of both past1 and past5).
 
 #### Both costs combined 
 
@@ -881,11 +882,11 @@ The cold line is over the hot line, which does not make sense in a thermodynamic
 ### Cleaning in Place
 
 Now let's only focus on another part of the process (the cleaning in place) and try to optimize the heat recovery. After looking for the heat exchanger in this process one can observe there is one used to heat thanks to use of steam between flows CIP2 and CIP3/10, and there is also one used to cool with glycolic water between flows CIP6 and CIP7.
-We could try to use the second one (between CIP6 and CIP7) to preheat the flow cip1 with is currently at 25°C and which need to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
+The second one (between CIP6 and CIP7) could be used to preheat the flow cip1 which is currently at 25°C and which need to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
 
 NB: The same could have been done by preheating the CIP2 for it to be closer to CIP3 temperature of 80°C. However the gap would have been lowered (only 20°C difference compared to 35°C for the chosen solution) and thus the heat recovery would have been less efficient.
  
-In chapter 2 when deermining heat and mass balances, the following relation had been determined between the flows temperatures:
+In chapter 2 when determining heat and mass balances, the following relation had been determined between the flows temperatures:
 
 - $T_cip6=75°C > T_{cip1}=25°C$
 
@@ -1050,7 +1051,7 @@ In this scenario the OPEX is dependent on the the cooling and heating HX of the 
 From this, $Q_{steam} = m_{cip2}*cp1*(353-T_{cip2})$ and $Q_{cooling} = m_{hot,newHX}*cp_{hot,newHX}*(T_{hot,out,newHX}-303)$ 
 
 
-It can be observed that the optimum dT is 24°C which brings CIP1' to ($75-24=51°C$) instead of 25°C. Thus compared to the case without optimization CIP2 will be cooler than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require more steam to heat up until 80°C. This doesn't seem to be efficient. This will check by comparing the costs with the Energy Bill.
+It can be observed that the optimum dT is 24°C which brings CIP1' to ($75-24=51°C$) instead of 25°C. Thus compared to the case without optimization CIP2 will be cooler than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require more steam to heat up until 80°C. This doesn't seem to be efficient. This will be checked by comparing the costs with the Energy Bill.
 
 ### Comparison with non-optimalized case:
 
