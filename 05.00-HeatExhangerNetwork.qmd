@@ -7,7 +7,104 @@ Your reports should include the following aspects:
 
 ## Identification of Penalizing Heat Exchangers
 
-Identify and list the heat exchangers that have the greatest impact on the energy penalty. Conversely, define a list of non-penalizing heat exchangers that require no modification. By removing the streams involved, establish subsets of hot and cold streams for which the heat exchanger network (interconnected heat exchangers) needs to be designed.
+<!--Identify and list the heat exchangers that have the greatest impact on the energy penalty. Conversely, define a list of non-penalizing heat exchangers that require no modification. By removing the streams involved, establish subsets of hot and cold streams for which the heat exchanger network (interconnected heat exchangers) needs to be designed.-->
+Thanks to the pinch analysis effectuated in the previous section it is possible to identify penalizing heat exchangers.
+There are four types of penalizing heat exchangers:
+- A cold utility cooling down a hot stream above the pinch
+- A hot utility heating up a cold stream below the pinch
+- A heat exchanger heating up a cold stream under the pinch using a hot stream above the pinch
+- A mixer where the fluids it is mixing are not on the same side of the pinch point, i.e. the cooler fluid intake is below the pinch and the warmer fluid intake is above the pinch
+
+Thanks to having calculated the pinch point at 67.5 °C in the previous section, it is now easy to find the penalizing heat exchangers in each section.
+
+Furthermore, it is possible to calculate the penalty caused by each penalizing heat exchanger, as it is simply the amount of heat utilized by said exchanger.
+
+The Wastewater and sludge production section will be skipped as it does not utilize any heat exchangers.
+
+
+ASK IF PENALIZING EXCHANGERS ARE CORRECT; IS IT PENALIZING IF ONE STREAM CROSSES THE PINCH POINT; IE COLD STREAM GOES FROM 50 TO 80
+
+### Pasteurisation
+
+```{python PastPen, echo = F, eval = F}
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+
+past_pen = {'Exchangers': ['Refrigeration', 'Past1', 'Past2', 'Past3', 'Past4', 'Past5', 'Past6', 'Past7', 'Mixer'],
+        'Penalizing': ['Not Penalizing', 'Penalizing', 'Penalizing', 'Penalizing', 'Not Penalizing', 'Penalizing', 'Penalizing', 'Penalizing', 'Not Penalizing'],
+        'Penalty (kW)': ['0', '1691.65', '142.88', '285.76', '0', '17.52', '35.61', '127', '0']}
+df = pd.DataFrame(past_pen)
+df = df.set_index('Exchangers')
+df = df.round(2)
+HTML(df.to_html())
+```
+
+### Evaporation
+
+TO BE CORRECTED ONCE THE EVAPORATION SECTION IS CORRECTED
+
+The evaporators are equivalent to mixers.
+
+```{python EvapPen, echo = F, eval = F}
+
+evap_pen = {'Exchangers': ['P1', 'P2', 'P3', 'P4', 'P5', 'Evap1', 'Evap2', 'Evap3'],
+        'Penalizing': ['Not Penalizing', 'Not Penalizing', 'Not Penalizing', 'Not Penalizing', 'Penalizing', 'Penalizing', 'Not Penalizing', 'Not Penalizing'],
+        'Penalty (kW)': ['0', '0', '0', '0', '98.04', '453.44', '0', '0']}
+df = pd.DataFrame(evap_pen)
+df = df.set_index('Exchangers')
+HTML(df.to_html())
+```
+
+### Drum Dryers
+
+```{python DrumPen, echo = F, eval = F}
+
+dryer_pen = {'Exchangers': ['Dryer 1', 'Dryer 2', 'DDHEX-1', 'DDHEX-2', 'Cooling Water'],
+        'Penalizing': ['Not Penalizing', 'Penalizing', 'Penalizing', 'Not Penalizing', 'Not Penalizing'],
+        'Penalty (kW)': ['0', '67.08', '0.11', '0', '0']}
+df = pd.DataFrame(dryer_pen)
+df = df.set_index('Exchangers')
+HTML(df.to_html())
+```
+
+### Cleaning in Place
+
+```{python CIPPen, echo = F, eval = F}
+
+CIP_pen = {'Exchangers': ['Mixer', 'CIP-HEX', 'Shower-1', 'Shower-2', 'Cooling Water'],
+        'Penalizing': ['Penalizing', 'Penalizing', 'Penalizing', 'Penalizing', 'Penalizing'],
+        'Penalty (kW)': ['175.81', '334.72', '41.84', '41.84', '225.94']}
+df = pd.DataFrame(CIP_pen)
+df = df.set_index('Exchangers')
+HTML(df.to_html())
+```
+
+### Rivella Production
+
+R-Mixer1 and R-Mixer2 are ignored because there is no heat exchange occurring in these mixers.
+
+```{python RivPen, echo = F, eval = F}
+
+riv_pen = {'Exchangers': ['Fermentation', 'Evaporator', 'R-HEX1', 'R-Mixer3', 'Green Rivella HEX', 'R-Mixer4', 'Red Rivella HEX'],
+        'Penalizing': ['Not Penalizing', 'Penalizing', 'Penalizing', 'Not Penalizing', 'Not Penalizing', 'Not Penalizing', 'Not Penalizing'],
+        'Penalty (kW)': ['0', '579.42', '40.11', '0', '0', '0', '0']}
+df = pd.DataFrame(riv_pen)
+df = df.set_index('Exchangers')
+HTML(df.to_html())
+```
+
+### Digester
+
+```{python DigPen, echo = F, eval = F}
+
+dig_pen = {'Exchangers': ['Digestor', 'Steam Dryer'],
+        'Penalizing': ['Not Penalizing', 'Penalizing'],
+        'Penalty (kW)': ['0', '28.75']}
+df = pd.DataFrame(dig_pen)
+df = df.set_index('Exchangers')
+HTML(df.to_html())
+```
 
 ## Application of Pinch Design Method
 

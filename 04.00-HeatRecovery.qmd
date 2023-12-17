@@ -1172,7 +1172,7 @@ We will start by showing the composite curves first:
 
 ```{r}
 library(jsonlite)
-pfilename<-"codes_02_heat_recovery/result/brewery-1.json"
+pfilename<-"codes_02_heat_recovery/result/brewery-21.json"
 data <- fromJSON(pfilename, flatten=FALSE)
 totex<-data$results$KPIs$totalcost
 capex<-data$results$KPIs$capex
@@ -1204,7 +1204,7 @@ import numpy as np
 plt.switch_backend('agg')
 
 # read json for heat integration data
-file_name = open('codes_02_heat_recovery/result/brewery-1.json')
+file_name = open('codes_02_heat_recovery/result/brewery-21.json')
 integ = json.loads(file_name.read())
 
 # we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
@@ -1223,7 +1223,7 @@ ca_hc = [(1-Tref/i) for i in T_hc]
 ca_cc = [(1-Tref/i) for i in T_cc]
 
 # compute back the original carnot factors given a deltaT_min
-deltaT_min = 40
+deltaT_min = 5
 T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
 T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
 ca_hc_ori = [(1-298.15/i) for i in T_hc_ori]
@@ -1265,8 +1265,8 @@ ax2 =ax.twinx()
 ax2.set_yticks(np.arange(0, len(T_ce), 1), T_ce)
 ax2.set_ylabel('$Temperature \ (\u00b0C)$', labelpad=10)
 
-plt.axvline(x=24946.177132, color="green", linestyle="--")
-plt.axvline(x=2975.059841, color="green", linestyle="--")
+plt.axvline(x=16508.95225, color="green", linestyle="--", alpha = 0.5)
+plt.axvline(x=2131.654373, color="green", linestyle="--", alpha = 0.5)
 
 plt.show()
 
@@ -1295,7 +1295,7 @@ ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
 ax.set_ylabel('$Temperature \ (°C)$')
 ax.set_title('$Grand \ Composite \ Curve$')
 ax.legend(["Grand Composite Curve"])
-ax.set_ybound(-100, 1200)
+ax.set_ybound(-10, 160)
 
 plt.show()
 
@@ -1311,7 +1311,7 @@ for i in range(len(Q_gcc)):
 #print(np.min(ca_cc_ori))
 
 upper_bound = 0
-lower_bound = 5000
+lower_bound = 30000
 for i in range(len(Q_hc)):
   if (ca_hc_ori[i] < (np.max(ca_hc_ori)) and Q_hc[i] > upper_bound):
     upper_bound = Q_hc[i]
@@ -1333,7 +1333,7 @@ cold_utilities = lower_bound
 total_w = 0
 
 for i in range(len(Q_cc)):
-  if ((ca_cc_ori[i] > 0.4) and (Q_cc[i] > total_w)):
+  if ((ca_cc_ori[i] > 0.2) and (Q_cc[i] > total_w)):
     total_w = Q_cc[i]
 
 
@@ -1344,8 +1344,9 @@ hot_utilities = total_w - upper_bound
 
 
 
-data_pinch_points = {'Pinch Points': ['Pinch Point 1', 'Pinch Point 2'],
-        'Temperature (°C)': [ intersections[0], intersections[1]]}
+
+data_pinch_points = {'Pinch Points': ['Pinch Point 1'],
+        'Temperature (°C)': [ intersections[0]]}
 
 dfs = pd.DataFrame(data_pinch_points)
 dfs = dfs.set_index('Pinch Points')
@@ -1356,8 +1357,8 @@ HTML(dfs.to_html())
 We can check that the heat load at these points is indeed 0 W by extracting its value at these points:
 
 ```{python, echo = T, eval = T}
-data_pinch_points = {'Pinch Points': ['Pinch Point 1', 'Pinch Point 2'],
-        'Heat (W)': [ Heat_inter[0], Heat_inter[1]]}
+data_pinch_points = {'Pinch Points': ['Pinch Point 1'],
+        'Heat (W)': [ Heat_inter[0]]}
 
 dfs = pd.DataFrame(data_pinch_points)
 dfs = dfs.set_index('Pinch Points')
