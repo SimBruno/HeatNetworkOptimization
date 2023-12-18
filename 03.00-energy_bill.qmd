@@ -130,7 +130,7 @@ $$
 
 ```{python compute_pasteurisation, echo = T, eval = T}
 
-import math
+#import math
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
@@ -144,7 +144,7 @@ Delta_T_Gly=5
 Ta=298
 
 #Refrigeration
-L_milk_ref=m_fmilk*Cp_fmilk*((T_fmilk-T_mixure_out)-T_a*math.log(T_fmilk/T_mixure_out))
+L_milk_ref=m_fmilk*Cp_fmilk*((T_fmilk-T_mixure_out)-T_a*np.log(T_fmilk/T_mixure_out))
 
 L_gy_ref=m_gly_ref*Cp_glywater*((Delta_T_Gly)-T_a*np.log(T_fmilk/T_mixure_out))#glywater temperature
 
@@ -221,6 +221,12 @@ L_mixer=L_mixer_1+L_mixer_2
 #Total exergy pasteurisation section
 
 L_tot_past= L_ref+L_past1+L_past2+L_past3+L_past4+L_past5+L_past6+L_past7+L_mixer
+
+#Calculations for Sankey Diagram
+
+L_steam_in=m_steam_past3*(2880000-480*7343)
+L_steam_out=m_steam_past3*(461000-383*1.418)
+L_fresh_milk=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*np.log(T_mixure_out/T_past_cent))
 
 
 # Dataframe for Exergy Loss Pasteurization
