@@ -1,11 +1,22 @@
 layer	source	target 	value
-exergy	glywater	factory    44.14
-carbon	natural gas	refinery_carbon	0.40
-hydrogen	crude	refinery_hydrogen	52.67
-hydrogen	natural gas	refinery_hydrogen	1.59
-hydrogen	water_SMR	refinery_hydrogen	1.30
-nitrogen	crude	refinery_nitrogen	0.06
-oxygen	crude	refinery_oxygen	0.09
+exergy	gly_in	factory    44.14
+exergy	fresh_milk	factory	0.40
+exergy	steam_in	factory	52.67
+exergy	thickner	factory	1.59
+exergy	factory	milk	1.30
+exergy	factory	cream	0.06
+exergy	factory	past1_loss	44.1
+exergy	factory	past2_loss	3.7
+exergy	factory	past3_loss	37.5
+exergy	factory	past4_loss	32.9
+exergy	factory	past5_loss	1.64
+exergy	factory	past6_loss	115.5
+exergy	factory	past7_loss	77.7
+exergy	factory	refr_loss	38.8
+exergy	factory	refr_mixer	2.12
+exergy	factory	steam_out	0.09
+exergy	factory	gly_out	0.09
+
 oxygen	water_SMR	refinery_oxygen	0.65
 oxygen	air	refinery_oxygen	2.84
 sulfur	crude	refinery_sulfur	0.18
