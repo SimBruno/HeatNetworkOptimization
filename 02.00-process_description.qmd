@@ -537,11 +537,13 @@ Assumptions:
 #Evaporator 1
 from codes_01_energy_bill.coolprop_functions import mixture
 from pyxosmose.state import State
-def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg):
-    Q_evap = m_in*cp_in*deltaT - m_in*h_in + m_out1*h_out1 + m_out2*h_out2
-    m_w = (Q_evap)/(hfg)
+def evaporator_fct(m_in,m_out1,m_out2,h_in,h_out1,h_out2,cp_in,deltaT,hfg,Lwater):
+    #Q_evap = -m_in*h_in + m_out1*h_out1 + m_out2*h_out2
+    Q_evap = m_out1*Lwater #kW
+    m_w = Q_evap/(hfg) #
     #print('Qevap:',Q_evap)
     #print('mw:',m_w)
+    #print(hfg)
     return Q_evap, m_w
 #Fixed Parameters 
 p6=31000
@@ -577,14 +579,15 @@ Point_e24 = State(pair='TP', fluid='water', temperature=T24, pressure=p24)
 Point_e24.StateCalc()
 # And print the dictionary for revision
 State_e24 = Point_e24.__dict__ # Whole dictionary with properties
-hfg1=State_e24["enthalpy"]
+hfg1=2257 #kJ/kg
 #print(hfg1)
 
 #Evap 1 calculation of heat 
 m7=m6-m14
 deltaT=5
+Lw1=2335 #kJ/kg
 
-Q_evap1, m_w1 = evaporator_fct(m6,m14,m7,h6,h14,h7,cp6,deltaT,hfg1)
+Q_evap1, m_w1 = evaporator_fct(m6,m14,m7,h6,h14,h7,cp6,deltaT,hfg1,Lw1)
 
 #print(Q_evap1)
 #print(m_w1)
@@ -625,14 +628,15 @@ Point_e17 = State(pair='TP', fluid='water', temperature=T17, pressure=p17)
 Point_e17.StateCalc()
 # And print the dictionary for revision
 State_e17 = Point_e17.__dict__ # Whole dictionary with properties
-hfg2=State_e17["enthalpy"]
+hfg2=Lw1 #kJ/kg
 #print(hfg2)
 
 m8=m7
 m9=m8-m15
 deltaT=5
+Lw2=2350 #kJ/kg
 
-Q_evap2, m_w2 = evaporator_fct(m8,m15,m9,h8,h15,h9,cp8,deltaT,hfg2)
+Q_evap2, m_w2 = evaporator_fct(m8,m15,m9,h8,h15,h9,cp8,deltaT,hfg2,Lw2) 
 
 #print(Q_evap2)
 #print(m_w2)
@@ -675,14 +679,15 @@ Point_e18 = State(pair='TP', fluid='water', temperature=T18, pressure=p18)
 Point_e18.StateCalc()
 # And print the dictionary for revision
 State_e18 = Point_e18.__dict__ # Whole dictionary with properties
-hfg3=State_e18["enthalpy"]
+hfg3=Lw2 #kJ/kg
 #print(hfg3)
 
 m10=m9
 m11=m10-m16
 deltaT=5
+Lw3=2360 #kJ/kg 
 
-Q_evap3, m_w3 = evaporator_fct(m10,m16,m11,h10,h16,h11,cp10,deltaT,hfg3)
+Q_evap3, m_w3 = evaporator_fct(m10,m16,m11,h10,h16,h11,cp10,deltaT,hfg3,Lw3)
 
 m17=m_w2
 m18=m_w3
@@ -703,7 +708,7 @@ HTML(df.to_html())
 
 #print in a data frame the heat demand of each evaporator
 data = {'Evaporator': ['1', '2', '3'],
-        'Heat demand (W)': [Q_evap1, Q_evap2, Q_evap3]}
+        'Heat demand (kW)': [Q_evap1, Q_evap2, Q_evap3]}
 df = pd.DataFrame(data)
 df = df.set_index('Evaporator')
 df = df.round(4)
