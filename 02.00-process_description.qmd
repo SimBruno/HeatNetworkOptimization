@@ -777,6 +777,7 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
     if Qcond<Q:
         #print("Cold stream is completely condensed")
         Thotout = (-Q+mhot*abs(hhot))/(mhot*cphot) + Thotin
+        
     else:
         #print("Cold stream is not completely condensed")
         Thotout = Thotin
@@ -791,8 +792,8 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
 # Heat Exchanger 4
 # Calculation can be done but the module is not used
 
-T4=338
-T5=T4
+T4=333
+T5=338
 T19=T14
 p4=100000
 State_e4=mixture(T=T4, P=p4, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
