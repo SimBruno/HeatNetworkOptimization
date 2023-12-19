@@ -1,5 +1,4 @@
 
-
 # Pinch analysis
 Starting from this chapter, you will embark on optimizing the energy efficiency of the dairy factory. This section is divided into two parts:
 
@@ -1138,6 +1137,7 @@ The following table sumarize the cost for the optimized (with heat recovery) and
 </table>
 
 
+
 ## Minimum energy requirement
 
 The minimum energy requirement, including both heat and cooling demand, can be determined through the application of pinch analysis. <!--In the Survival Guide, you can find an example of using QRosmose to conduct pinch analysis for a brewery plant. For your project, you are expected to employ the same methodology to analyze the dairy factory. While more detailed tutorials will be provided during the semester, the TA team will also be available to assist you as needed.-->
@@ -1173,7 +1173,7 @@ We will start by showing the composite curves first:
 
 ```{r}
 library(jsonlite)
-pfilename<-"codes_02_heat_recovery/result/brewery-21.json"
+pfilename<-"codes_02_heat_recovery/result/brewery-57.json"
 data <- fromJSON(pfilename, flatten=FALSE)
 totex<-data$results$KPIs$totalcost
 capex<-data$results$KPIs$capex
@@ -1205,7 +1205,7 @@ import numpy as np
 plt.switch_backend('agg')
 
 # read json for heat integration data
-file_name = open('codes_02_heat_recovery/result/brewery-21.json')
+file_name = open('codes_02_heat_recovery/result/brewery-57.json')
 integ = json.loads(file_name.read())
 
 # we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
@@ -1224,6 +1224,7 @@ ca_hc = [(1-Tref/i) for i in T_hc]
 ca_cc = [(1-Tref/i) for i in T_cc]
 
 # compute back the original carnot factors given a deltaT_min
+#deltaT_min = 40
 deltaT_min = 5
 T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
 T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
@@ -1245,29 +1246,46 @@ T_ce = [int(Tref_ce/(1-i) - 273.15) for i in ca_values]
 figure, ax = plt.subplots(figsize = (8,6))
 
 # both cold curves (blue): dashed --> shifted, solid --> original
-ax.plot(Q_cc, ca_cc, "--b")
-ax.plot(Q_cc, ca_cc_ori, "-b")
+#ax.plot(Q_cc, ca_cc, "--b")
+#ax.plot(Q_cc, ca_cc_ori, "-b")
 # both hot curves (red): dashed --> shifted, solid --> original
-ax.plot(Q_hc, ca_hc, "--r")
-ax.plot(Q_hc, ca_hc_ori, "-r")
+#ax.plot(Q_hc, ca_hc, "--r")
+#ax.plot(Q_hc, ca_hc_ori, "-r")
 # fill the area between the original and shifted curves
-ax.fill_between(Q_cc, ca_cc_ori, ca_cc, color="blue", alpha=0.25)
-ax.fill_between(Q_hc, ca_hc, ca_hc_ori, color="red", alpha=0.25)
+#ax.fill_between(Q_cc, ca_cc_ori, ca_cc, color="blue", alpha=0.25)
+#ax.fill_between(Q_hc, ca_hc, ca_hc_ori, color="red", alpha=0.25)
+T_cc = [(i-273.15) for i in T_cc]
+T_cc_ori = [(i-273.15) for i in T_cc_ori]
+T_hc = [(i-273.15) for i in T_hc]
+T_hc_ori = [(i-273.15) for i in T_hc_ori]
+
+# both cold curves (blue): dashed --> shifted, solid --> original
+ax.plot(Q_cc, T_cc, "--b")
+ax.plot(Q_cc, T_cc_ori, "-b")
+# both hot curves (red): dashed --> shifted, solid --> original
+ax.plot(Q_hc, T_hc, "--r")
+ax.plot(Q_hc, T_hc_ori, "-r")
+# fill the area between the original and shifted curves
+ax.fill_between(Q_cc, T_cc_ori, T_cc, color="blue", alpha=0.25)
+ax.fill_between(Q_hc, T_hc, T_hc_ori, color="red", alpha=0.25)
+
+
+
 
 # add the lables and title
 ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
-ax.set_ylabel('$Carnot \ Factor \ (1 - T_{0}/T)$')
+ax.set_ylabel('$Temperature \ (°C)$')
 ax.set_title('$Composite \ Curves$')
 ax.legend(["Corrected Cold Composite Curve", "Cold Composite Curve", "Corrected Hot Composite Curve", "Hot Composite Curve"])
-ax.set_ybound(ca_min, ca_max)
+#ax.set_ybound(ca_min, ca_max)
 
 # secondary axis. In this case we don't plot anything, we simply set the secondary axis ticks
-ax2 =ax.twinx()
-ax2.set_yticks(np.arange(0, len(T_ce), 1), T_ce)
-ax2.set_ylabel('$Temperature \ (\u00b0C)$', labelpad=10)
+#ax2 =ax.twinx()
+#ax2.set_yticks(np.arange(0, len(T_ce), 1), T_ce)
+#ax2.set_ylabel('$Temperature \ (\u00b0C)$', labelpad=10)
 
-plt.axvline(x=16508.95225, color="green", linestyle="--", alpha = 0.5)
-plt.axvline(x=2131.654373, color="green", linestyle="--", alpha = 0.5)
+plt.axvline(x=7322.8, color="green", linestyle="--", alpha = 0.5)
+plt.axvline(x=34336.58, color="green", linestyle="--", alpha = 0.5)
 
 plt.show()
 
@@ -1283,20 +1301,18 @@ Q_gcc = np.zeros(len(Q_cc))
 for i in range(len(Q_cc)):
   Q_gcc[i] = Q_cc[i] - Q_hc[i]  
 
-for i in range(len(T_hc)):
-  T_hc[i] = T_hc[i] - 273.15
-
 figure, ax = plt.subplots(figsize = (8,6))
 
+#T_hc1 = [(i+273.15) for i in T_hc]
 ax.plot(Q_gcc, T_hc, "-g")
 plt.axhline(y=0, color='black', linestyle='--')
-
+plt.axvline(x=0, color='black', linestyle='--')
 
 ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
 ax.set_ylabel('$Temperature \ (°C)$')
 ax.set_title('$Grand \ Composite \ Curve$')
 ax.legend(["Grand Composite Curve"])
-ax.set_ybound(-10, 160)
+
 
 plt.show()
 
@@ -1304,7 +1320,8 @@ Heat_inter = []
 intersections = []
 for i in range(len(Q_gcc)):
   if (Q_gcc[i]<=10):
-    if (T_hc[i]>=0 and T_hc[i]<=1000):
+    #if (T_hc[i]>=-30-273.15 and T_hc[i]<=200-273.15):
+    if (T_hc[i]>=-30 and T_hc[i]<=200):
       intersections.append(T_hc[i])
       Heat_inter.append(Q_gcc[i])
 #print("We can observe two pinch points at the temperatures:", intersections, " (°C)")
@@ -1322,7 +1339,9 @@ for i in range(len(Q_hc)):
 #print("We find that the maximum heat recovery potential is equal to", np.round(upper_bound - lower_bound, 2), " W.")
 ```
 
-In the next tables we will show the temperatures of the pinch points and the energy requirements and heat recovery:
+In the next tables we will show the temperature of the pinch point and the energy requirements and heat recovery:
+
+
 
 ```{python, echo = T, eval = T}
 import pandas as pd
@@ -1337,14 +1356,13 @@ for i in range(len(Q_cc)):
   if ((ca_cc_ori[i] > 0.2) and (Q_cc[i] > total_w)):
     total_w = Q_cc[i]
 
-
+#print(total_w)
 hot_utilities = total_w - upper_bound
 
 #print("The cold utilities require", cold_utilities, "W and the hot utilities need", hot_utilities, "W of energy. In total, the minimum energy requirements are of", (cold_utilities+hot_utilities),"W.")
 
-
-
-
+print(upper_bound)
+print(lower_bound)
 
 data_pinch_points = {'Pinch Points': ['Pinch Point 1'],
         'Temperature (°C)': [ intersections[0]]}
@@ -1355,23 +1373,23 @@ dfs = dfs.round(2)
 HTML(dfs.to_html())
 ```
 
-We can check that the heat load at these points is indeed 0 W by extracting its value at these points:
+We can check that the heat load at this point is indeed 0 W by extracting its value at this points:
 
 ```{python, echo = T, eval = T}
 data_pinch_points = {'Pinch Points': ['Pinch Point 1'],
-        'Heat (W)': [ Heat_inter[0]]}
+        'Heat (kW)': [ Heat_inter[0]]}
 
 dfs = pd.DataFrame(data_pinch_points)
 dfs = dfs.set_index('Pinch Points')
 HTML(dfs.to_html())
 ```
 
-These values can indeed be approximated to 0 W.
+This value can indeed be approximated to 0 W.
 
 We are also able to compute the energy requirements and maximum heat recovery:
 ```{python, echo = T, eval = T}
 data_heat_recovery = {'Information': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-        'Heat (W)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
+        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
 
 dfs = pd.DataFrame(data_heat_recovery)
 dfs = dfs.set_index('Information')
