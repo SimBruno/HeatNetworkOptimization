@@ -10,19 +10,21 @@ Your reports should include the following aspects:
 <!--Identify and list the heat exchangers that have the greatest impact on the energy penalty. Conversely, define a list of non-penalizing heat exchangers that require no modification. By removing the streams involved, establish subsets of hot and cold streams for which the heat exchanger network (interconnected heat exchangers) needs to be designed.-->
 Thanks to the pinch analysis effectuated in the previous section it is possible to identify penalizing heat exchangers.
 There are four types of penalizing heat exchangers:
+
 - A cold utility cooling down a hot stream above the pinch
+
 - A hot utility heating up a cold stream below the pinch
+
 - A heat exchanger heating up a cold stream under the pinch using a hot stream above the pinch
+
 - A mixer where the fluids it is mixing are not on the same side of the pinch point, i.e. the cooler fluid intake is below the pinch and the warmer fluid intake is above the pinch
+
 
 Thanks to having calculated the pinch point at 67.5 °C in the previous section, it is now easy to find the penalizing heat exchangers in each section.
 
 Furthermore, it is possible to calculate the penalty caused by each penalizing heat exchanger, as it is simply the amount of heat utilized by said exchanger.
 
 The Wastewater and sludge production section will be skipped as it does not utilize any heat exchangers.
-
-
-ASK IF PENALIZING EXCHANGERS ARE CORRECT; IS IT PENALIZING IF ONE STREAM CROSSES THE PINCH POINT; IE COLD STREAM GOES FROM 50 TO 80
 
 ### Pasteurisation
 
@@ -49,8 +51,8 @@ The evaporators are equivalent to mixers.
 ```{python EvapPen, echo = F, eval = F}
 
 evap_pen = {'Exchangers': ['P1', 'P2', 'P3', 'P4', 'P5', 'Evap1', 'Evap2', 'Evap3'],
-        'Penalizing': ['Not Penalizing', 'Not Penalizing', 'Not Penalizing', 'Not Penalizing', 'Penalizing', 'Penalizing', 'Not Penalizing', 'Not Penalizing'],
-        'Penalty (kW)': ['0', '0', '0', '0', '98.04', '453.44', '0', '0']}
+        'Penalizing': ['Not Penalizing', 'Not Penalizing', 'Not Penalizing', 'Penalizing', 'Not Penalizing', 'Penalizing', 'Penalizing', 'Not Penalizing'],
+        'Penalty (kW)': ['0', '0', '0', '97.89', '0', '3736.00', '3008.00', '0']}
 df = pd.DataFrame(evap_pen)
 df = df.set_index('Exchangers')
 HTML(df.to_html())
