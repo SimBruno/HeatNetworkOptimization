@@ -82,7 +82,7 @@ slightly_super_heated_steam = 0.7372 [kg/s] # Slightly superheated steam produce
 water_density =  1000 [kg/m3] # Water density
 CO2_density = 0.0019 [kg/m3] # CO2 density
 powder_dryers_flow_ref = 0.69 [kg/s] # Powdered milk production in the drum dryers phase
-dt_min  = 5 [K] #
+dt_min = 5 [K] #
 #n = 40.0 [yr] #lifetime of a plant
 #i = 0.06 [-] #interest rate
 #CEPCI_2020 = 596.2 [-] # actual CEPCI
@@ -115,34 +115,34 @@ The calculated parameters are defined as follows:
 
 |Layer      |Display name   |shortname  |Unit       |Color  |
 |:----------|:--------------|:----------|:----------|:------|
-|FRESH_MILK |Fresh Milk     |fresh_milk |kg/s       |white  |
+|FRESH_MILK |Fresh_Milk     |fresh_milk |kg/s       |white  |
 |CREAM      |Cream          |cream      |kg/s       |black  |  
 |MILK       |Milk           |milk       |kg/s       |grey   |
 |THICKENER  |Thickener      |thickener  |kg/s       |black  |
 |WASTEWATER |Wastewater     |wastewater |kg/s       |green  |  
 |WHEY       |Whey           |whey       |kg/s       |blue   |
-|CONC_MILK  |Conc. Milk     |conc. milk |kg/s       |red    |  
-|STEAM_EVAP |Steam Evap.    |steam evap.|kg/s       |orange |
-|WATER_DRY  |Water Dryers   |water dry. |kg/s       |cyan   |
-|MAKE_UP_WAT|Make up Water  |makeup wat.|kg/s       |purple |
+|CONC_MILK  |Conc_Milk      |conc_milk  |kg/s       |red    |  
+|STEAM_EVAP |Steam_Evap     |steam_evap |kg/s       |orange |
+|WATER_DRY  |Water_Dryers   |water_dry  |kg/s       |cyan   |
+|MAKE_UP_WAT|Make_up_Water  |makeup_wat |kg/s       |purple |
 |BOTTLE     |Bottle         |bottle     |kg/s       |beige  |
-|LAKE_WATER |Lake Water     |lake water |kg/s       |pink   |
-|COLD_AIR   |Cold Air       |cold air   |kg/s       |scarlet|
-|HOT_WATER  |Hot Water      |hot water  |kg/s       |olive  |
+|LAKE_WATER |Lake_Water     |lake_water |kg/s       |pink   |
+|COLD_AIR   |Cold_Air       |cold_air   |kg/s       |scarlet|
+|HOT_WATER  |Hot_Water      |hot_water  |kg/s       |olive  |
 |DISCHARGE  |Discharge      |discharge  |kg/s       |brown  |
 |SLUDGE     |Sludge         |sludge     |kg/s       |lime   |
 |AROMA      |Aroma          |aroma      |kg/s       |coral  |
-|WATER6     |Water Riv. 6   |water r. 6 |kg/s       |sienna |
-|WATER11    |Water Riv. 11  |water r. 11|kg/s       |azure  |
-|FRUIT SUGAR|Fruit Sugar    |fruit sugar|kg/s       |navy   |
+|WATER6     |Water_Riv_6    |water_r_6  |kg/s       |sienna |
+|WATER11    |Water_Riv_11   |water_r_11 |kg/s       |azure  |
+|FRUIT_SUGAR|Fruit_Sugar    |fruit_sugar|kg/s       |navy   |
 |SUGAR      |Sugar          |sugar      |kg/s       |yellow |
-|WATER18    |Water Riv. 18  |water r. 18|kg/s       |tan    |
-|DEG_WASTE  |Biodeg. Waste  |deg. waste |kg/s       |magenta|
+|WATER18    |Water_Riv_18   |water_r_18 |kg/s       |tan    |
+|DEG_WASTE  |Biodeg_Waste   |deg_waste  |kg/s       |magenta|
 |BIOGAS     |Biogas         |biogas     |kg/s       |cyan   |
-|DIG. WASTE |Digester Waste |dig. waste |kg/s       |skyblue|
-|SUP. H. ST.|Superheat Steam|sup. h. st.|kg/s       |violet |
-|DIGESTATE  |Dryed Digestate|digestate  |kg/s       |maroon |
-|SL. STEAM  |Slight Heat St.|sl. steam  |kg/s       |thistle|
+|DIG_WASTE  |Digester_Waste |dig_waste  |kg/s       |skyblue|
+|SUP_H_ST   |Superheat_Steam|sup_h_st   |kg/s       |violet |
+|DIGESTATE  |Dryed_Digestate|digestate  |kg/s       |maroon |
+|SL_STEAM   |Slight_Heat_St |sl_steam   |kg/s       |thistle|
 ```
 
 ## Brewery Process Units {-}
@@ -158,9 +158,6 @@ The dairy process contains the following units
 |Evaporation    |Process|
 |Drum_Dryers    |Process|
 |Cleaning_Place |Process|
-|Cold_Storage   |Process|
-|Hot_Water      |Process|
-|Wastewater     |Process|
 |Rivella        |Process|
 |Digester       |Process| 
 ```
@@ -193,9 +190,16 @@ The heat Streams:
 #: OSMOSE HEAT_STREAMS HotPart_Batch1
 |name         |Tin   |Tout   |Hin     |Hout    |DT min/2|alpha|
 |:------------|:-----|:------|:-------|:-------|:-------|:----|
-|Fresh_Milk   |6.00  |60.00  |0       |13049.84|2.5     |1    |
-|Cream_0      |60.00 |4.00   |60.465  |0       |2.5     |1    |
-|Milk         |60.00 |4.00   |14182.87|0       |2.5     |1    |
+|Fresh_Milk   |6.00  |4.00   |4833.6  |0       |2.5     |1    |
+|Past_cent    |4.00  |60.00  |0       |13533.2 |2.5     |1    |
+|crpast_a     |60    |65.9   |0       |8.41    |2.5     |1    |
+|crpast_x     |65.9  |56.49  |7.371   |0       |2.5     |1    |
+|thickener_b  |4.00  |75.00  |0       |3.57    |2.5     |1    |
+|thickener_end|75.00 |4.00   |10.116  |0       |2.5     |1    |
+|cream_end    |75.00 |4.00   |69.37   |0       |2.5     |1    |
+|crpast_b     |56.49 |75     |0       |17.093  |2.5     |1    |
+|Past_b       |60.00 |75     |0       |3223.37 |2.5     |1    |
+|Milk_end     |75    |4.00   |15257.3 |0       |2.5     |1    |
 ```
 
 ## Evaporation {-}
@@ -210,18 +214,29 @@ The heat Streams:
 
 **Evaporation Streams**
 
-
 The heat Streams:
 
 ```{rosmose}
 : OSMOSE HEAT_STREAMS Evaporation
 
-|name                |Tin    |Tout  |Hin   |Hout    |DT min/2 |alpha|
-|:-------------------|:------|:-----|:-----|:-------|:--------|:----|
-|Milk_5              |4.00   |65.00 |0.00  |5975.218|2.5      |1    |
-|Milk_8              |65.00  |70.00 |0.00  |333.332 |2.5      |1    |
-|Milk_10             |70.00  |65.00 |961.29|0.00    |2.5      |1    |   
-|Concentrated_Milk   |65.00  |4.00  |771.94|0.00    |2.5      |1    |
+|name      |Tin    |Tout  |Hin     |Hout    |DT min/2 |alpha|
+|:---------|:------|:-----|:-------|:-------|:--------|:----|
+|e5        |4.00   |65    |0       |3057.38 |2.5      |1    |
+|e6        |65     |70    |0       |475     |2.5      |1    |
+|e6_lat    |70.00  |70.00 |0       |5977.6  |2.5      |1    |
+|e19       |70.00  |25    |30.345  |0       |2.5      |1    |
+|e17       |70.00  |65.00 |34.8296 |0       |2.5      |1    |  
+|e17_lat   |65     |65    |3880.32 |0       |2.5      |1    |
+|e8        |70     |65    |219.64  |0       |2.5      |1    |
+|e8_lat    |64.5   |64.5  |0       |3850.32 |2.5      |1    |
+|e20       |65     |25    |145.377 |0       |2.5      |1    |
+|e18       |65     |60    |13.395  |0       |2.5      |1    |
+|e18_lat   |60     |60    |1510.4  |0       |2.5      |1    |
+|e16       |60     |25    |242.295 |0       |2.5      |1    |
+|e10       |65     |60    |85.394  |0       |2.5      |1    |
+|e10_lat   |59.5   |59.5  |0       |2510.4  |2.5      |1    |
+|conc_milk |60     |4     |722.276 |0       |2.5      |1    |
+|e24       |70     |70    |6184.2  |0       |2.5      |1    | 
 ```
 
 ## Drum Dryers {-}
@@ -242,9 +257,16 @@ The heat Streams:
 : OSMOSE HEAT_STREAMS Drum_Dryers
 |name        |Tin   |Tout |Hin    |Hout    |DT min/2 |alpha|
 |:-----------|:-----|:----|:------|:-------|:--------|:----|
-|Final_powder|4.00  |50.00|0.00   |127.527 |2.5      |1    |
-|Water_1     |4.00  |45.00|0.00   |156.894 |2.5      |1    | 
-|Water_2     |100.00|45.00|15.583 |0.00    |2.5      |1    |
+|Final_powder|60.00 |50.00|56.64  |0       |2.5      |1    |
+|dd4         |4.00  |60.00|0      |196.701 |2.5      |1    |
+|dd13_I      |4.00  |45.00|0      |156.894 |2.5      |1    |
+|dd13_II     |60.00 |45.00|12.54  |0       |2.5      |1    |
+|dd14        |60.00 |45.00|0.161  |0       |2.5      |1    |
+|dd10_II     |50.00 |60.00|0      |0.093   |2.5      |1    |
+|dd10        |50.00 |60.00|0      |0.0012  |2.5      |1    |
+|dd9_II      |60.00 |50.00|3.14   |0       |2.5      |1    |
+|dd9         |90.00 |50.00|0.04   |0       |2.5      |1    |
+|dd8         |45.00 |90.00|0      |0.000067|2.5      |1    |
 ```
 
 
@@ -267,61 +289,14 @@ The heat Streams:
 : OSMOSE HEAT_STREAMS Cleaning_Place
 |name        |Tin  |Tout |Hin    |Hout    |DT min/2 |alpha|
 |:-----------|:----|:----|:------|:-------|:--------|:----|
-|Bottles     |25.00|40.00|0.00   |555.718 |2.5      |1    |
-|Lake Water  |25.00|30.00|0.00   |291.004 |2.5      |1    |
+|CIP2_make   |25.00|60.00|0      |210.974 |2.5      |1    |
+|CIP2        |75.00|60.00|492.274|0       |2.5      |1    |
+|CIP3        |60.00|80.00|0      |1338.88 |2.5      |1    |
+|CIP4        |80.00|75.00|83.68  |0       |2.5      |1    |
+|CIP12       |80.00|75.00|83.68  |0       |2.5      |1    |
+|Lake        |75.00|30.00|271.123|0       |2.5      |1    |
 ```
 
-
-## Cold Storage {-}
-
-
-
-
-
-```{rosmose}
-: OSMOSE UNIT_PARAM Cold_Storage
-|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
-|:----|:----|:----|:----|:---|:---|:---|:---|
-|0    |0    |0    |0    |0   |0   |1   |1   |
-```
-
-
-
-**Cold Storage Streams**
-
-The heat Streams:
-
-```{rosmose}
-: OSMOSE HEAT_STREAMS Cold_Storage
-|name     |Tin  |Tout |Hin   |Hout |DT min/2 |alpha|
-|:--------|:----|:----|:-----|:----|:--------|:----|
-|Air      |0.00 |-5.00|500.00|0.00 |2.5      |1    |
-```
-
-
-## Hot Water {-}
-
-```{rosmose}
-: OSMOSE UNIT_PARAM Hot_Water
-
-|cost1|cost2|cinv1|cinv2|imp1|imp2|fmin|fmax|
-|:----|:----|:----|:----|:---|:---|:---|:---|
-|0    |0    |0    |0    |0   |0   |1   |1   |
-```
-
-
-
-**Hot Water Streams**
-
-The heat Streams:
-
-```{rosmose}
-: OSMOSE HEAT_STREAMS Hot_Water
-|name    |Tin |Tout|Hin   |Hout  |DT min/2 |alpha|
-|:-------|:---|:---|:-----|:-----|:--------|:----|
-|Water   |15.0|55.0|0.00  |167.25|2.5      |1    |
-
-```
 
 
 ## Rivella Production {-}
@@ -341,14 +316,17 @@ The heat Streams:
 : OSMOSE HEAT_STREAMS Rivella
 |name          |Tin   |Tout |Hin    |Hout    |DT min/2 |alpha|
 |:-------------|:-----|:----|:------|:-------|:--------|:----|
-|Fruit Sugar   |25.00 |10.00|0.5699 |0.00    |2.5      |1    |
-|H2O_green     |25.00 |10.00|0.5699 |0.00    |2.5      |1    | 
-|Whey_8        |50.00 |10.00|1.7099 |0.00    |2.5      |1    | 
-|Whey_17       |50.00 |10.00|5.2482 |0.00    |2.5      |1    |
-|H2O_red       |25.00 |10.00|0.4373 |0.00    |2.5      |1    |
-|Sugar         |25.00 |10.00|3.0615 |0.00    |2.5      |1    |
-|Whey_1        |3.85  |50.00|0.00   |287.139 |2.5      |1    |
-|Water_CIP     |3.85  |100.0|0.00   |686.251 |2.5      |1    |         
+|R1_R5         |4.00  |25.00|0      |92.032  |2.5      |1    |
+|R5_R7         |25.00 |100.0|0      |898.33  |2.5      |1    |
+|R7_split      |100.00|50.00|62.1896|0       |2.5      |1    |
+|R10_R13       |50.00 |41.9 |0.293  |0       |2.5      |1    |
+|R11_R13       |25.00 |41.9 |0      |0.0982  |2.5      |1    |
+|R12_R13       |25.00 |41.9 |0      |0.0982  |2.5      |1    |
+|R13_R14       |41.9  |10.00|2.85   |0       |2.5      |1    |
+|R17_R20       |50.00 |42.86|1.4096 |0       |2.5      |1    |
+|R18_R20       |25.00 |42.86|0      |0.117   |2.5      |1    |
+|R19_R20       |25.00 |42.86|0      |0.822   |2.5      |1    |
+|R20_R21       |42.86 |10.00|15.121 |0       |2.5      |1    |     
 ```
 
 ## Digester {-}
@@ -368,11 +346,11 @@ The heat Streams:
 : OSMOSE HEAT_STREAMS Digester
 |name             |Tin  |Tout |Hin   |Hout    |DT min/2 |alpha|
 |:----------------|:----|:----|:-----|:-------|:--------|:----|
-|Biogas           |20.00|55.00|0.00  |0.1507  |2.5      |1    | 
-|Wastewater       |20.00|55.00|0.00  |9.4265  |2.5      |1    |
-|Superheat_steam  |150.0|130.0|20.829|0.00    |2.5      |1    |
-|Steam            |20.00|130.0|0.00  |1.7454  |2.5      |1    |
-|Dryed Digestate  |20.00|100.0|0.00  |2.1273  |2.5      |1    |
+|Biogas           |20.00|55.00|0     |0.151   |2.5      |1    |
+|D1_D2            |20.00|55.00|0     |12.483  |2.5      |1    |
+|D5_D8            |55.00|130.0|0     |0.368   |2.5      |1    |
+|D5_D6            |55.00|100.0|0     |0.4486  |2.5      |1    |
+|D7_D8            |150.0|130.0|20.829|0       |2.5      |1    |
 ```
 
 
