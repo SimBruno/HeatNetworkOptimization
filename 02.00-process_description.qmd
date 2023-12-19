@@ -512,7 +512,7 @@ HTML(df.to_html())
 Knowing the mass flow of each evaporator, the heating demand can be computed. The heating demand is the amount of heat needed to evaporate the water in the milk and is given by the following equation. 
 
 $$
-Q_{\text{evap}} = m_{\text{in}} \cdot c_{p_{\text{in}}} \cdot \Delta T - m_{\text{in}} \cdot h_{\text{in}} + m_{\text{out1}} \cdot h_{\text{out1}} + m_{\text{out2}} \cdot h_{\text{out2}}
+Q_{\text{evap}} = m_{\text{6}} \cdot  L_{\text{vap, water}} 
 $${#eq-Qevap}
 
 Then, knowing the heat requirement, it is possible to derive the mass flow of steam that is needed to evaporate the water, assuming a pressure value.
@@ -768,6 +768,10 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
     return Q, Thotout
 ```
 
+\textit{Note}: However, after completing calculations, it appears the flows entering HX3 were not respecting the condition ($T_{cold,in}<T_{hot,out}$). This comes from the fact the hot inlet flow e20 was too low. 
+One solution could have been to reduce e18 mass flow. However, the problem was solved by first determining all mass and heat balance for the three evaporator before handling the HX. This decision (at first validated by some TAs) made it was impossible to change e18 without changing the whole system (it was discovered to late in the semester). 
+Therefore to solve in -a hopefully more original- a convenient way this issue, it is assumed a steam flow can be added to make e20 reach a certain value such that $T_{cold,in}<T_{hot,out}$ in the HX3. 
+If it was to be reperformed the mass and heat balance of such system would be determined by starting with evap1, then HX4, then evap2, then HX3, etc, until HX1. This would let more flexibility to adapt the system to the temperature constraints. 
 
 ```{python HX, echo = T, eval = T}
 
@@ -815,7 +819,8 @@ Q4, Thot4 = HeatExchanger(m5, cp4, T4, T5, T19, cp19, m19, h19)
 T3=317.5
 T20=T15
 m4=m1
-m20=m15-m_w3
+#m20=m15-m_w3
+m20=0.9
 p20=p8
 p3=p4
 State_e3=mixture(T=T3, P=p3, frac_water=p_water_out0, frac_fat=p_fat_out0) # this is a dictionary!!
@@ -1038,19 +1043,26 @@ State_e23 = mixture(T=T23, P=p23, frac_water=p_water_23, frac_fat=p_fat_23) # th
 
 #Exit flows of 3 HXs 
 
-Texit2= T16-(Q2/(cp16*m16))
+Texit2= Thot2
 pexit2=p16
 State_exit2 = State(pair='TP', fluid='water', temperature=Texit2, pressure=pexit2) 
 State_exit2.StateCalc()
 # And print the dictionary for revision
 State_exit2 = State_exit2.__dict__
 
-Texit3= T20-(Q3/(cp20*m20))
+Texit3= Thot3
 pexit3=p20
 State_exit3 = State(pair='TP', fluid='water', temperature=Texit3, pressure=pexit3) 
 State_exit3.StateCalc()
 # And print the dictionary for revision
 State_exit3 = State_exit3.__dict__
+
+Texit4= Thot4
+pexit4=p19
+State_exit4 = State(pair='TP', fluid='water', temperature=Texit4, pressure=pexit4) 
+State_exit4.StateCalc()
+# And print the dictionary for revision
+State_exit4 = State_exit4.__dict__
 
 #Exctraction of entropy
 s1=State_e1["entropy"]
@@ -1078,7 +1090,7 @@ s22=State_e22["entropy"]
 s23=State_e23["entropy"]
 sexit2=State_exit2["entropy"]
 sexit3=State_exit3["entropy"]
-
+sexit4=State_exit4["entropy"]
 
 h1=State_e1["enthalpy"]
 h2=State_e2["enthalpy"]
@@ -1105,6 +1117,7 @@ h22=State_e22["enthalpy"]
 h23=State_e23["enthalpy"]
 hexit2=State_exit2["enthalpy"]
 hexit3=State_exit3["enthalpy"]
+hexit4=State_exit4["enthalpy"]
 
 
 m2=m1
@@ -1116,17 +1129,18 @@ m22 = m_22
 m23 = m_23
 mexit2=m16
 mexit3=m20
+mexit4=m19
 
 
 #Recap
 #Print in a dataframe: Temperature, Pressure, Mass flow, Enthalpy, Entropy for each point (i.e. 1 to 23)
 
-datarecap = {'Point': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20','21', '22', '23', 'exit2', 'exit3'],
-        'Temperature (K)': [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10,T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,T21, T22, T23,Texit2, Texit3],
-        'Pressure (Pa)': [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,p21, p22, p23,pexit2, pexit3],
-        'Mass flow (kg/s)': [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10,m11, m12, m13, m14, m15, m16, m17, m18, m19, m20,m21, m22, m23,mexit2, mexit3],
-        'Enthalpy (J/mol)': [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10,h11, h12, h13, h14, h15, h16, h17, h18, h19, h20,h21, h22, h23, hexit2, hexit3],
-        'Entropy (J/K)': [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10,s11, s12, s13, s14, s15, s16, s17, s18, s19, s20,s21, s22, s23, sexit2, sexit3]}
+datarecap = {'Point': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20','21', '22', '23', '24', 'hot_exit2', 'hot_exit3', 'hot_exit4'],
+        'Temperature (K)': [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10,T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,T21, T22, T23, T24, Texit2, Texit3, Texit4],
+        'Pressure (Pa)': [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,p21, p22, p23, p24, pexit2, pexit3, pexit4],
+        'Mass flow (kg/s)': [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15, m16, m17, m18, m19, m20,m21, m22, m23, m24, mexit2, mexit3, mexit4],
+        'Enthalpy (J/mol)': [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10,h11, h12, h13, h14, h15, h16, h17, h18, h19, h20,h21, h22, h23, '', hexit2, hexit3, hexit4],
+        'Entropy (J/K)': [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, '', sexit2, sexit3, sexit4]}
 dfrecap = pd.DataFrame(datarecap)
 dfrecap = dfrecap.set_index('Point')
 dfrecap = dfrecap.round(2)
@@ -1134,7 +1148,7 @@ HTML(dfrecap.to_html())
 
 #Print in a dataframe: Q for each heat exchanger and evaporator
 dataevap = {'Evaporator': ['1', '2', '3'],
-        'Q (W)': [Q_evap1, Q_evap2, Q_evap3]}
+        'Q (kW)': [Q_evap1, Q_evap2, Q_evap3]}
 dfevap = pd.DataFrame(dataevap)
 dfevap = dfevap.set_index('Evaporator')
 dfevap = dfevap.round(2)
@@ -1142,7 +1156,7 @@ HTML(dfevap.to_html())
 
 #Print in a dataframe: Q for each heat exchanger and evaporator
 datahx = {'Heat_Exchanger': ['1', '2', '3', '4', 'Glycolic'],
-        'Q (W)': [Q1, Q2, Q3, Q4, Qglycol]}
+        'Q (kW)': [Q1*0.001, Q2*0.001, Q3*0.001, Q4*0.001, Qglycol*0.001]}
 dfhx = pd.DataFrame(datahx)
 dfhx = dfhx.set_index('Heat_Exchanger')
 dfhx = dfhx.round(2)
