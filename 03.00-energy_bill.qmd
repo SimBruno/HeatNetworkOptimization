@@ -455,6 +455,8 @@ Qcool_tot = (Qpast_cool + Qevap_cool + Qdry_cool + Qclean_cool + Q_storage)/COP
 OPEXcool_fr = Qcool_tot*0.001 * elec_fr * top
 OPEXcool_ger = Qcool_tot*0.001 * elec_ger *top
 
+ 
+
 #Heat cost
 Qheat_tot = Qpast_heat + Qevap_heat + Qdry_heat + Qclean_heat + Qhot_water + Qrivella_heat + Qdigester_heat
 OPEXheat_fr = Qheat_tot*0.001 * gas_fr * top
@@ -466,6 +468,8 @@ OPEX = OPEX.round(3)
 HTML(OPEX.to_html())
 
 
+
+#TASK4 Comparison
 #OPEX_past_5_fr = Qpast_6*0.001 * gas_fr * top + (Qpast_7/COP)*0.001 * elec_fr * top
 #OPEX_past_5_ger = Qpast_6*0.001 * gas_gr * top + (Qpast_7/COP)*0.001 * elec_ger * top
 #print('OPEX_past_5_fr', OPEX_past_5_fr)
@@ -480,4 +484,11 @@ HTML(OPEX.to_html())
 #OPEX_CIP_ger = (Qclean_heat)*0.001 * gas_gr * top + ((Qclean_cool)/COP)*0.001 * elec_ger * top
 #print('OPEX_CIP_fr', OPEX_CIP_fr)
 #print('OPEX_CIP_ger', OPEX_CIP_ger)
+
+#TASK7 Comparison
+#OPEXcool_fr_task7 = (Qpast_7+Qclean_cool)*0.001 * elec_fr * top
+#OPEXheat_fr_task7 = (Qpast_3 + Qpast_6+Qclean_heat)*0.001 * gas_fr * top
+
+#print('OPEXcool_fr_task7', OPEXcool_fr_task7)
+#print('OPEXheat_fr_task7', OPEXheat_fr_task7)
 ```

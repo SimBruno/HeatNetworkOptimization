@@ -115,6 +115,37 @@ Determine the composite curves and identify the pinch point for each subset. Thi
 Implement the pinch design method to generate a network configuration. With each heat exchanger placement, calculate the heat exchanged, flow rates, temperature conditions, size, and corresponding cost. Utilize loop and path following techniques to attempt the elimination of small heat exchangers. Evaluate the trade-off between cost (changes in the energy bill) and benefits (investment) in this process.
 ### Heat Exchanger Network Design
 
+To perform the HEN design, one first needs to identify the hot and cold streams. The hot streams are the streams that will be used to heat up the cold streams and vice versa. 
+In this design from the results of task 5 and 6, the pinch point is at 67.5 °C for a $\Delta_{min}$ of 10K.
+The flows will only be taken from the pasteurization, cleaning in place, hot water and cold storage processes.
+However, one constraints is that only penalizing flows will be considered. These are the ones where a cold utility is above the pinch point, a hot utility is below the pinch point or a flows which crosses or starts/ends at the pinch point.
+In the HEN design all temperatures are considered in the corrected domain, i.e. $\Delta_{min}/2$ is removed for Hot Flows Temperatures and added for Cold Flows Temperatures.
+From the list of the flow determine in task 5, the following flows are penalizing and will be considered for the HEN design:
+
+|  Flow  | Above/Below/Cross Pinch | T_{in} [K] | T_{out} [K] | T*_{in} [K] | T*_{out} [K] | MCp [kW/K] | Q_{flow} [kW] |
+|:------:|:-----------------------:|:----------:|:-----------:|:-----------:|:------------:|:----------:|:-------------:|
+| A-cold |          Cross          |     333    |     348     |    335.5    |     350.5    |    28.6    |     428.6     |
+|  B-hot |          Cross          |     348    |    283.8    |    345.5    |     281.3    |    28.6    |     1834.5    |
+| C-cold |        Below ends       |     333    |     338     |    335.5    |     340.5    |     1.6    |      17.5     |
+| D-cold |          Cross          |    329.5   |     348     |     332     |     350.5    |     1.9    |      35.6     |
+|  E-hot |          Cross          |     348    |     277     |    345.5    |     274.5    |     1.9    |     136.6     |
+| F-cold |          Cross          |     333    |     353     |    335.5    |     355.5    |    16.7    |     334.7     |
+|  G-hot |          Cross          |     348    |     303     |    345.5    |     300.5    |     5.0    |     225.7     |
+|  H-hot |          Cross          |     348    |     333     |    345.5    |     330.5    |    11.7    |     175.5     |
+
+It may be noticed that in the pasteurization process, one didn't consider the flow crossing Past1 HX to heat up from 4°C to 60°C. It has been tried to performed the HEN design with this flow but it introduced a too big unbalanced in the $\sum mcp_{cold}$ vs $\sum mcp_{hot}$ below the pinch (the sum was higher for cold streams instead of hot streams). Thus, this flow has been removed from the HEN design. It is not a problem since this flow, located below the pinch, can be entirely heated up by the part of hot flow B below the pinch. Thus there is no need to cross the pinch point to heat up this flow and it is not penalizing.
+
+Also for the CIP process, the design optimized from task4 with an additionnal HX to heat up the incoming CIP1 flow was used.
+
+Finally, even if the hot flow from the cold storage process is supposed to be penalizing (hot utility below the pinch), it has not been considered in the design due to its extremely low Temperature which makes this hot flow temperatures always below any cold flow temperatures. Thus, it is not possible to create any HX with this kind of flow (recall $T_{hot flow}>T_{cold flow}$).
+
+The two following figures show the flows location on the pasteurization and CIP processes
+
+![Past_flows](Figures/pasteurization_task7.jpg)
+![CIP_flows](Figures/cip_task7.jpg)
+
+
+
 ### Economic Analysis of the Heat Exchanger Network
 
 The economic analysis of the heat exchanger network is done by calculating both the capital cost and the operating cost. The capital cost is calculated by using the following equation (similar to what used in task 4):
@@ -129,7 +160,7 @@ $$\text{Area} = \frac{Q_{HX}}{U\cdot LMTD_{HX}}$$
 
 where LMTD is taken in the corrected domain ($\Delta T_{min}$ is considered for $T_{cold}$ and $T_{hot}$)
 
-The following values for the capital costs of all the 9 HX used are compiled in the table below:
+The following values for the capital costs of all the 10 HX used are compiled in the table below:
 
 ```{python CapCostHEN, echo = F, eval = F}
 dt_A = [0, 0, 0, 0, 0, 0, 0, 0, 0, 5 ]
@@ -158,28 +189,39 @@ for i in range(len(Q)):
         area.append(Q[i]/(U*LMTD[i]))
         Cp.append(ANNUALIZATIONFACTOR*FBM*e*((CEPCI2019/CEPCI1998) * 10**(K1+K2*np.log(area[i]))))
 
-
-print(LMTD)
-print(area)
-print(Cp)
+#print(ANNUALIZATIONFACTOR)
+#print(LMTD)
+#print(area)
+#print(Cp)
 
 ```
 
 
-
+|     |  T_{hot} [K]  |  T_{cold} [K] | LMTD[K] | Q [kW] | A [m^2] | Annualized Investment [k€/yr] |
+|:---:|:-------------:|:-------------:|:-------:|:------:|:-------:|:-----------------------------:|
+|  E1 | 345.5 - 340.5 | 340.5 - 345.5 |    5    |  83.5  |   33.4  |              91.3             |
+|  E2 | 345.5 - 340.5 | 340.5 - 345.5 |    5    |  59.5  |   23.8  |              64.7             |
+|  E3 | 345.5 - 340.5 | 340.5 - 345.5 |    5    |  58.5  |   23.4  |              63.6             |
+|  E4 | 345.5 - 340.5 | 340.5 - 345.5 |    5    |  25.1  |   10.1  |              26.9             |
+|  E5 | 345.5 - 340.5 | 340.5 - 345.5 |    5    |   9.6  |   3.84  |              10.1             |
+|  E6 | 340.5 - 335.5 | 335.5 - 340.5 |    5    |  142.9 |  57.16  |             157.6             |
+|  E7 | 340.5 - 335.5 | 335.5 - 340.5 |    5    |  58.5  |   23.4  |              63.6             |
+|  E8 | 340.5 - 335.5 | 335.5 - 340.5 |    5    |   25   |    10   |              26.8             |
+|  E9 | 340.5 - 331.9 |  332 - 340.5  |   5.05  |  16.36 |   6.48  |              17.3             |
+| E10 | 335.5 - 334.9 | 335.5 - 340.5 |   7.6   |  17.52 |   4.61  |              12.2             |
+| TOTAL |  |  |     |   |     |              534.1             |
 
 The operating cost of the added Cold and Hot Utility is calculated by using the following equation:
 
-Equations
+$$OP_{Cold Utility} = \frac{Q_{CU}}{COP} \cdot t_{ope} \cdot \text{Cost}_{Electricity}$$
+$$OP_{Hot Utility} = \frac{Q_{HU}}{\epsilon} \cdot t_{ope} \cdot \text{Cost}_{NatGas}$$
 
 The table below recaps the operating cost of the added utilities:
 
 ```{python OpeCostHEN, echo = F, eval = F}
 top = 24*0.95*365 #h/year
 gas_fr = 0.08 # €/kWh
-gas_ger = 0.08 # €/kWh 
 elec_fr = 0.12 # €/kWh
-elec_ger = 0.21 # €/kWh
 COP = 3.5 #same assumption in Energy Bill
 
 CUtil = [1531.18, 110.64, 175.6, 58.5]
@@ -193,10 +235,33 @@ for i in range(len(CUtil)):
 for i in range(len(HUtil)):
         HUtilCost.append(HUtil[i]*top*gas_fr)
 
-print(CUtilCost)
-print(HUtilCost)
-
+#print(CUtilCost)
+#print(HUtilCost)
 ```
+
+|       | Q [kW] | OP [k€/yr] |
+|:-----:|:------:|:----------:|
+|  HU1  |  142.6 |     95     |
+|  HU2  |   9.7  |     6.4    |
+|  HU3  |  167.5 |    111.5   |
+|  CU1  | 1531.2 |    436.8   |
+|  CU2  |  110.6 |    31.6    |
+|  CU3  |  175.6 |    50.1    |
+|  CU4  |  58.5  |    16.7    |
+| TOTAL |    -   |    748.1   |
+
+
+
+In order to assess the economic feasibility of the HEN, the total annualized investment cost and the total operating cost are calculated and compared to the old cost by determining the payback time.
+
+The old cost for the HX involved in this HEN design is: 789.3 k€/yr
+Thus the payback time is computed with the following equation:
+$$t_{payback} = \frac{INV_{tot,new}}{(a)(OC_{old}-OC_{new})} = 162 \text{years}$$
+
+where $a$ is the annualization factor of 0.08, $OC_{old}$ is the old operating cost and $OC_{new}$ is the new operating cost.
+
+The system is not economically feasible as the payback time is too long. The choice of $\Delta_{min}$ is not optimal are the HEN design cotains some flaws. 
+Let's see if we have better results with a different HEN design method.
 
 ### Path following methods
 
@@ -204,11 +269,20 @@ print(HUtilCost)
 
 ### Loop Method
 
-With our HEN design there is no possible loop. No cold and hot flows are connected twice via two different heat exchangers.
+Let's look at two possible loops: 
+
+- a first loop between the flows B and C
+- a second loop between the flows E and F
+
+#### Loop 1: between B and C
+
+The loop help us remove the HX E2. 
+Thus E6 will be increased by 59.5 kW and E2 will be removed.
+
+The new 
 
 
 
 
 
 
-> Don't forget that we have provided examples in the guide book.
