@@ -375,7 +375,7 @@ for i in range(len(CUtil)):
 for i in range(len(HUtil)):
         HUtilCost.append(HUtil[i]*top*gas_fr)
 
-print(CUtilCost)
+#print(CUtilCost)
 #print(HUtilCost)
 ```
 
@@ -405,21 +405,81 @@ Let's see if we have better results with a different HEN design method.
 
 ### Path following methods
 
-...
+![Path Method](Figures/PATHtask7.jpg)
+
+Different paths can be followed to remove HX from the original HEN design.
+However, only one will be detailed here. The considered path starts from the HU1 on flow A and ends on the CU4 on flow H after successively passing through E4, E8 and E7. The goal is to remove E4 which exchange 25.1kW between A2b and G. By doing so, one have to also change the rest of the HEN design to compensate the loss of heat exchanger:
+
+- HU1 will gain 25.1 kW
+- E8 will gain 25.1 kW and exchange 50.1 kW 
+- E7 will lose 25.1 kW and exchange 33.4 kW
+- CU4 will gain 25.1 kW
+
+The new design Operating price will then be: 776.9k€/yr and the new Investment price will decrease by: 26.9k€/yr.
+
+It is overall slightly lower (+23.7 - 26.9 = -3.2k€/yr gained) than the original design. Thus, it may be useful to remove E4 from the HEN design.
+
+```{python OpeCostPath, echo = F, eval = F}
+top = 24*0.95*365 #h/year
+gas_fr = 0.08 # €/kWh
+elec_fr = 0.12 # €/kWh
+COP = 3.5 #same assumption in Energy Bill
+
+CUtil = [1548.7, 110.64, 175.6, 83.6]   
+HUtil = [167.7, 9.65, 167.5] 
+
+CUtilCost = []
+HUtilCost = []
+
+for i in range(len(CUtil)):
+        CUtilCost.append(CUtil[i]*top*elec_fr/COP)
+for i in range(len(HUtil)):
+        HUtilCost.append(HUtil[i]*top*gas_fr)
+
+#print(CUtilCost)
+#print(HUtilCost)
+```
 
 ### Loop Method
+![Loop Method](Figures/LOOPtask7.jpg)
 
-Let's look at possible loops: 
+In this design, two loops are possible. The first one is between A and B and the second one is between D and E.
+Because we said E9 were unfeasible let's see if we can remove it from the design by using the loop method and thus let's focus on loop between D and E.
 
-- a first loop between the flows B and C
-- a second loop between the flows E and F
+The loop will pass through E5 and E9. The goal is to remove E9 which exchange 16.36 kW between D and E. By doing so, one have to also change the rest of the HEN design to compensate the loss of heat exchanger:
 
-#### Loop 1: between B and C
+- E5 will gain 16.36 kW and exchange 25.96 kW.
 
-The loop help us remove the HX E2. 
-Thus E6 will be increased by 59.5 kW and E2 will be removed.
+This will to an increase of $T_{cold,E5,out}$ on the flow D which then become 354 instead of 350.5. 
 
-The new 
+- HU2 will be remove since the maximum temperature of the flow D, now 354°C, is reached.
+
+The new design Operating price will then be: 746.7 and the new Investment price will decrease by nothing since E9 was already removed from the design but now it is done in a more justified way.   
+
+It is slightly than the original design. Thus, it may be useful to remove E9 from the HEN design and apply this loop.
+
+```{python OpeCostLoop, echo = F, eval = F}
+top = 24*0.95*365 #h/year
+gas_fr = 0.08 # €/kWh
+elec_fr = 0.12 # €/kWh
+COP = 3.5 #same assumption in Energy Bill
+
+CUtil = [1548.7, 110.64, 175.6, 58.5]   
+HUtil = [142.6, 167.5] 
+
+CUtilCost = []
+HUtilCost = []
+
+for i in range(len(CUtil)):
+        CUtilCost.append(CUtil[i]*top*elec_fr/COP)
+for i in range(len(HUtil)):
+        HUtilCost.append(HUtil[i]*top*gas_fr)
+
+#print(CUtilCost)
+#print(HUtilCost)
+```
+
+
 
 
 
