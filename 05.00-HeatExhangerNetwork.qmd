@@ -113,7 +113,7 @@ HTML(df.to_html())
 Determine the composite curves and identify the pinch point for each subset. This step also helps define the list of utility streams to be considered for the heat exchanger network design.
 
 Implement the pinch design method to generate a network configuration. With each heat exchanger placement, calculate the heat exchanged, flow rates, temperature conditions, size, and corresponding cost. Utilize loop and path following techniques to attempt the elimination of small heat exchangers. Evaluate the trade-off between cost (changes in the energy bill) and benefits (investment) in this process.
-
+### Heat Exchanger Network Design
 
 ### Economic Analysis of the Heat Exchanger Network
 
@@ -144,6 +144,11 @@ CEPCI2019=603.1
 CEPCI1998=389.5 #https://personalpages.manchester.ac.uk/staff/tom.rodgers/Interactive_graphs/CEPCI.html?reactors/CEPCI/index.html
 K1=3.6788 #sl 12 T4.1 assumption spiral plate HX
 K2=0.4412
+FBM=4.74 #assumption fluid sl 10 T4.1
+i=0.05 #sl 8 T4.2
+e=0.92 #€/$ exchange rate 2023 Nov 
+n=20
+ANNUALIZATIONFACTOR = (i*(1+i)**n)/((1+i)**n-1)
 
 for i in range(len(Q)):
         if dt_A[i] == dt_B[i]: #if the two temperatures difference are the same when cp_hot = cp_cold , then the LMTD is equal to the min temperature difference
@@ -151,7 +156,7 @@ for i in range(len(Q)):
         else:
                 LMTD.append((dt_A[i]-dt_B[i])/np.log((dt_A[i]+dtmin)/(dt_B[i]+dtmin)))
         area.append(Q[i]/(U*LMTD[i]))
-        #Cp.append((CEPCI2019/CEPCI1998) * 10^(K1+K2*np.log(area[i])))
+        Cp.append(ANNUALIZATIONFACTOR*FBM*e*((CEPCI2019/CEPCI1998) * 10**(K1+K2*np.log(area[i]))))
 
 
 print(LMTD)
@@ -161,7 +166,7 @@ print(Cp)
 ```
 
 
-```
+
 
 The operating cost of the added Cold and Hot Utility is calculated by using the following equation:
 
@@ -170,6 +175,26 @@ Equations
 The table below recaps the operating cost of the added utilities:
 
 ```{python OpeCostHEN, echo = F, eval = F}
+top = 24*0.95*365 #h/year
+gas_fr = 0.08 # €/kWh
+gas_ger = 0.08 # €/kWh 
+elec_fr = 0.12 # €/kWh
+elec_ger = 0.21 # €/kWh
+COP = 3.5 #same assumption in Energy Bill
+
+CUtil = [1531.18, 110.64, 175.6, 58.5]
+HUtil = [142.6, 9.65, 167.5] 
+
+CUtilCost = []
+HUtilCost = []
+
+for i in range(len(CUtil)):
+        CUtilCost.append(CUtil[i]*top*elec_fr/COP)
+for i in range(len(HUtil)):
+        HUtilCost.append(HUtil[i]*top*gas_fr)
+
+print(CUtilCost)
+print(HUtilCost)
 
 ```
 

@@ -170,7 +170,7 @@ def Dtmin(dT, T1, T1v, T2v, T2, m1, m2, cp1, cp2, position, pastnb):
     #Find the minimum Area of the HX
     Q = m2*cp2*(T2-T2_prime)
     #print('Q = ', round(Q, 3), 'W')
-    alpha= 1 #kW/m^2°C, assumption based on alpha_H20
+    alpha= 1000 #W/m^2°C, assumption based on alpha_H20
     U = alpha/2
     dtA = abs(T2-T1_prime)  # to be sure we have a positive value in the ln() of the LMTD
     dtB = abs(T1-T2_prime)
