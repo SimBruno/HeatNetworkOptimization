@@ -148,7 +148,7 @@ The two following figures show the flows location on the pasteurization and CIP 
 Now the cold and hot flows are defined, the design can be determine. 
 The rules are taken from the ex3 of the course and are the following:
 
-ILLUSTRATION W/O EXCHANGERS
+![HENbeforedesign](Figures/HENflowsbef.jpg)
 
 Here are the steps to follow to design the HEN:
 
@@ -290,7 +290,7 @@ So let's remove the flow C below the pinch from all the following calculations a
 
 Here is the final HEN design (note that additionnal temperatures where indicated on flows to help understand what temperature gap the utilities have to fill):
 
-ILLUSTRATION WITH ALL EXCHANGERS
+![HENafterdesign](Figures/HENflowsaft.jpg)
 
 
 It appears that the method used here doesn't prevent from impossible HX. Indeed, it is possible to see that E9 and E10 are impossible as the temperature of the cold flow is higher than the temperature of the hot flow. 
@@ -300,16 +300,7 @@ Because of this infeasibility E9 and E10 will be removed from the following econ
 ### Economic Analysis of the Heat Exchanger Network
 
 The economic analysis of the heat exchanger network is done by calculating both the capital cost and the operating cost. The capital cost is calculated by using the following equation (similar to what used in task 4):
-
-$$ \text{INV} = a*F_{BM} \cdot \sum C_{p}\cdot e $$
-
-where 
-
-$$C_{p} = \frac{I_{t}}{I_{ref}}\cdot 10^{k1\cdot k2\cdot log(\text{Area})}$$
-
-$$\text{Area} = \frac{Q_{HX}}{U\cdot LMTD_{HX}}$$ 
-
-where LMTD is taken in the corrected domain ($\Delta T_{min}$ is considered for $T_{cold}$ and $T_{hot}$)
+The equations for Investment Cost and Annualized Investment Cost can be find in task 4 where $\Delta T_{min}$ optimization was done. All parameters and assumptions remain the same. Only the temperatures are different and come from the HEN design above.
 
 The following values for the capital costs of all the 10 HX used are compiled in the table below:
 
@@ -418,7 +409,7 @@ Let's see if we have better results with a different HEN design method.
 
 ### Loop Method
 
-Let's look at two possible loops: 
+Let's look at possible loops: 
 
 - a first loop between the flows B and C
 - a second loop between the flows E and F
