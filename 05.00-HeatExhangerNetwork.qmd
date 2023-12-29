@@ -222,19 +222,80 @@ Let's start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
 
 - HU1 is placed after all splitting of A and $Q_{HU1} = Q_{A} - Q_{E2} -  Q_{E3} - Q_{E4} = 142.6 kW$
 
-- HU2 is placed after all splitting of D and $Q_{HU2} = Q_{D} - Q_{E5} = 9.7 kW$
+- HU2 is placed after E5 on flow D and $Q_{HU2} = Q_{D} - Q_{E5} = 9.7 kW$
 
-- HU3 is placed after all splitting of F and $Q_{HU3} = Q_{F} - Q_{E1} = 167.5 kW$
+- HU3 is placed after E1 on flow F and $Q_{HU3} = Q_{F} - Q_{E1} = 167.5 kW$
 
 Let's now continue with the design below the pinch point (recall $T_{pinch}=67.5°C$).
 
+1. Step 1:
 
+- First it can be noticed that $\sum mcp_{hot} \leq \sum mcp_{cold}$. This is only due to the 1.6 kW/K of the flow C. Thus no matter how we connect the flows the 2nd feasibility rule  will never be respected. 
+So let's remove the flow C below the pinch from all the following calculations at first, and then handle it at the end.
+
+- $N_{hot} = 4$ and $N_{cold} = 3$ (w/o flow C) thus no splitting needed.
+
+- Two biggest mcp flows are A and B and 2nd feasibility rule is respected.
+
+- E6 is placed between A and B and $Q_{E6} = Q_{A} = 142.9 kW$
+
+2. Step 2:
+
+- $N_{hot} = 3$ and $N_{cold} = 2$ (w/o flow C) thus no splitting needed.
+
+- Two biggest mcp flows are F and H BUT 2nd feasibility rule is respected (i.e., $mcp_{hot} \leq mcp_{cold}$).
+
+- Splitting of flow F into F1 and F2 such that: $mcp_{F1} = 11.7 kW/K$ and $mcp_{F2} = 5.0 kW/K$.
+
+- Now 2nd feasibility rule is respected.
+
+- E7 is placed between F1 and H and $Q_{E7} = mcp_{F1}*(T_{pinch} - T_{in,F}) = 58.5 kW$
+
+3. Step 3:
+
+- $N_{hot} = 2$ and $N_{cold} = 2$ (w/o flow C) thus no splitting needed.
+
+- Two biggest mcp flows are F2 and G and 2nd feasibility rule is respected.
+
+- E8 is placed between F2 and G and $Q_{E8} = mcp_{F2}*(T_{pinch} - T_{in,F}) = 25 kW$
+
+4. Step 4:
+
+- $N_{hot} = 1$ and $N_{cold} = 1$ (w/o flow C) thus no splitting needed.
+
+- Two biggest mcp flows are D and E and 2nd feasibility rule is respected.
+
+- E9 is placed between D and E and $Q_{E9} = Q_{D} = 16.36 kW$
+
+5. Step 5:
+
+- Let's now handle flow C. It is possible to use the rest of heat from flow B to heat up flow C. 
+
+- Feasibility rules are respected.
+
+- $Q_{E10} = Q_{C} = 17.52 kW$
+
+6. Step 6:
+
+- Place the Cold Utilities to reach the target temperatures of the hot flows.
+
+- CU1 is placed after all splitting of B and $Q_{CU1} = Q_{B} - Q_{E6} -Q_{E10} = 1531.2 kW$
+
+- CU2 is placed after E9 on flow E and $Q_{CU2} = Q_{E} - Q_{E9} = 110.6 kW$
+
+- CU3 is placed after E8 on flow G and $Q_{CU3} = Q_{G} - Q_{E8} = 175.6 kW$
+
+- CU4 is placed after E7 on flow F1 and $Q_{CU4} = Q_{H} - Q_{E7} = 58.5 kW$
+
+
+Here is the final HEN design (note that additionnal temperatures where indicated on flows to help understand what temperature gap the utilities have to fill):
 
 ILLUSTRATION WITH ALL EXCHANGERS
 
-COMMENTS ON THE E9 and E10 EXCHANGERS which are impossible
 
-REOVE E9 AND E10 FROM ECONOMIC ANALYSIS
+It appears that the method used here doesn't prevent from impossible HX. Indeed, it is possible to see that E9 and E10 are impossible as the temperature of the cold flow is higher than the temperature of the hot flow. 
+Because of this infeasibility E9 and E10 will be removed from the following economic analysis. Further on the report, with the help of loop method, it will be possible to remove E9 from the design.
+
 
 ### Economic Analysis of the Heat Exchanger Network
 
@@ -297,9 +358,7 @@ for i in range(len(Q)):
 |  E6 | 340.5 - 335.5 | 335.5 - 340.5 |    5    |  142.9 |  57.16  |             157.6             |
 |  E7 | 340.5 - 335.5 | 335.5 - 340.5 |    5    |  58.5  |   23.4  |              63.6             |
 |  E8 | 340.5 - 335.5 | 335.5 - 340.5 |    5    |   25   |    10   |              26.8             |
-|  E9 | 340.5 - 331.9 |  332 - 340.5  |   5.05  |  16.36 |   6.48  |              17.3             |
-| E10 | 335.5 - 334.9 | 335.5 - 340.5 |   7.6   |  17.52 |   4.61  |              12.2             |
-| TOTAL |  |  |     |   |     |              534.1             |
+| TOTAL |  |  |     |   |     |              504.6             |
 
 The operating cost of the added Cold and Hot Utility is calculated by using the following equation:
 
@@ -314,7 +373,7 @@ gas_fr = 0.08 # €/kWh
 elec_fr = 0.12 # €/kWh
 COP = 3.5 #same assumption in Energy Bill
 
-CUtil = [1531.18, 110.64, 175.6, 58.5]
+CUtil = [1548.7, 110.64, 175.6, 58.5]   
 HUtil = [142.6, 9.65, 167.5] 
 
 CUtilCost = []
@@ -325,7 +384,7 @@ for i in range(len(CUtil)):
 for i in range(len(HUtil)):
         HUtilCost.append(HUtil[i]*top*gas_fr)
 
-#print(CUtilCost)
+print(CUtilCost)
 #print(HUtilCost)
 ```
 
@@ -334,19 +393,19 @@ for i in range(len(HUtil)):
 |  HU1  |  142.6 |     95     |
 |  HU2  |   9.7  |     6.4    |
 |  HU3  |  167.5 |    111.5   |
-|  CU1  | 1531.2 |    436.8   |
+|  CU1  | 1548.7 |   441.9    |
 |  CU2  |  110.6 |    31.6    |
 |  CU3  |  175.6 |    50.1    |
 |  CU4  |  58.5  |    16.7    |
-| TOTAL |    -   |    748.1   |
+| TOTAL |    -   |    753.2  |
 
-
+$*$ the little difference between the CU1 on the graph and the CU1 on the table is due to the removal of E10 HX from the design while doing the table for the reasons exposed above.
 
 In order to assess the economic feasibility of the HEN, the total annualized investment cost and the total operating cost are calculated and compared to the old cost by determining the payback time.
 
 The old cost for the HX involved in this HEN design is: 789.3 k€/yr
 Thus the payback time is computed with the following equation:
-$$t_{payback} = \frac{INV_{tot,new}}{(a)(OC_{old}-OC_{new})} = 162 \text{years}$$
+$$t_{payback} = \frac{INV_{tot,new}}{(a)(OC_{old}-OC_{new})} = 174 \text{years}$$
 
 where $a$ is the annualization factor of 0.08, $OC_{old}$ is the old operating cost and $OC_{new}$ is the new operating cost.
 
