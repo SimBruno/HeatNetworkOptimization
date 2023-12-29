@@ -116,13 +116,13 @@ Implement the pinch design method to generate a network configuration. With each
 ### Heat Exchanger Network Design
 
 To perform the HEN design, one first needs to identify the hot and cold streams. The hot streams are the streams that will be used to heat up the cold streams and vice versa. 
-In this design from the results of task 5 and 6, the pinch point is at 67.5 °C for a $\Delta_{min}$ of 10K.
+In this design from the results of task 5 and 6, the pinch point is at 67.5 °C for a $\Delta T_{min}$ of 10K.
 The flows will only be taken from the pasteurization, cleaning in place, hot water and cold storage processes.
 However, one constraints is that only penalizing flows will be considered. These are the ones where a cold utility is above the pinch point, a hot utility is below the pinch point or a flows which crosses or starts/ends at the pinch point.
-In the HEN design all temperatures are considered in the corrected domain, i.e. $\Delta_{min}/2$ is removed for Hot Flows Temperatures and added for Cold Flows Temperatures.
+In the HEN design all temperatures are considered in the corrected domain, i.e. $\Delta T_{min}/2$ is removed for Hot Flows Temperatures and added for Cold Flows Temperatures.
 From the list of the flow determine in task 5, the following flows are penalizing and will be considered for the HEN design:
 
-|  Flow  | Above/Below/Cross Pinch | T_{in} [K] | T_{out} [K] | T*_{in} [K] | T*_{out} [K] | MCp [kW/K] | Q_{flow} [kW] |
+|  Flow  | Above/Below/Cross Pinch | $T_{in}$ [K] | $T_{out}$ [K] | $T^{*}_{in}$ [K] | $T^{*}_{out}$ [K] | MCp [kW/K] | $Q_{flow}$ [kW] |
 |:------:|:-----------------------:|:----------:|:-----------:|:-----------:|:------------:|:----------:|:-------------:|
 | A-cold |          Cross          |     333    |     348     |    335.5    |     350.5    |    28.6    |     428.6     |
 |  B-hot |          Cross          |     348    |    283.8    |    345.5    |     281.3    |    28.6    |     1834.5    |
@@ -145,6 +145,96 @@ The two following figures show the flows location on the pasteurization and CIP 
 ![CIP_flows](Figures/cip_task7.jpg)
 
 
+Now the cold and hot flows are defined, the design can be determine. 
+The rules are taken from the ex3 of the course and are the following:
+
+ILLUSTRATION W/O EXCHANGERS
+
+Here are the steps to follow to design the HEN:
+
+1. Feasibility Rules
+
+- Number of streams rules: above pinch: $N_{cold} \geq N_{hot}$, below pinch: $N_{cold} \leq N_{hot}$,
+
+- Cp rules: above pinch: $mcp_{cold} \geq mcp_{hot}$ and $\sum mcp_{cold, remaining} \geq \sum mcp_{hot, remaining}$, below pinch: $mcp_{cold} \leq mcp_{hot}$ and $\sum mcp_{cold, remaining} \leq \sum mcp_{hot, remaining}$.
+
+2. Heuristic Rules
+
+- Choose the biggest mcp flow from the remaining flows to select where to place the HX, 
+
+- If Feasibility rules are not respected, splitting must be done,
+
+- When all flows have been connected with HX, add Cold Utilities and Hot Utilities to reach the target temperatures of respective hot and cold flows.
+
+Let's start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
+
+1. Step 1:
+
+- $N_{cold} = 3$ and $N_{hot} = 4$ thus splitting needed to respect 1st feasibility rule.
+
+- Splitting of flow A into A1 and A2 such that: $mcp_{A1} =  11.9 kW/K$ and $mcp_{A2} = 16.7 kW/K$. This splitting will be useful for E2 HX.
+
+- Two biggest mcp flows are F and B. BUT $mcp_{cold} \leq mcp_{hot}$ 
+
+- Splitting of flow B into B1 and B2 such that: $mcp_{B1} =  16.7 kW/K$ and $mcp_{B2} = 11.9 kW/K$. 
+
+- Now 2nd feasibility rule is respected.
+
+- E1 is placed between F and B1 and $Q_{E1} = mcp_{B1}*(T_{in,B}-T_{pinch}) = 83.5 kW$
+
+2. Step 2:
+
+- $N_{cold} = 3$ and $N_{hot} = 4$ thus splitting needed to respect 1st feasibility rule.
+
+- Splitting A2 into 2 streams A2a and A2b such that: $mcp_{A2a} =  11.7 kW/K$ and $mcp_{A2b} = 5 kW/K$. This splitting will be useful for E3 HX.
+
+- Two biggest mcp flows are A1 and B2 and 2nd feasibility rule is respected.
+
+- E2 is placed between A1 and B2 and $Q_{E2} = mcp_{B2}*(T_{in,B}-T_{pinch}) = 59.5 kW$
+
+3. Step 3:
+
+- $N_{cold} = 3$ and $N_{hot} = 3$ thus no splitting needed.
+
+- Two biggest mcp flows are A2a and H and 2nd feasibility rule is respected.
+
+- E3 is placed between A2a and H and $Q_{E3} = Q_{H} = 58.5 kW$
+
+4. Step 4:
+
+- $N_{cold} = 2$ and $N_{hot} = 2$ thus no splitting needed.
+
+- Two biggest mcp flows are A2b and G and 2nd feasibility rule is respected.
+
+- E4 is placed between A2b and G and $Q_{E4} = Q_{G} = 25.1 kW$
+
+5. Step 5:
+
+- $N_{cold} = 1$ and $N_{hot} = 1$ thus no splitting needed.
+
+- Two biggest mcp flows are D and E and 2nd feasibility rule is respected.
+
+- E5 is placed between D and E and $Q_{E5} = Q_{D} = 9.6 kW$
+
+6. Step 6:
+
+- Place the Hot Utilities to reach the target temperatures of the cold flows.
+
+- HU1 is placed after all splitting of A and $Q_{HU1} = Q_{A} - Q_{E2} -  Q_{E3} - Q_{E4} = 142.6 kW$
+
+- HU2 is placed after all splitting of D and $Q_{HU2} = Q_{D} - Q_{E5} = 9.7 kW$
+
+- HU3 is placed after all splitting of F and $Q_{HU3} = Q_{F} - Q_{E1} = 167.5 kW$
+
+Let's now continue with the design below the pinch point (recall $T_{pinch}=67.5°C$).
+
+
+
+ILLUSTRATION WITH ALL EXCHANGERS
+
+COMMENTS ON THE E9 and E10 EXCHANGERS which are impossible
+
+REOVE E9 AND E10 FROM ECONOMIC ANALYSIS
 
 ### Economic Analysis of the Heat Exchanger Network
 
@@ -197,7 +287,7 @@ for i in range(len(Q)):
 ```
 
 
-|     |  T_{hot} [K]  |  T_{cold} [K] | LMTD[K] | Q [kW] | A [m^2] | Annualized Investment [k€/yr] |
+|     |  $T^{*}_{hot}$ [K]  |  $T^{*}_{cold}$ [K] | LMTD[K] | Q [kW] | A [m^2] | Annualized Investment [k€/yr] |
 |:---:|:-------------:|:-------------:|:-------:|:------:|:-------:|:-----------------------------:|
 |  E1 | 345.5 - 340.5 | 340.5 - 345.5 |    5    |  83.5  |   33.4  |              91.3             |
 |  E2 | 345.5 - 340.5 | 340.5 - 345.5 |    5    |  59.5  |   23.8  |              64.7             |
