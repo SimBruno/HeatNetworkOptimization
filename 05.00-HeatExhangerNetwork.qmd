@@ -113,6 +113,7 @@ HTML(df.to_html())
 Determine the composite curves and identify the pinch point for each subset. This step also helps define the list of utility streams to be considered for the heat exchanger network design.
 
 Implement the pinch design method to generate a network configuration. With each heat exchanger placement, calculate the heat exchanged, flow rates, temperature conditions, size, and corresponding cost. Utilize loop and path following techniques to attempt the elimination of small heat exchangers. Evaluate the trade-off between cost (changes in the energy bill) and benefits (investment) in this process.
+
 ### Heat Exchanger Network Design
 
 To perform the HEN design, one first needs to identify the hot and cold streams. The hot streams are the streams that will be used to heat up the cold streams and vice versa. 
@@ -415,9 +416,43 @@ However, only one will be detailed here. The considered path starts from the HU1
 - E7 will lose 25.1 kW and exchange 33.4 kW
 - CU4 will gain 25.1 kW
 
-The new design Operating price will then be: 776.9k€/yr and the new Investment price will decrease by: 26.9k€/yr.
+The new design Operating price will then be: 776.9k€/yr (compared to 753.2k€/yr after HEN design) but the new Investment price will decrease to 477.8 k€/yr (compared to 504.6k€/yr after HEN design).
 
-It is overall slightly lower (+23.7 - 26.9 = -3.2k€/yr gained) than the original design. Thus, it may be useful to remove E4 from the HEN design.
+Overall the path method enable to gain 3.1k€/yr compared to after the HEN design. However the payback time would be way too high (because to reduce it, the Operating Costs should be decreased instead of increased).
+
+```{python CapCostPath, echo = F, eval = F}
+dt_A = [0, 0, 0,  0, 0, 0, 0]
+dt_B = [0, 0, 0,  0, 0, 0, 0]
+Q = [83.5, 59.5, 58.5, 9.6, 142.9, 33.4, 50.1]
+LMTD = []
+area = []
+Cp = []
+U = 0.500 #kW/m^2°C, assumption based on alpha_H20
+dtmin = 5 #°C
+CEPCI2019=603.1 
+CEPCI1998=389.5 #https://personalpages.manchester.ac.uk/staff/tom.rodgers/Interactive_graphs/CEPCI.html?reactors/CEPCI/index.html
+K1=3.6788 #sl 12 T4.1 assumption spiral plate HX
+K2=0.4412
+FBM=4.74 #assumption fluid sl 10 T4.1
+i=0.05 #sl 8 T4.2
+e=0.92 #€/$ exchange rate 2023 Nov 
+n=20
+ANNUALIZATIONFACTOR = (i*(1+i)**n)/((1+i)**n-1)
+
+for i in range(len(Q)):
+        if dt_A[i] == dt_B[i]: #if the two temperatures difference are the same when cp_hot = cp_cold , then the LMTD is equal to the min temperature difference
+            LMTD.append(dtmin)
+        else:
+                LMTD.append((dt_A[i]-dt_B[i])/np.log((dt_A[i]+dtmin)/(dt_B[i]+dtmin)))
+        area.append(Q[i]/(U*LMTD[i]))
+        Cp.append(ANNUALIZATIONFACTOR*FBM*e*((CEPCI2019/CEPCI1998) * 10**(K1+K2*np.log(area[i]))))
+
+#print(ANNUALIZATIONFACTOR)
+#print(LMTD)
+#print(area)
+#print(sum(Cp))
+
+```
 
 ```{python OpeCostPath, echo = F, eval = F}
 top = 24*0.95*365 #h/year
@@ -454,9 +489,44 @@ This will to an increase of $T_{cold,E5,out}$ on the flow D which then become 35
 
 - HU2 will be remove since the maximum temperature of the flow D, now 354°C, is reached.
 
-The new design Operating price will then be: 746.7 and the new Investment price will decrease by nothing since E9 was already removed from the design but now it is done in a more justified way.   
 
-It is slightly than the original design. Thus, it may be useful to remove E9 from the HEN design and apply this loop.
+The new design Operating price will then be: 746.7k€/yr (compared to 753.2k€/yr after HEN design) but the new Investment price will increase to 522.6 k€/yr (compared to 504.6k€/yr after HEN design).
+
+Compared to path method, loop enables to reduce operating costs and thus reduce the payback time by more than 20 years (even though the payback time is still high for the reasons explained above).
+
+```{python CapCostLoop, echo = F, eval = F}
+dt_A = [0, 0, 0, 0, 0, 0, 0, 0]
+dt_B = [0, 0, 0, 0, 0, 0, 0, 0]
+Q = [83.5, 59.5, 58.5, 25.1, 25.96, 142.9, 58.5, 25]
+LMTD = []
+area = []
+Cp = []
+U = 0.500 #kW/m^2°C, assumption based on alpha_H20
+dtmin = 5 #°C
+CEPCI2019=603.1 
+CEPCI1998=389.5 #https://personalpages.manchester.ac.uk/staff/tom.rodgers/Interactive_graphs/CEPCI.html?reactors/CEPCI/index.html
+K1=3.6788 #sl 12 T4.1 assumption spiral plate HX
+K2=0.4412
+FBM=4.74 #assumption fluid sl 10 T4.1
+i=0.05 #sl 8 T4.2
+e=0.92 #€/$ exchange rate 2023 Nov 
+n=20
+ANNUALIZATIONFACTOR = (i*(1+i)**n)/((1+i)**n-1)
+
+for i in range(len(Q)):
+        if dt_A[i] == dt_B[i]: #if the two temperatures difference are the same when cp_hot = cp_cold , then the LMTD is equal to the min temperature difference
+            LMTD.append(dtmin)
+        else:
+                LMTD.append((dt_A[i]-dt_B[i])/np.log((dt_A[i]+dtmin)/(dt_B[i]+dtmin)))
+        area.append(Q[i]/(U*LMTD[i]))
+        Cp.append(ANNUALIZATIONFACTOR*FBM*e*((CEPCI2019/CEPCI1998) * 10**(K1+K2*np.log(area[i]))))
+
+#print(ANNUALIZATIONFACTOR)
+#print(LMTD)
+#print(area)
+#print(sum(Cp))
+
+```
 
 ```{python OpeCostLoop, echo = F, eval = F}
 top = 24*0.95*365 #h/year
