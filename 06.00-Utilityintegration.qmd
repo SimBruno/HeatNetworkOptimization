@@ -16,3 +16,124 @@ You will proceed by the following steps :
 5. In particular, the integration of the soda production will be investigated, by making a sensitivity analysis of the capacity on the soda production process.
 6. The systematic generation of alternative system configuration options will allow to compare the different options and select the final recommendation.
 
+
+## Grand Composite Curve
+
+Here is the grand composite curve:
+```{python, echo = T, eval = T}
+import matplotlib.pyplot as plt
+import json
+import numpy as np
+
+
+# read json for heat integration data
+file_name = open('codes_02_heat_recovery/result/brewery-57.json')
+integ = json.loads(file_name.read())
+
+# we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
+hotcc = integ["results"]["graph"][0][0][1]["data"][0]["curve"]
+coldcc = integ["results"]["graph"][0][0][1]["data"][1]["curve"]
+
+# extract the temperature (T in Kelvin) and heat (Q in kW)
+T_hc = [i["T"] for i in hotcc]
+Q_hc = [i["Q"] for i in hotcc]
+T_cc = [i["T"] for i in coldcc]
+Q_cc = [i["Q"] for i in coldcc]
+
+# compute the shifted carnot factor (1 - T0/T) and Treference = 298.15K
+Tref = 298.15 
+ca_hc = [(1-Tref/i) for i in T_hc]
+ca_cc = [(1-Tref/i) for i in T_cc]
+
+# compute back the original carnot factors given a deltaT_min
+#deltaT_min = 40
+deltaT_min = 5
+T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
+T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
+ca_hc_ori = [(1-298.15/i) for i in T_hc_ori]
+ca_cc_ori = [(1-298.15/i) for i in T_cc_ori]
+
+# prepare the second y-axis for plotting
+# the minim carnot value is extracted from the original cooling. Round it to the lowest .0
+# the maximum carnot carnot value is extracted from the original heating. Round it to the highest .0
+ca_min = round(min(ca_cc_ori) - 0.05, 1)
+ca_max = round(max(ca_hc_ori) + 0.05, 1)
+# generate an array with the carnot list from min to max
+ca_values = np.arange(ca_min, ca_max, 0.2)
+# compute the corresponding temperature values in celcius
+Tref_ce = 298.15
+T_ce = [int(Tref_ce/(1-i) - 273.15) for i in ca_values]
+
+# plot the composite curves
+#figure, ax = plt.subplots(figsize = (8,6))
+
+# both cold curves (blue): dashed --> shifted, solid --> original
+#ax.plot(Q_cc, ca_cc, "--b")
+#ax.plot(Q_cc, ca_cc_ori, "-b")
+# both hot curves (red): dashed --> shifted, solid --> original
+#ax.plot(Q_hc, ca_hc, "--r")
+#ax.plot(Q_hc, ca_hc_ori, "-r")
+# fill the area between the original and shifted curves
+#ax.fill_between(Q_cc, ca_cc_ori, ca_cc, color="blue", alpha=0.25)
+#ax.fill_between(Q_hc, ca_hc, ca_hc_ori, color="red", alpha=0.25)
+T_cc = [(i-273.15) for i in T_cc]
+T_cc_ori = [(i-273.15) for i in T_cc_ori]
+T_hc = [(i-273.15) for i in T_hc]
+T_hc_ori = [(i-273.15) for i in T_hc_ori]
+
+# both cold curves (blue): dashed --> shifted, solid --> original
+#ax.plot(Q_cc, T_cc, "--b")
+#ax.plot(Q_cc, T_cc_ori, "-b")
+# both hot curves (red): dashed --> shifted, solid --> original
+#ax.plot(Q_hc, T_hc, "--r")
+#ax.plot(Q_hc, T_hc_ori, "-r")
+# fill the area between the original and shifted curves
+#ax.fill_between(Q_cc, T_cc_ori, T_cc, color="blue", alpha=0.25)
+#ax.fill_between(Q_hc, T_hc, T_hc_ori, color="red", alpha=0.25)
+
+
+
+
+# add the lables and title
+#ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
+#ax.set_ylabel('$Temperature \ (°C)$')
+#ax.set_title('$Composite \ Curves$')
+#ax.legend(["Corrected Cold Composite Curve", "Cold Composite Curve", "Corrected Hot Composite Curve", "Hot Composite Curve"])
+#ax.set_ybound(ca_min, ca_max)
+
+# secondary axis. In this case we don't plot anything, we simply set the secondary axis ticks
+#ax2 =ax.twinx()
+#ax2.set_yticks(np.arange(0, len(T_ce), 1), T_ce)
+#ax2.set_ylabel('$Temperature \ (\u00b0C)$', labelpad=10)
+
+#plt.axvline(x=7322.8, color="green", linestyle="--", alpha = 0.5)
+#plt.axvline(x=34336.58, color="green", linestyle="--", alpha = 0.5)
+
+#plt.show()
+
+```
+
+
+```{python, echo = T, eval = T, fig.cap='Fig. 2: Grand Composite Curve'}
+
+Q_gcc = np.zeros(len(Q_cc))
+
+for i in range(len(Q_cc)):
+  Q_gcc[i] = Q_cc[i] - Q_hc[i]  
+
+figure, ax = plt.subplots(figsize = (8,6))
+
+#T_hc1 = [(i+273.15) for i in T_hc]
+ax.plot(Q_gcc, T_hc, "-g")
+plt.axhline(y=0, color='black', linestyle='--')
+plt.axvline(x=0, color='black', linestyle='--')
+
+ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
+ax.set_ylabel('$Temperature \ (°C)$')
+ax.set_title('$Grand \ Composite \ Curve$')
+ax.legend(["Grand Composite Curve"])
+
+print(Q_gcc[0])
+plt.show()
+
+```
