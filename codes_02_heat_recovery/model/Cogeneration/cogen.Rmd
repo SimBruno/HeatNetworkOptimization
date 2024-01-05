@@ -57,7 +57,7 @@ Cinv2_cogen = 1200*%Cogen_elec%*(%CEPCI_2020%/%CEPCI_2008%)*%Annuity% [Euro/y] #
 
 |cost1  |cost2  |cinv1  |cinv2         |imp1   |imp2   |fmin   |fmax   |
 |:------|:------|:------|:-------------|:------|:------|:------|:------|
-|0      |0      |0      |%Cinv2_cogen% |0      |0      |0      |5      |
+|0    |0    |100   |%Cinv2_cogen% |0      |0      |0      |10000     |
 ```
 
 **Cogeneration Streams**

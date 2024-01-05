@@ -8,9 +8,9 @@
 ```{rosmose}
 water_cost = 0.0025 [Euro/kg] # Water price in Switzerland is 2-2.5 CHF/m3 (wfw.ch and Swiss gas and water industry association)
 CW_ref_LOAD = 1000 [kg/h] # Reference capacity of water supply
-elec_cost = 0.25 [Euro/kWh] # price of electricity for businesses in Switzerland 2023 (Oiken)
+elec_cost = 0.12 [Euro/kWh] # price of electricity for businesses in Switzerland 2023 (Oiken)
 ELEC_ref_POWER = 1000 [kW] # Reference capacity of electricity supply
-natgas_cost = 0.119 [Euro/kWh] # price of natural gas for businesses in Switzerland (globalpetrolprices.com)
+natgas_cost = 0.08 [Euro/kWh] # price of natural gas for businesses in Switzerland (globalpetrolprices.com)
 NATGAS_ref_LOAD = 1000 [kW] #Reference capacity of natural gas supply
 CO2_cost = 0.0084 [Euro/kg] # price of CO2 sold by the market to the process (highly volatile prices due to energy crisis)
 CO2_ref_LOAD = 1 [kg/h] # Reference load of CO2 needed by the process

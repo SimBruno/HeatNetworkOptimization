@@ -43,16 +43,33 @@ This run includes:
 * Utilities: Refrigerator and heat pumps. 
 
 
-<!--
+
 ## Example files
 
 Below you will find instructions on how to call different process and utility models, how to solve your optimization problem using OSMOSE, amd how to eventually report and plot your results. 
 
 REMEMBER these are the brewery example files, you will need to adapt them for the dairy process accordingly. Good Luck!
 
--->
 
 ```{r child = 'model/BreweryProcess/BreweryProcess.Rmd'}
+```
+
+```{r child = 'model/CoolingTower/CoolingTower.Rmd'}
+```
+
+```{r child = 'model/Market/Market.Rmd'}
+```
+
+```{r child = 'model/Furnace/Furnace.Rmd'}
+```
+
+```{r child = 'model/Refrigerator/Refrigerator.Rmd'}
+```
+
+```{r child = 'model/Heatpump/Heatpump.Rmd'}
+```
+
+```{r child = 'model/Cogeneration/cogen.Rmd'}
 ```
 
 ## Visualization of Dairy Process {-}
@@ -61,6 +78,31 @@ REMEMBER these are the brewery example files, you will need to adapt them for th
 ```{rosmose display et, fig.cap="breweryprocess-visualize", out.height="80%"}
 : OSMOSE DISPLAY_ET breweryprocess
 ```
+
+```{rosmose display ct, fig.cap="coolingtower-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET coolingtower
+```
+
+```{rosmose display market, fig.cap="market-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET market
+```
+
+```{rosmose display furnace, fig.cap="furnace-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET furnace
+```
+
+```{rosmose display fridge, fig.cap="refrigeration-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET refrigerator
+```
+
+```{rosmose display hp, fig.cap="heatpump-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET heatpump
+```
+
+```{rosmose display cogen, fig.cap="cogeneration-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET cogen
+```
+
 
 
 ```{rosmose eval = F}
@@ -82,7 +124,7 @@ REMEMBER these are the brewery example files, you will need to adapt them for th
 ```
 
 ```{rosmose solve-osmose}
-! OSMOSE SOLVE-LOCAL brewery MER [breweryprocess]
+! OSMOSE SOLVE-LOCAL brewery TotalCost [breweryprocess, coolingtower, market, furnace, refrigerator, heatpump, cogen]
 
 |name   |value|
 |:------|:----|
@@ -119,10 +161,10 @@ The following code is used to retrieve the data of the generated JSON file.
 This code is used to find and load certain json file:
 ```{r, eval=T}
 library(jsonlite)
-pfilename<-"result/brewery-18.json"
+pfilename<-"result/brewery-115.json"
 data <- fromJSON(pfilename, flatten=FALSE)
-#x<-data$results$KPIs$opex
-#y<- data$results$delta_hot[[1]]$Clu$DefaultHeatCascade
+x<-data$results$KPIs$opex
+y<-data$results$delta_hot[[1]]$Clu$DefaultHeatCascade
 ```
 
 
@@ -192,19 +234,18 @@ The following code is about reporting the optimization results and plotting the 
 
 # Optimization Results {-}
 
-<!-- ## Capital and Operational Expenditures {-} -->
+ ## Capital and Operational Expenditures {-} 
 
-<!-- ```{r print economic results} -->
-<!-- cat("CAPEX:", data$results$KPIs$capex) -->
-<!-- cat("OPEX:", data$results$KPIs$opex) -->
-<!-- ``` -->
+```{r print economic results} 
+cat("CAPEX:", data$results$KPIs$capex) 
+cat("OPEX:", data$results$KPIs$opex) 
+``` 
 
-<!-- ## Energy Requirements {-} -->
-
-<!-- ```{r print energy results} -->
-<!-- cat("Minimum Heating Requirement:", data$results$delta_hot[[1]]$Clu$DefaultHeatCascade, "kW","\n") -->
-<!-- cat("Minimum Cooling Requirement:", data$results$delta_cold[[1]]$Clu$DefaultHeatCascade, "kW") -->
-<!-- ``` -->
+## Energy Requirements {-} 
+```{r print energy results} 
+cat("Minimum Heating Requirement:", data$results$delta_hot[[1]]$Clu$DefaultHeatCascade, "kW","\n") 
+cat("Minimum Cooling Requirement:", data$results$delta_cold[[1]]$Clu$DefaultHeatCascade, "kW") 
+``` 
 
 ## Plots {-}
 
@@ -240,6 +281,9 @@ display_cc()
 **Grand Composite Curve**
 
 ```{r gcc, eval = TRUE}
+
+
+
 display_gcc <- function(time=1){
   graphs <- data$results$graph[[1]]
   graph <- graphs[[time]]
@@ -261,7 +305,19 @@ display_gcc <- function(time=1){
 }
 
 display_gcc()
+
+
+display_icc()
+
+display_carnot()
+
+#display_invcost(data)
+
+#display_opcost()
+
+#display_totcost()
+
+str(data["results"])
+
 ```
-
-
 
