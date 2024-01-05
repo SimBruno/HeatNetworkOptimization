@@ -9,7 +9,7 @@
 Tad = 2025 [C] # Adiabatic flame temperature of the fuel 
 dtmin_radiation = 2 [C] # radiation delta t mininum
 dtmin_convection = 8 [C] # convection delta t mininum
-To = 25 [C] # Tamb = To = Tchemicalreference
+To = 25 [C] # Tamb = To = Tchemicalreference 
 Trad= 1050 [C] # Radiation temperature threshold, actual temperature is 1050°C but 400 can be used for plot visualization
 Tstack = 100 [C] # Stack temperature threshold for no dew point
 MWair = 29 [kg/kmol] # Molecular weight of dry air = 79% N2 + 21% O2
@@ -19,7 +19,7 @@ LHV = 50000 [kJ/kg] # natural gas LHV @ 25°C,1 bar
 molratst = 9.52 [kmol/kmol] # Stoich molar air to fuel ratio
 a = 1.02 [-] # excess air as in: CH4 + a*2(O2+3.76N2) --> CO2 + 2H2O + 2*3.76N2 + 2(a-1)(O2 + 3.76N2)
 cpair = 1.075 [kJ/kg/K] # Air heat capacity @427°C, 1bar (Engineering toolbox)
-Tprin = 26 [C] # Preheating temperature
+Tprin = 26 [C] # Preheating temperature   
 Furnace_natGas_LOAD = 1000 [kW] # Reference furnace load 
 Spec_heaterCost = 200 [Euro/kW]
 n = 40.0 [yr] #lifetime of a furnace
@@ -79,7 +79,7 @@ Cinv2_NGFur = %Spec_heaterCost%*%Furnace_natGas_LOAD%*(%CEPCI_2020%/%CEPCI_2008%
 
 |cost1  |cost2  |cinv1  |cinv2         |imp1   |imp2   |fmin   |fmax   |
 |:------|:------|:------|:-------------|:------|:------|:------|:------|
-|0      |0      |0      |%Cinv2_NGFur% |0      |0      |0      |100    |
+|10    |665.76   |331.3   |%Cinv2_NGFur% |0      |0      |0      |10000    |
 ```
 
 
