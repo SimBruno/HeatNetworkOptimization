@@ -124,11 +124,11 @@ REMEMBER these are the brewery example files, you will need to adapt them for th
 ```
 
 ```{rosmose solve-osmose}
-! OSMOSE SOLVE-LOCAL brewery TotalCost [breweryprocess, coolingtower, market, furnace, refrigerator, heatpump, cogen]
+! OSMOSE SOLVE-LOCAL brewery TotalCost [breweryprocess, refrigerator, furnace, market, coolingtower]
 
 |name   |value|
 |:------|:----|
-|op_time|8760 |
+|op_time|8322 |
 ```
 
 
@@ -161,7 +161,7 @@ The following code is used to retrieve the data of the generated JSON file.
 This code is used to find and load certain json file:
 ```{r, eval=T}
 library(jsonlite)
-pfilename<-"result/brewery-115.json"
+pfilename<-"result/brewery-144.json"
 data <- fromJSON(pfilename, flatten=FALSE)
 x<-data$results$KPIs$opex
 y<-data$results$delta_hot[[1]]$Clu$DefaultHeatCascade
