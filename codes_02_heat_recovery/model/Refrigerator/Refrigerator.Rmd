@@ -8,8 +8,8 @@
 ```{rosmose} 
 Evap_Tin = -30 [C] # Evaporator temperature inlet
 Evap_Tout = -30 [C] # Evaporator temperature outlet
-Cond_Tin = 35 [C] # Condenser temperature inlet
-Cond_Tout = 35 [C] # Condenser temperature outlet
+Cond_Tin = 32 [C] # Condenser temperature inlet     was 35
+Cond_Tout = 32 [C] # Condenser temperature outlet    was 35
 Evap_Qmax = 5000 [kW] # evaporator reference heat flow rate (Q_L)
 exeff = 0.5 [-] # Second law efficiency
 dtmin_2ph = 2 [C] # phase-change delta t minimum
@@ -56,7 +56,7 @@ Cinv2_RF = 300*%Cond_Qmax%*(%CEPCI_2020%/%CEPCI_2008%)*%Annuity% [Euro/y] #300 E
 
 |cost1  |cost2  |cinv1  |cinv2      |imp1   |imp2   |fmin   |fmax   |
 |:------|:------|:------|:----------|:------|:------|:------|:------|
-|0      |0      |0      |%Cinv2_RF% |0      |0      |0      |10     |
+|10   |499.32  |495.21  |%Cinv2_RF% |0      |0      |0      |1000   |
 ```
 
 **Refrigerator Streams**
