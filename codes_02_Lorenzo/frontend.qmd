@@ -1,0 +1,323 @@
+---
+title: "Dairy Process Optimization"
+author:
+  - "EPFL IPESE"
+unitname:
+  faculty: School of Engineering
+  institute: Mechanical Engineering
+  laboratory: Industrial Process and Energy Systems Engineering
+advisor: François Maréchal
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format:
+    html:
+        theme: simplex
+        toc_depth: 3
+        toc: true
+        toc_float: true
+        collapse: true
+        smooth_scroll: true
+        dev: svg
+        code_folding: hide
+        number_sections: true
+        mathjax: default
+        fig-format: svg
+venv: "../venv"
+---
+
+```{r setup, warning = F, results = "hide", message=F}
+source("../rosmose-setup.R", local = knitr::knit_global())
+```
+
+# Introduction {-}
+
+This report presents ROSMOSE integration results of various scenarios studying the dairy process including it's heat integration, valorization of certain waste products, utilization of different technologies such as heat pumps and refrigerators, and optimization of the overall process to minimize cost and maximize revenue. 
+
+# Problem Definition {-}
+
+This project will use a model named **DairyProcess**.
+
+This run includes:
+
+* Dairy Process: Pasteurization, evaporation, drum dryers, cleaning in place, cold storage, hot water, wastewater ans sludge production, rivella production and digester. 
+
+* Utilities: Refrigerator and heat pumps. 
+
+
+
+## Example files
+
+Below you will find instructions on how to call different process and utility models, how to solve your optimization problem using OSMOSE, amd how to eventually report and plot your results. 
+
+REMEMBER these are the brewery example files, you will need to adapt them for the dairy process accordingly. Good Luck!
+
+
+```{r child = 'model/BreweryProcess/BreweryProcess.Rmd'}
+```
+
+```{r child = 'model/CoolingTower/CoolingTower.Rmd'}
+```
+
+```{r child = 'model/Market/Market.Rmd'}
+```
+
+```{r child = 'model/Furnace/Furnace.Rmd'}
+```
+
+```{r child = 'model/Refrigerator/Refrigerator.Rmd'}
+```
+
+```{r child = 'model/Heatpump/Heatpump.Rmd'}
+```
+
+```{r child = 'model/Cogeneration/cogen.Rmd'}
+```
+
+## Visualization of Dairy Process {-}
+
+
+```{rosmose display et, fig.cap="breweryprocess-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET breweryprocess
+```
+
+```{rosmose display ct, fig.cap="coolingtower-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET coolingtower
+```
+
+```{rosmose display market, fig.cap="market-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET market
+```
+
+```{rosmose display furnace, fig.cap="furnace-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET furnace
+```
+
+```{rosmose display fridge, fig.cap="refrigeration-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET refrigerator
+```
+
+```{rosmose display hp, fig.cap="heatpump-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET heatpump
+```
+
+```{rosmose display cogen, fig.cap="cogeneration-visualize", out.height="80%"}
+: OSMOSE DISPLAY_ET cogen
+```
+
+
+
+```{rosmose eval = F}
+: TAGS DISPLAY_TAGS [nvuD]
+
+```
+
+<!-- | solver         | gurobi        |          | -->
+
+
+```{rosmose configure solver}
+: OSMOSE OPTIONS mathProg
+
+| Property       | Value         | Comments |
+|:---------------|:--------------|:---------|
+| language       | ampl          |          |
+| solver         | gurobi        |          |
+| solver_options | {}            |          |
+```
+
+```{rosmose solve-osmose}
+! OSMOSE SOLVE-LOCAL brewery TotalCost [breweryprocess, coolingtower, market, furnace, refrigerator, heatpump, cogen]
+
+|name   |value|
+|:------|:----|
+|op_time|8760 |
+```
+
+
+<!--
+
+Serialization
+
+This function can be used in case you are facing errors which are not clear and you want to explore deaper into the process files in order to determine and debug your errors. -->
+
+```{rosmose}
+#! OSMOSE SERIALIZE_PROJECT brewery MER [breweryprocess]
+#! OSMOSE SERIALIZE_PROJECT brewery TotalCost [breweryprocess, coolingtower, market, furnace, refrigerator]
+#! OSMOSE SERIALIZE_PROJECT brewery TotalCost [breweryprocess,market, coolingtower, heatpump, heatpump2, heatpump3, cogen]
+
+```
+
+```{rosmose}
+#! OSMOSE SERIALIZE_ET [breweryprocess]
+#! OSMOSE SERIALIZE_ET [breweryprocess, coolingtower, market, furnace, refrigerator]
+#! OSMOSE SERIALIZE_ET [breweryprocess,market, coolingtower, heatpump, heatpump2, heatpump3, cogen]
+#! OSMOSE SERIALIZE_ET [et1, coolingtower, market, furnace, refrigerator]
+
+```
+
+
+
+The following code is used to retrieve the data of the generated JSON file.
+
+
+This code is used to find and load certain json file:
+```{r, eval=T}
+library(jsonlite)
+pfilename<-"result/brewery-115.json"
+data <- fromJSON(pfilename, flatten=FALSE)
+x<-data$results$KPIs$opex
+y<-data$results$delta_hot[[1]]$Clu$DefaultHeatCascade
+```
+
+
+
+
+<!-- The following code is used to find the last existing json file and load the next json file automatically (if you want to load one specific json file, refer to the previous chunk) -->
+
+<!-- ```{r, echo=FALSE} -->
+
+<!-- library(jsonlite) -->
+
+<!-- # Function to find the last existing brewery-N.json file (update with your project name instead of brewery) -->
+<!-- findLastExistingJSONFile <- function() { -->
+<!--   n <- 1 -->
+<!--   while (file.exists(sprintf("result/brewery-%d.json", n))) { -->
+<!--     n <- n + 1 -->
+<!--   } -->
+<!--   if (n > 1) { -->
+<!--     last_existing_file <- sprintf("result/brewery-%d.json", n - 1) -->
+<!--     return(last_existing_file) -->
+<!--   } else { -->
+<!--     return(NULL) # No existing files yet -->
+<!--   } -->
+<!-- } -->
+
+<!-- # Find the last existing brewery file -->
+<!-- last_JSON_file <- findLastExistingJSONFile() -->
+
+<!-- # Load the lastest json file -->
+<!-- if (!is.null(last_JSON_file)) { -->
+<!--   # Get the next brewery file in the sequence -->
+<!--   next_JSON_number <- as.numeric(gsub("brewery-(\\d+)\\.json", "\\1", last_JSON_file)) + 1 -->
+<!--   next_JSON_file <- sprintf("result/brewery-%d.json", next_JSON_number) -->
+
+<!--   # Load data from the next brewery file -->
+<!--   if (file.exists(next_JSON_file)) { -->
+<!--     data <- fromJSON(next_JSON_file, flatten = FALSE) -->
+<!--     cat("Loaded data from:", next_JSON_file, "\n") -->
+<!--   } -->
+<!-- } else { -->
+<!--   # Define the brewery file as the first -->
+<!--   next_JSON_number <- 1 -->
+<!--   next_JSON_file <- sprintf("result/brewery-%d.json", next_JSON_number) -->
+
+<!--   # Load data from the first brewery file -->
+<!--   if (file.exists(next_JSON_file)) { -->
+<!--     data <- fromJSON(next_JSON_file, flatten = FALSE) -->
+
+<!--     cat("Loaded data from:", next_JSON_file, "\n") -->
+<!--   }  -->
+
+<!-- } -->
+
+
+<!-- # Construct the path to frontend_brewery.html -->
+<!-- html_file_path <- file.path("frontend_brewery.html") -->
+
+<!-- # Open the HTML file in the default web browser -->
+<!-- browseURL(html_file_path) -->
+
+
+<!-- ``` -->
+
+
+The following code is about reporting the optimization results and plotting the pertinent plots for the corresponding optimization scenarios
+
+
+# Optimization Results {-}
+
+ ## Capital and Operational Expenditures {-} 
+
+```{r print economic results} 
+cat("CAPEX:", data$results$KPIs$capex) 
+cat("OPEX:", data$results$KPIs$opex) 
+``` 
+
+## Energy Requirements {-} 
+```{r print energy results} 
+cat("Minimum Heating Requirement:", data$results$delta_hot[[1]]$Clu$DefaultHeatCascade, "kW","\n") 
+cat("Minimum Cooling Requirement:", data$results$delta_cold[[1]]$Clu$DefaultHeatCascade, "kW") 
+``` 
+
+## Plots {-}
+
+**Hot and cold Composite curves**
+
+```{r cc, eval = TRUE}
+display_cc <- function(time=1){
+  graphs <- data$results$graph[[1]]
+  graph <- graphs[[time]]
+  graph <- graph[graph$plot_type == "cc",]$data[[1]]
+  hcc <- graph[graph$title == "Hot streams",]$curve[[1]]
+  ccc <- graph[graph$title == "Cold streams",]$curve[[1]]
+
+  if (!is_empty(hcc) && !is_empty(ccc)){
+    plot_ly() %>%
+            add_trace(x=hcc$Q, y=hcc$T-273.15, mode = 'lines', line=list(color='red'), name='Hot Streams') %>%
+            add_trace(x=ccc$Q, y=ccc$T-273.15, mode = 'lines', line=list(color='blue'),  name='Cold Streams') %>%
+            layout(xaxis= list(title = "Heat load [kW]"),
+                   yaxis= list(title = "Corrected Temperature [°C]"),
+                   margin= list(l=50, r=0, b=40, t=40),
+                   title = "Composite Curves"
+            )
+
+
+  } else {
+    print(paste("There is no CC for timestep", time))
+  }
+}
+
+display_cc()
+```
+
+**Grand Composite Curve**
+
+```{r gcc, eval = TRUE}
+
+
+
+display_gcc <- function(time=1){
+  graphs <- data$results$graph[[1]]
+  graph <- graphs[[time]]
+  graph <- graph[graph$plot_type == "gcc",]$data[[1]]
+  gcc <- graph$curve[[1]]
+
+  if (!is_empty(gcc)){
+    plot_ly() %>%
+
+      add_trace(x=gcc$Q, y=gcc$T-273.15, mode = 'lines', line=list(color='green'), name='GCC') %>%
+      layout(xaxis= list(title = "Heat load [kW]"),
+             yaxis= list(title = "Corrected Temperature [°C]"),
+             margin= list(l=50, r=50, b=40, t=40),
+             title = "Grand Composite Curve"
+            )
+  } else {
+    print(paste("There is no GCC for timestep", time))
+  }
+}
+
+display_gcc()
+
+
+display_icc()
+
+display_carnot()
+
+#display_invcost(data)
+
+#display_opcost()
+
+#display_totcost()
+
+str(data["results"])
+
+```
+
