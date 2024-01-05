@@ -6,14 +6,14 @@
 
 
 ```{rosmose} 
-Cool_Tin = 15 [C] #Cooling tower inlet temperature 
-Cool_Tout = 30 [C] #Cooling tower outlet temperature 
+Cool_Tin = 25 [C] #Cooling tower inlet temperature     15
+Cool_Tout = 25 [C] #Cooling tower outlet temperature      30
 Cool_Qmax = 1000 [kW] #Cooling tower reference heat load
 Cool_Elec = 0.021 [kW/kW] #Cooling Tower electricity input kWel/kWth
 dtmin_liq = 5 [C] #delta Tmin of the cooling water (w/ liquid streams)
 deltaH = 62.8 [kJ/kg] #Enthalpy change for cooling water @1 bar between 15 to 30°C
 Twetbulb = 12.17 [C]
-n = 40.0 [yr] #lifetime of a cooling tower
+n = 20.0 [yr] #lifetime of a cooling tower
 i = 0.06 [-] #interest rate
 CEPCI_2020 = 596.2 [-] # actual CEPCI
 CEPCI_2008 = 575.4 [-] # CEPCI 2008
@@ -59,7 +59,7 @@ Cinv2_CT = %CTCost%*(%CEPCI_2020%/%CEPCI_2008%)*%Annuity% [Euro/y]
 
 |cost1  |cost2  |cinv1  |cinv2      |imp1   |imp2   |fmin   |fmax   |
 |:------|:------|:------|:----------|:------|:------|:------|:------|
-|0      |0      |0      |%Cinv2_CT% |0      |0      |0      |100    |
+|10   |10     |0      |%Cinv2_CT% |0      |0      |0    |10000  |
 ```
 
 **Cooling Tower Streams**
