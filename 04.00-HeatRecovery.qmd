@@ -1182,6 +1182,7 @@ opex<-data$results$KPIs$opex
 costs<-data.frame(totex, opex, capex)
 ```
 
+The two green lines show the different zones of the graph, indicating the cold utility represented by the zone on the left, the maximum heat recovery, shown by the heat between the two green lines, and the hot utility, on the right of the right-most green line.
 
 <!--
 
@@ -1293,7 +1294,9 @@ plt.show()
 figure.savefig("composite_curves.png", format="png", dpi=600)
 ```
 
-Here is the grand composite curve:
+It is important to note the three plateaux performed by each composite curve between 60°C to 70°C, which correspond to the heat exchanged via the evaporators in the evaporator section. As these plateaux are located on top of each other, they indicate that it would be possible to reuse a large part of their heat.
+
+Next is the grand composite curve:
 ```{python, echo = T, eval = T, fig.cap='Fig. 2: Grand Composite Curve'}
 
 Q_gcc = np.zeros(len(Q_cc))
@@ -1315,6 +1318,11 @@ ax.legend(["Grand Composite Curve"])
 
 
 plt.show()
+```
+
+It is possible to observe that the grand composite curve presents three zones where a large amount of heat can be recuperated, represented by the plateaus located between 50°C and 80°C. Black lines were added to more easily show that the temperature of the system stays above 0°C and the position of the pinch point, which is the temperature where the heat load of the Grand Composite Curve is equal to 0 W.
+
+```{python, echo = T, eval = T}
 
 Heat_inter = []
 intersections = []
@@ -1361,8 +1369,8 @@ hot_utilities = total_w - upper_bound
 
 #print("The cold utilities require", cold_utilities, "W and the hot utilities need", hot_utilities, "W of energy. In total, the minimum energy requirements are of", (cold_utilities+hot_utilities),"W.")
 
-print(upper_bound)
-print(lower_bound)
+#print(upper_bound)
+#print(lower_bound)
 
 data_pinch_points = {'Pinch Points': ['Pinch Point 1'],
         'Temperature (°C)': [ intersections[0]]}
