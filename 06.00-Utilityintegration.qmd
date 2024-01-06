@@ -101,10 +101,6 @@ fig.show()
 
 %1. Generating the Grand composite curve (GCC) of the process system and analysing the temperature levels and the amount for the heat deficits and surplus in the system. 
 
-## Energy Conversion Technologies
-
-In this section are listed the energy conversion technologies that can be implemented within the facility under study.
-
 ## System Key Performance Indicators (KPI)
 
 To characterize the relevance of the system, Key Performance Indicators (KPI) are defined before being computed in the case of this study. The six following KPIs are used:
@@ -124,12 +120,39 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 ### KPIs formulas
 
 
-## Computations
+## Adding Utilities to the Grand Composite Curve
 
+### Dummy case
+
+|        ICC Plot              |        Carnot Plot           |
+| ---------------------------- | ----------------------------- |
+| ![ICC Plot](Figures/icc_dummy.jpg) | ![Carnot Plot](Figures/carnot_dummy.jpg) |
+
+### Optimization of case without Rivella and Digester
+
+|        ICC Plot              |        Carnot Plot           |
+| ---------------------------- | ----------------------------- |
+| ![ICC Plot](Figures/icc_base.jpg) | ![Carnot Plot](Figures/carnot_base.jpg) |
+
+### Optimization of case with Rivella
+
+|        ICC Plot              |        Carnot Plot           |
+| ---------------------------- | ----------------------------- |
+| ![ICC Plot](Figures/icc_rivella.jpg) | ![Carnot Plot](Figures/carnot_rivella.jpg) |
+
+### Optimization of case with Digester
+
+|        ICC Plot              |        Carnot Plot           |
+| ---------------------------- | ----------------------------- |
+| ![ICC Plot](Figures/icc_digester.jpg) | ![Carnot Plot](Figures/carnot_digester.jpg) |
+
+### Optimization of case with both Rivella and Digester
+
+|        ICC Plot              |        Carnot Plot           |
+| ---------------------------- | ----------------------------- |
+| ![ICC Plot](Figures/icc_both.jpg) | ![Carnot Plot](Figures/carnot_both.jpg) |
 
 
 4. The energy conversion system integration is calculated by calculating the relative flows (level of usage) in the energy conversion system. The flows are calculated based on a given set of energy conversion unit and with one of the KPI as an objective. This calculation aims at discovering synergies or complementarities between energy covnersion technologies to suppply the process energy needs.
 5. In particular, the integration of the soda production will be investigated, by making a sensitivity analysis of the capacity on the soda production process.
 6. The systematic generation of alternative system configuration options will allow to compare the different options and select the final recommendation.
-
-ATTENTION A LA FIN FAIRE BALANCE AVEC LES BENEFICES
