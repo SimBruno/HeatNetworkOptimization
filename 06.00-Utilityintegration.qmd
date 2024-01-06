@@ -527,34 +527,52 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 
 ### Dummy case
 
-|        ICC Plot              |        Carnot Plot           |
+| Integrated Composite Curve              |        Carnot           |
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_dummy.jpg) | ![Carnot Plot](Figures/carnot_dummy-1.jpg) |
 
+
+In this initial case, utility units are added to the Grand Composite Curve, with the default parameters, and cost and emission factors from the previous section. Here, only boiler, cooling tower and refrigeration units are considered. As highlighted in the Carnot plot, there is a lot of exergy losses, especially in the hot flow requirement (boiler). The target of this task is to reduce these losses by adding more efficient and more adapted units. 
+
 ### Optimization of case without Rivella and Digester
 
-|        ICC Plot              |        Carnot Plot           |
+| Integrated Composite Curve              |        Carnot           |
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_base.jpg) | ![Carnot Plot](Figures/carnot_base-1.jpg) |
 
+Let first optimize the case without Rivella and Digester. The target is to reduced the area between the utility and the Grand Composite Curve, which represents the exergy losses. Indeed, reducing the area means that the heat generation fits better the heat requirement. To do so, the following steps are applied:
+
+- The first step is to reduce the major exergy losses, which are in the hot flow requirement. To do so, a cogeneration engine is added in the optimization. The operating temperature of cogeneration engine is 450°C, while boiler is 1050°C. Then, it is more adapted to use a cogeneration engine according to the hot flow requirements, which are at maximum about 150°C for the digester, 100°C for the rivella and 80°C for the process without digester and rivella.
+- Secondly, a heat pump is added to the Grand Composite Curve, around the pinch point, to enlace the three evaporator stages.
+- Finally, the refrigeration unit and the cooling tower are used, at different and adapted temperature levels, to minimize the exergy losses for the cold flow requirement.
+
+The Carnot plot shows that the exergy losses are reduced, for hot and cold flows, and the boiler is not used anymore.
+
 ### Optimization of case with Rivella
 
-|        ICC Plot              |        Carnot Plot           |
+| Integrated Composite Curve              |        Carnot           |
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_rivella.jpg) | ![Carnot Plot](Figures/carnot_rivella.jpg) |
 
+For the case with Rivella, with Digester, and with Rivella and Digester, the results are very similar. Only the maximum heat requirement is higher, as mention before, and still way lower than the operating temperature of the cogeneration engine. The Carnot plot shows that the exergy losses are reduced, compared to the first scenario, but is similar to the case without Rivella and Digester.
+
 ### Optimization of case with Digester
 
-|        ICC Plot              |        Carnot Plot           |
+| Integrated Composite Curve              |        Carnot           |
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_digester.jpg) | ![Carnot Plot](Figures/carnot_digester.jpg) |
 
 ### Optimization of case with both Rivella and Digester
 
-|        ICC Plot              |        Carnot Plot           |
+| Integrated Composite Curve              |        Carnot           |
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_both.jpg) | ![Carnot Plot](Figures/carnot_both.jpg) |
 
+### Reducing the operating temperature of the cogeneration engine
+
+Exergy is supposed to be reduced in the hot flow requirement, by reducing the operating temperature of the cogeneration engine.
+
+## (Guidelines)
 
 You will proceed by the following steps :
 
