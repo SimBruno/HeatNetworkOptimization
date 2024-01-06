@@ -111,23 +111,15 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
  
 ### KPIs definitions
 
-|KPI Name             |KPI Acronym|Unit(s)| Description |
-|:----|:----------|:--------|:---------|
-|Operating Expenditure|OPEX       |[CHF/year]|Represents the cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis|
-|Capital Expenditure  |CAPEX      |[CHF]|Indicates the investment associated with energy conversion units|
-|Total Expenditure    |TOTEX      |[CHF/year]| Sums up the total cost of the energy supply considering the annualized investment and operating cost|
-|Exergy Losses        |-          |[kW] or in [kJ/$kg_{product}$]| Exergy Losses. Takes the second unit when converting the resources to useful heat, electricity, cooling, and refrigeration needs: this KPI evaluates the energy losses within the energy conversion technology implemented|
-|Emissions            |-          |[$kg_{CO_{2}eq}$/year] |Advises the emissions due to the energy conversion technology |      
+|KPI Name|Acronym|Unit(s)| Description |
+|:--|:--|:---|:----------------|
+|Operating Expenditure|OPEX|[CHF/year]|Represents the cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis|
+|Capital Expenditure|CAPEX|[CHF]|Indicates the investment associated with energy conversion units|
+|Total Expenditure|TOTEX|[CHF/year]| Sums up the total cost of the energy supply considering the annualized investment and operating cost|
+|Exergy Losses|-|[kW] or in [kJ/$kg_{product}$]| Evaluates the energy losses within the energy conversion technology implemented. Measured using [kJ/$kg_{product}$] when converting the resources to useful heat, electricity, cooling, and refrigeration needs|
+|Emissions|-|[$kg_{CO_{2}eq}$/year] |Advises the emissions due to the energy conversion technology |      
 |Life Cycle Environmental impact|-|[$kg_{CO_{2}eq}$/year]|Advises the emissions due to the life cycle of the energy conversion technology |      
 
-<<<<<<< Updated upstream
-| KPI Name | Operating Expenditure | Capital Expenditure | Total Expenditure | Exergy Losses | Emissions | Life Cycle Environmental impact |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| KPI Acronym | OPEX | CAPEX | TOTEX | - | - | - |
-| Unit(s) | [CHF/year] | [CHF] | [CHF/year] | [kW] or in [kJ/$kg_{product}$] | [$kg_{CO_{2}eq}$/year] | [$kg_{CO_{2}eq}$/year] |
-| Description | Represents the cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis | Indicates the investment associated with energy conversion units | Sums up the total cost of the energy supply considering the annualized investment and operating cost | Evaluates the energy losses within the energy conversion technology implemented | Advises the emissions due to the energy conversion technology | Advises the emissions due to the life cycle of the energy conversion technology |
-=======
->>>>>>> Stashed changes
 
 ### KPIs formulas
 
