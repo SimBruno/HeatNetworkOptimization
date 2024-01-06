@@ -104,7 +104,7 @@ fig.show()
 ## System Key Performance Indicators (KPI)
 
 To characterize the relevance of the system, Key Performance Indicators (KPI) are defined before being computed in the case of this study. The six following KPIs are used:
- 
+ @cinv
 ### KPIs definitions
 
 |KPI Name|Acronym|Unit(s)| Description |
@@ -119,6 +119,16 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 
 ### KPIs formulas
 
+### Table
+
+| Variable            | $cost_1$ | $cost_2$    | $cinv_1$       | $cinv_2$    | $imp_1$      | $imp_2$         | $f_{min}$ | $f_{max}$ |
+|---------------------|-------|----------|-------------|----------|-----------|--------------|------|------|
+| Unit                | [€/y] | [€/kW/y] | [€/y]       | [€/kW/y] | [kgCO2/y] | [kgCO2/kW/y] | %    | %    |
+| Cooling Tower       | 0     | 10       | 0           | -        | 0         | 0            | 0    | 100  |
+| Boiler              | 0     | 665,76   | 331,3013165 | -        | 0         | 230          | 0    | 100  |
+| Cogeneration engine | 0     | 665,76   | 1355,022385 | -        | 0         | 230          | 0    | 100  |
+| Heat Pump           | 0     | 499,32   | 495,2082836 | -        | 0         | 0            | 0    | 100  |
+| Refrigeration       | 0     | 499,32   | 495,2082836 | -        | 0         | 0            | 0    | 100  |
 
 ## Adding Utilities to the Grand Composite Curve
 
