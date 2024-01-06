@@ -2,21 +2,6 @@
 
 Once the heat recovery is implemented, the energy balance of the process system is closed by converting energy resources like natural and electricity into useful heat, cold or refrigeration heat loads for the process.
 
-You will proceed by the following steps :
-
-1. Generating the Grand composite curve (GCC) of the process system and analysing the temperature levels and the amount for the heat deficits and surplus in the system. 
-2. From the Grand composite curve analysis, a list of possible energy conversion technologies like boilers, steam or Rankine cycles, heat pumps, cooling water or refrigeration system will be established. The hot and cold streams as well as the resources consumption/production as well as the associated investment will be defined based on the estimated heat loads and temperatures from the process system GCC.
-3. System **Key Performance Indicators (KPI)** will be defined to characterise :
-     1. the operating expenditure (OPEX) in [CHF/year]: cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis.
-     2. the capital expenditure (CAPEX) in [CHF]: the investment associated with energy conversion units
-     3. the total expenditure (TOTEX) in [CHF/year]: total cost of the energy supply considering the annualised investment and operating cost
-     3. the exergy losses in [kW] or in [kJ/$kg_{product}$] when converting hte resources to useful heat, electricity, cooling and refrigeration needs.
-     4. the emissions  in [$kg_{CO_{2}}$/year] and the associated life cycle environmental impact in [$kg_{CO_{2}eq}$/year] of the energy supply.
-4. The energy conversion system integration is calculated by calculating the relative flows (level of usage) in the energy conversion system. The flows are calculated based on a given set of energy conversion unit and with one of the KPI as an objective. This calculation aims at discovering synergies or complementarities between energy covnersion technologies to suppply the process energy needs.
-5. In particular, the integration of the soda production will be investigated, by making a sensitivity analysis of the capacity on the soda production process.
-6. The systematic generation of alternative system configuration options will allow to compare the different options and select the final recommendation.
-
-
 ## Grand Composite Curve
 
 ```{python, echo = T, eval = T}
@@ -104,7 +89,8 @@ fig.show()
 ## System Key Performance Indicators (KPI)
 
 To characterize the relevance of the system, Key Performance Indicators (KPI) are defined before being computed in the case of this study. The six following KPIs are used:
- @cinv
+
+
 ### KPIs definitions
 
 |KPI Name|Acronym|Unit(s)| Description |
@@ -119,7 +105,10 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 
 ### KPIs formulas
 
-### Table
+### Parameters
+
+ @cinv
+
 
 | Variable            | $cost_1$ | $cost_2$    | $cinv_1$       | $cinv_2$    | $imp_1$      | $imp_2$         | $f_{min}$ | $f_{max}$ |
 |---------------------|-------|----------|-------------|----------|-----------|--------------|------|------|
@@ -163,6 +152,19 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 | ![ICC Plot](Figures/icc_both.jpg) | ![Carnot Plot](Figures/carnot_both.jpg) |
 
 
+You will proceed by the following steps :
+
+1. Generating the Grand composite curve (GCC) of the process system and analysing the temperature levels and the amount for the heat deficits and surplus in the system. 
+2. From the Grand composite curve analysis, a list of possible energy conversion technologies like boilers, steam or Rankine cycles, heat pumps, cooling water or refrigeration system will be established. The hot and cold streams as well as the resources consumption/production as well as the associated investment will be defined based on the estimated heat loads and temperatures from the process system GCC.
+3. System **Key Performance Indicators (KPI)** will be defined to characterise :
+     1. the operating expenditure (OPEX) in [CHF/year]: cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis.
+     2. the capital expenditure (CAPEX) in [CHF]: the investment associated with energy conversion units
+     3. the total expenditure (TOTEX) in [CHF/year]: total cost of the energy supply considering the annualised investment and operating cost
+     3. the exergy losses in [kW] or in [kJ/$kg_{product}$] when converting hte resources to useful heat, electricity, cooling and refrigeration needs.
+     4. the emissions  in [$kg_{CO_{2}}$/year] and the associated life cycle environmental impact in [$kg_{CO_{2}eq}$/year] of the energy supply.
+4. The energy conversion system integration is calculated by calculating the relative flows (level of usage) in the energy conversion system. The flows are calculated based on a given set of energy conversion unit and with one of the KPI as an objective. This calculation aims at discovering synergies or complementarities between energy covnersion technologies to suppply the process energy needs.
+5. In particular, the integration of the soda production will be investigated, by making a sensitivity analysis of the capacity on the soda production process.
+6. The systematic generation of alternative system configuration options will allow to compare the different options and select the final recommendation.
 4. The energy conversion system integration is calculated by calculating the relative flows (level of usage) in the energy conversion system. The flows are calculated based on a given set of energy conversion unit and with one of the KPI as an objective. This calculation aims at discovering synergies or complementarities between energy covnersion technologies to suppply the process energy needs.
 5. In particular, the integration of the soda production will be investigated, by making a sensitivity analysis of the capacity on the soda production process.
 6. The systematic generation of alternative system configuration options will allow to compare the different options and select the final recommendation.
