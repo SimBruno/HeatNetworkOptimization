@@ -19,311 +19,84 @@ You will proceed by the following steps :
 
 ## Grand Composite Curve
 
-Here is the grand composite curve with both Rivella and Digester processes:
 ```{python, echo = T, eval = T}
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import json
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import numpy as np
 
-
-# read json for heat integration data
-file_name = open('codes_02_heat_recovery/result/brewery-57.json')
-integ = json.loads(file_name.read())
-
-# we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
-hotcc = integ["results"]["graph"][0][0][1]["data"][0]["curve"]
-coldcc = integ["results"]["graph"][0][0][1]["data"][1]["curve"]
-
-# extract the temperature (T in Kelvin) and heat (Q in kW)
-T_hc = [i["T"] for i in hotcc]
-Q_hc = [i["Q"] for i in hotcc]
-T_cc = [i["T"] for i in coldcc]
-Q_cc = [i["Q"] for i in coldcc]
-
-# compute the shifted carnot factor (1 - T0/T) and Treference = 298.15K
-Tref = 298.15 
-ca_hc = [(1-Tref/i) for i in T_hc]
-ca_cc = [(1-Tref/i) for i in T_cc]
-
-# compute back the original carnot factors given a deltaT_min
-#deltaT_min = 40
-deltaT_min = 5
-T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
-T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
-ca_hc_ori = [(1-298.15/i) for i in T_hc_ori]
-ca_cc_ori = [(1-298.15/i) for i in T_cc_ori]
-
-# prepare the second y-axis for plotting
-# the minim carnot value is extracted from the original cooling. Round it to the lowest .0
-# the maximum carnot carnot value is extracted from the original heating. Round it to the highest .0
-ca_min = round(min(ca_cc_ori) - 0.05, 1)
-ca_max = round(max(ca_hc_ori) + 0.05, 1)
-# generate an array with the carnot list from min to max
-ca_values = np.arange(ca_min, ca_max, 0.2)
-# compute the corresponding temperature values in celcius
-Tref_ce = 298.15
-T_ce = [int(Tref_ce/(1-i) - 273.15) for i in ca_values]
-
-
-T_cc = [(i-273.15) for i in T_cc]
-T_cc_ori = [(i-273.15) for i in T_cc_ori]
-T_hc = [(i-273.15) for i in T_hc]
-T_hc_ori = [(i-273.15) for i in T_hc_ori]
-
-Q_gcc = np.zeros(len(Q_cc))
-
-for i in range(len(Q_cc)):
-  Q_gcc[i] = Q_cc[i] - Q_hc[i]  
-
-figure, ax = plt.subplots(figsize = (8,6))
-
-#T_hc1 = [(i+273.15) for i in T_hc]
-ax.plot(Q_gcc, T_hc, "-g")
-plt.axhline(y=0, color='black', linestyle='--')
-plt.axvline(x=0, color='black', linestyle='--')
-
-ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
-ax.set_ylabel('$Temperature \ (°C)$')
-ax.set_title('$Grand \ Composite \ Curve$')
-ax.legend(["Grand Composite Curve"])
-
-print(Q_gcc[0])
-plt.show()
-
-```
-
-
-
-Here is the one with neither Rivella nor Digester:
-```{python, echo = T, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-
-
-# read json for heat integration data
-file_name = open('codes_02_heat_recovery/result/brewery-59NoRivellaNoDigester.json')
-integ = json.loads(file_name.read())
-
-# we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
-hotcc = integ["results"]["graph"][0][0][1]["data"][0]["curve"]
-coldcc = integ["results"]["graph"][0][0][1]["data"][1]["curve"]
-
-# extract the temperature (T in Kelvin) and heat (Q in kW)
-T_hc = [i["T"] for i in hotcc]
-Q_hc = [i["Q"] for i in hotcc]
-T_cc = [i["T"] for i in coldcc]
-Q_cc = [i["Q"] for i in coldcc]
-
-# compute the shifted carnot factor (1 - T0/T) and Treference = 298.15K
-Tref = 298.15 
-ca_hc = [(1-Tref/i) for i in T_hc]
-ca_cc = [(1-Tref/i) for i in T_cc]
-
-# compute back the original carnot factors given a deltaT_min
-#deltaT_min = 40
-deltaT_min = 5
-T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
-T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
-ca_hc_ori = [(1-298.15/i) for i in T_hc_ori]
-ca_cc_ori = [(1-298.15/i) for i in T_cc_ori]
-
-# prepare the second y-axis for plotting
-# the minim carnot value is extracted from the original cooling. Round it to the lowest .0
-# the maximum carnot carnot value is extracted from the original heating. Round it to the highest .0
-ca_min = round(min(ca_cc_ori) - 0.05, 1)
-ca_max = round(max(ca_hc_ori) + 0.05, 1)
-# generate an array with the carnot list from min to max
-ca_values = np.arange(ca_min, ca_max, 0.2)
-# compute the corresponding temperature values in celcius
-Tref_ce = 298.15
-T_ce = [int(Tref_ce/(1-i) - 273.15) for i in ca_values]
-
-
-T_cc = [(i-273.15) for i in T_cc]
-T_cc_ori = [(i-273.15) for i in T_cc_ori]
-T_hc = [(i-273.15) for i in T_hc]
-T_hc_ori = [(i-273.15) for i in T_hc_ori]
-
-Q_gcc = np.zeros(len(Q_cc))
-
-for i in range(len(Q_cc)):
-  Q_gcc[i] = Q_cc[i] - Q_hc[i]  
-
-figure, ax = plt.subplots(figsize = (8,6))
-
-#T_hc1 = [(i+273.15) for i in T_hc]
-ax.plot(Q_gcc, T_hc, "-g")
-plt.axhline(y=0, color='black', linestyle='--')
-plt.axvline(x=0, color='black', linestyle='--')
-
-ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
-ax.set_ylabel('$Temperature \ (°C)$')
-ax.set_title('$Grand \ Composite \ Curve$')
-ax.legend(["Grand Composite Curve"])
-
-print(Q_gcc[0])
-plt.show()
-
-```
-
-
-
-
-
-
-
-Here is the one with only Rivella:
-
-```{python, echo = T, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-
-
-# read json for heat integration data
-file_name = open('codes_02_heat_recovery/result/brewery-59_no_digester.json')
-integ = json.loads(file_name.read())
-
-# we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
-hotcc = integ["results"]["graph"][0][0][1]["data"][0]["curve"]
-coldcc = integ["results"]["graph"][0][0][1]["data"][1]["curve"]
-
-# extract the temperature (T in Kelvin) and heat (Q in kW)
-T_hc = [i["T"] for i in hotcc]
-Q_hc = [i["Q"] for i in hotcc]
-T_cc = [i["T"] for i in coldcc]
-Q_cc = [i["Q"] for i in coldcc]
-
-# compute the shifted carnot factor (1 - T0/T) and Treference = 298.15K
-Tref = 298.15 
-ca_hc = [(1-Tref/i) for i in T_hc]
-ca_cc = [(1-Tref/i) for i in T_cc]
-
-# compute back the original carnot factors given a deltaT_min
-#deltaT_min = 40
-deltaT_min = 5
-T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
-T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
-ca_hc_ori = [(1-298.15/i) for i in T_hc_ori]
-ca_cc_ori = [(1-298.15/i) for i in T_cc_ori]
-
-# prepare the second y-axis for plotting
-# the minim carnot value is extracted from the original cooling. Round it to the lowest .0
-# the maximum carnot carnot value is extracted from the original heating. Round it to the highest .0
-ca_min = round(min(ca_cc_ori) - 0.05, 1)
-ca_max = round(max(ca_hc_ori) + 0.05, 1)
-# generate an array with the carnot list from min to max
-ca_values = np.arange(ca_min, ca_max, 0.2)
-# compute the corresponding temperature values in celcius
-Tref_ce = 298.15
-T_ce = [int(Tref_ce/(1-i) - 273.15) for i in ca_values]
-
-
-T_cc = [(i-273.15) for i in T_cc]
-T_cc_ori = [(i-273.15) for i in T_cc_ori]
-T_hc = [(i-273.15) for i in T_hc]
-T_hc_ori = [(i-273.15) for i in T_hc_ori]
-
-Q_gcc = np.zeros(len(Q_cc))
-
-for i in range(len(Q_cc)):
-  Q_gcc[i] = Q_cc[i] - Q_hc[i]  
-
-figure, ax = plt.subplots(figsize = (8,6))
-
-#T_hc1 = [(i+273.15) for i in T_hc]
-ax.plot(Q_gcc, T_hc, "-g")
-plt.axhline(y=0, color='black', linestyle='--')
-plt.axvline(x=0, color='black', linestyle='--')
-
-ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
-ax.set_ylabel('$Temperature \ (°C)$')
-ax.set_title('$Grand \ Composite \ Curve$')
-ax.legend(["Grand Composite Curve"])
-
-print(Q_gcc[0])
-plt.show()
-
-```
-
-
-
-
-
-Here is the one with only the digester:
-```{python, echo = T, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-
-
-# read json for heat integration data
-file_name = open('codes_02_heat_recovery/result/brewery-59NoRivella.json')
-integ = json.loads(file_name.read())
-
-# we used .keys() and json-reader to locate the data of interest (hot and cold composite curves)
-hotcc = integ["results"]["graph"][0][0][1]["data"][0]["curve"]
-coldcc = integ["results"]["graph"][0][0][1]["data"][1]["curve"]
-
-# extract the temperature (T in Kelvin) and heat (Q in kW)
-T_hc = [i["T"] for i in hotcc]
-Q_hc = [i["Q"] for i in hotcc]
-T_cc = [i["T"] for i in coldcc]
-Q_cc = [i["Q"] for i in coldcc]
-
-# compute the shifted carnot factor (1 - T0/T) and Treference = 298.15K
-Tref = 298.15 
-ca_hc = [(1-Tref/i) for i in T_hc]
-ca_cc = [(1-Tref/i) for i in T_cc]
-
-# compute back the original carnot factors given a deltaT_min
-#deltaT_min = 40
-deltaT_min = 5
-T_hc_ori = [(i+deltaT_min/2) for i in T_hc]
-T_cc_ori = [(i-deltaT_min/2) for i in T_cc]
-ca_hc_ori = [(1-298.15/i) for i in T_hc_ori]
-ca_cc_ori = [(1-298.15/i) for i in T_cc_ori]
-
-# prepare the second y-axis for plotting
-# the minim carnot value is extracted from the original cooling. Round it to the lowest .0
-# the maximum carnot carnot value is extracted from the original heating. Round it to the highest .0
-ca_min = round(min(ca_cc_ori) - 0.05, 1)
-ca_max = round(max(ca_hc_ori) + 0.05, 1)
-# generate an array with the carnot list from min to max
-ca_values = np.arange(ca_min, ca_max, 0.2)
-# compute the corresponding temperature values in celcius
-Tref_ce = 298.15
-T_ce = [int(Tref_ce/(1-i) - 273.15) for i in ca_values]
-
-
-T_cc = [(i-273.15) for i in T_cc]
-T_cc_ori = [(i-273.15) for i in T_cc_ori]
-T_hc = [(i-273.15) for i in T_hc]
-T_hc_ori = [(i-273.15) for i in T_hc_ori]
-
-Q_gcc = np.zeros(len(Q_cc))
-
-for i in range(len(Q_cc)):
-  Q_gcc[i] = Q_cc[i] - Q_hc[i]  
-
-figure, ax = plt.subplots(figsize = (8,6))
-
-#T_hc1 = [(i+273.15) for i in T_hc]
-ax.plot(Q_gcc, T_hc, "-g")
-plt.axhline(y=0, color='black', linestyle='--')
-plt.axvline(x=0, color='black', linestyle='--')
-
-ax.set_xlabel('$Heat \ Load \ (kW)$', labelpad=12)
-ax.set_ylabel('$Temperature \ (°C)$')
-ax.set_title('$Grand \ Composite \ Curve$')
-ax.legend(["Grand Composite Curve"])
-
-print(Q_gcc[0])
-plt.show()
-
+# Function to create the Grand Composite Curve plot
+def create_gcc_plot(Q_gcc, T_hc, title):
+    fig = go.Figure()
+
+    # Add the Grand Composite Curve without legend
+    fig.add_trace(go.Scatter(x=Q_gcc, y=T_hc, mode='lines', name=None))
+
+    # Add horizontal and vertical reference lines
+    fig.add_shape(go.layout.Shape(type='line', x0=0, x1=0, y0=min(T_hc), y1=max(T_hc), line=dict(dash='dash')))
+    fig.add_shape(go.layout.Shape(type='line', x0=min(Q_gcc), x1=max(Q_gcc), y0=0, y1=0, line=dict(dash='dash')))
+
+    # Set axis labels and title
+    fig.update_layout(
+        xaxis_title='Heat Load (kW)',
+        yaxis_title='Temperature (°C)',
+        title=dict(text=title, x=0.5),  # Center the title
+        paper_bgcolor='white',  # Set the background color
+    )
+
+    return fig
+
+# Read JSON for heat integration data for each case
+file_names = [
+    'codes_02_heat_recovery/result/brewery-57.json',
+    'codes_02_heat_recovery/result/brewery-59NoRivellaNoDigester.json',
+    'codes_02_heat_recovery/result/brewery-59_no_digester.json',
+    'codes_02_heat_recovery/result/brewery-59NoRivella.json'
+]
+
+titles = [
+    'With Rivella and Digester',
+    'Without Rivella and Digester',
+    'Only with Rivella',
+    'Only with Digester'
+]
+
+# Create subplots with a 2x2 grid
+fig = make_subplots(rows=2, cols=2, subplot_titles=titles)
+
+# Loop through each case and add the corresponding subplot
+for i, file_name in enumerate(file_names, start=1):
+    integ = json.loads(open(file_name).read())
+    hotcc = integ["results"]["graph"][0][0][1]["data"][0]["curve"]
+    coldcc = integ["results"]["graph"][0][0][1]["data"][1]["curve"]
+    T_hc = [(i["T"] - 273.15) for i in hotcc]
+    Q_hc = [i["Q"] for i in hotcc]
+    T_cc = [(i["T"] - 273.15) for i in coldcc]
+    Q_cc = [i["Q"] for i in coldcc]
+
+    deltaT_min = 5
+    T_hc_ori = [(i + deltaT_min/2) for i in T_hc]
+    Q_gcc = np.zeros(len(Q_cc))
+
+    for j in range(len(Q_cc)):
+        Q_gcc[j] = Q_cc[j] - Q_hc[j]
+
+    row = (i - 1) // 2 + 1
+    col = (i - 1) % 2 + 1
+
+    fig.add_trace(go.Scatter(x=Q_gcc, y=T_hc, mode='lines', name=None), row=row, col=col)
+
+    # Add horizontal and vertical reference lines to each subplot
+    fig.add_shape(go.layout.Shape(type='line', x0=0, x1=0, y0=min(T_hc), y1=max(T_hc), line=dict(dash='dash')), row=row, col=col)
+    fig.add_shape(go.layout.Shape(type='line', x0=min(Q_gcc), x1=max(Q_gcc), y0=0, y1=0, line=dict(dash='dash')), row=row, col=col)
+
+    # Set axis labels and title for the subplot
+    fig.update_xaxes(title_text='Heat Load (kW)', row=row, col=col)
+    fig.update_yaxes(title_text='Temperature (°C)', row=row, col=col)
+    fig.update_layout(title=dict(text='Grand Composite Curve', x=0.5), paper_bgcolor='white', showlegend = False)
+
+# Show the plot
+fig.show()
 ```
 
 %1. Generating the Grand composite curve (GCC) of the process system and analysing the temperature levels and the amount for the heat deficits and surplus in the system. 
@@ -343,17 +116,15 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
  
 ### KPIs definitions
 
-```{r KPIs, echo = T, eval = F}
-
 |KPI Name             |KPI Acronym|Unit(s)| Description |
-|:----|:----------|:--------|:--------- |
+|:----|:----------|:--------|:---------|
 |Operating Expenditure|OPEX       |[CHF/year]|Represents the cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis|
 |Capital Expenditure  |CAPEX      |[CHF]|Indicates the investment associated with energy conversion units|
 |Total Expenditure    |TOTEX      |[CHF/year]| Sums up the total cost of the energy supply considering the annualized investment and operating cost|
 |Exergy Losses        |-          |[kW] or in [kJ/$kg_{product}$]| Exergy Losses. Takes the second unit when converting the resources to useful heat, electricity, cooling, and refrigeration needs: this KPI evaluates the energy losses within the energy conversion technology implemented|
 |Emissions            |-          |[$kg_{CO_{2}eq}$/year] |Advises the emissions due to the energy conversion technology |      
 |Life Cycle Environmental impact|-|[$kg_{CO_{2}eq}$/year]|Advises the emissions due to the life cycle of the energy conversion technology |      
-```
+
 
 
 ### KPIs formulas
