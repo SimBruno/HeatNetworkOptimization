@@ -132,13 +132,13 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 
 |        ICC Plot              |        Carnot Plot           |
 | ---------------------------- | ----------------------------- |
-| ![ICC Plot](Figures/icc_dummy.jpg) | ![Carnot Plot](Figures/carnot_dummy.jpg) |
+| ![ICC Plot](Figures/icc_dummy.jpg) | ![Carnot Plot](Figures/carnot_dummy-1.jpg) |
 
 ### Optimization of case without Rivella and Digester
 
 |        ICC Plot              |        Carnot Plot           |
 | ---------------------------- | ----------------------------- |
-| ![ICC Plot](Figures/icc_base.jpg) | ![Carnot Plot](Figures/carnot_base.jpg) |
+| ![ICC Plot](Figures/icc_base.jpg) | ![Carnot Plot](Figures/carnot_base-1.jpg) |
 
 ### Optimization of case with Rivella
 
