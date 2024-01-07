@@ -4,7 +4,7 @@ Once the heat recovery is implemented, the energy balance of the process system 
 
 ## Grand Composite Curve
 
-```{python, echo = T, eval = T}
+```{python, echo = F, eval = T}
 import json
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -84,7 +84,8 @@ for i, file_name in enumerate(file_names, start=1):
 fig.show()
 ```
 
-```{python, echo = T, eval = T, fig.cap='Fig. 1: Composite Curves'}
+
+```{python, echo = F, eval = T}
 import matplotlib.pyplot as plt
 import json
 import numpy as np
@@ -152,39 +153,38 @@ for i in range(len(Q_gcc)):
       Heat_inter.append(Q_gcc[i])
 
 
-upper_bound = 0
-lower_bound = 30000
+upper_bound1 = 0
+lower_bound1 = 30000
 for i in range(len(Q_hc)):
-  if (ca_hc_ori[i] < (np.max(ca_hc_ori)) and Q_hc[i] > upper_bound):
-    upper_bound = Q_hc[i]
-  if (ca_cc_ori[i] > np.min(ca_cc_ori) and Q_cc[i] < lower_bound):
-    lower_bound = Q_cc[i]
+  if (ca_hc_ori[i] < (np.max(ca_hc_ori)) and Q_hc[i] > upper_bound1):
+    upper_bound1 = Q_hc[i]
+  if (ca_cc_ori[i] > np.min(ca_cc_ori) and Q_cc[i] < lower_bound1):
+    lower_bound1 = Q_cc[i]
 
 
 
 
-cold_utilities = lower_bound
+cold_utilities1 = lower_bound1
 total_w = 0
 
 for i in range(len(Q_cc)):
   if ((ca_cc_ori[i] > 0.2) and (Q_cc[i] > total_w)):
     total_w = Q_cc[i]
 
-hot_utilities = total_w - upper_bound
+hot_utilities1 = total_w - upper_bound1
 
 
-data_heat_recovery = {'With Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
+#data_heat_recovery = {'With Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
+#        'Heat (kW)': [cold_utilities1, hot_utilities1, cold_utilities1+hot_utilities1, np.round(upper_bound1 - lower_bound1, 2)]}
 
-dfs = pd.DataFrame(data_heat_recovery)
-dfs = dfs.set_index('With Rivella and Digester')
-dfs = dfs.round(2)
-HTML(dfs.to_html())
-
+#dfs = pd.DataFrame(data_heat_recovery)
+#dfs = dfs.set_index('With Rivella and Digester')
+#dfs = dfs.round(2)
+#HTML(dfs.to_html())
 ```
 
 
-```{python, echo = T, eval = T, fig.cap='Fig. 1: Composite Curves'}
+```{python, echo = F, eval = T}
 import matplotlib.pyplot as plt
 import json
 import numpy as np
@@ -252,39 +252,39 @@ for i in range(len(Q_gcc)):
       Heat_inter.append(Q_gcc[i])
 
 
-upper_bound = 0
-lower_bound = 30000
+upper_bound2 = 0
+lower_bound2 = 30000
 for i in range(len(Q_hc)):
-  if (ca_hc_ori[i] < (np.max(ca_hc_ori)) and Q_hc[i] > upper_bound):
-    upper_bound = Q_hc[i]
-  if (ca_cc_ori[i] > np.min(ca_cc_ori) and Q_cc[i] < lower_bound):
-    lower_bound = Q_cc[i]
+  if (ca_hc_ori[i] < (np.max(ca_hc_ori)) and Q_hc[i] > upper_bound2):
+    upper_bound2 = Q_hc[i]
+  if (ca_cc_ori[i] > np.min(ca_cc_ori) and Q_cc[i] < lower_bound2):
+    lower_bound2 = Q_cc[i]
 
 
 
 
-cold_utilities = lower_bound
+cold_utilities2 = lower_bound2
 total_w = 0
 
 for i in range(len(Q_cc)):
   if ((ca_cc_ori[i] > 0.1) and (Q_cc[i] > total_w)):
     total_w = Q_cc[i]
 
-hot_utilities = total_w - upper_bound
+hot_utilities2 = total_w - upper_bound2
 
 
-data_heat_recovery = {'Without Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
+#data_heat_recovery = {'Without Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
+ #       'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
 
-dfs = pd.DataFrame(data_heat_recovery)
-dfs = dfs.set_index('Without Rivella and Digester')
-dfs = dfs.round(2)
-HTML(dfs.to_html())
+#dfs = pd.DataFrame(data_heat_recovery)
+#dfs = dfs.set_index('Without Rivella and Digester')
+#dfs = dfs.round(2)
+#HTML(dfs.to_html())
 
 ```
 
 
-```{python, echo = T, eval = T, fig.cap='Fig. 1: Composite Curves'}
+```{python, echo = F, eval = T}
 import matplotlib.pyplot as plt
 import json
 import numpy as np
@@ -352,40 +352,40 @@ for i in range(len(Q_gcc)):
       Heat_inter.append(Q_gcc[i])
 
 
-upper_bound = 0
-lower_bound = 30000
+upper_bound3 = 0
+lower_bound3 = 30000
 for i in range(len(Q_hc)):
-  if (ca_hc_ori[i] < (np.max(ca_hc_ori)) and Q_hc[i] > upper_bound):
-    upper_bound = Q_hc[i]
-  if (ca_cc_ori[i] > np.min(ca_cc_ori) and Q_cc[i] < lower_bound):
-    lower_bound = Q_cc[i]
+  if (ca_hc_ori[i] < (np.max(ca_hc_ori)) and Q_hc[i] > upper_bound3):
+    upper_bound3 = Q_hc[i]
+  if (ca_cc_ori[i] > np.min(ca_cc_ori) and Q_cc[i] < lower_bound3):
+    lower_bound3 = Q_cc[i]
 
 
 
 
-cold_utilities = lower_bound
+cold_utilities3 = lower_bound3
 total_w = 0
 
 for i in range(len(Q_cc)):
   if ((ca_cc_ori[i] > 0.2) and (Q_cc[i] > total_w)):
     total_w = Q_cc[i]
 
-hot_utilities = total_w - upper_bound
+hot_utilities3 = total_w - upper_bound3
 
 
-data_heat_recovery = {'Only with Rivella': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
+#data_heat_recovery = {'Only with Rivella': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
+#        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
 
-dfs = pd.DataFrame(data_heat_recovery)
-dfs = dfs.set_index('Only with Rivella')
-dfs = dfs.round(2)
-HTML(dfs.to_html())
+#dfs = pd.DataFrame(data_heat_recovery)
+#dfs = dfs.set_index('Only with Rivella')
+#dfs = dfs.round(2)
+#HTML(dfs.to_html())
 
 ```
 
 
 
-```{python, echo = T, eval = T, fig.cap='Fig. 1: Composite Curves'}
+```{python, echo = F, eval = T}
 import matplotlib.pyplot as plt
 import json
 import numpy as np
@@ -474,11 +474,14 @@ for i in range(len(Q_cc)):
 hot_utilities = total_w - upper_bound
 
 
-data_heat_recovery = {'Only with Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
+data_heat_recovery = {'Information': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
+        'Only with Digester (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)],
+        'Only with Rivella (kW)': [cold_utilities3, hot_utilities3, cold_utilities3+hot_utilities3, np.round(upper_bound3 - lower_bound3, 2)],
+        'With Rivella and Digester (kW)': [cold_utilities1, hot_utilities1, cold_utilities1+hot_utilities1, np.round(upper_bound1 - lower_bound1, 2)],
+        'Without Rivella and Digester (kW)': [cold_utilities2, hot_utilities2, cold_utilities2+hot_utilities2, np.round(upper_bound2 - lower_bound2, 2)],}
 
 dfs = pd.DataFrame(data_heat_recovery)
-dfs = dfs.set_index('Only with Digester')
+dfs = dfs.set_index('Information')
 dfs = dfs.round(2)
 HTML(dfs.to_html())
 
