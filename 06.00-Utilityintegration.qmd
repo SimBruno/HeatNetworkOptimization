@@ -620,6 +620,8 @@ Exergy is supposed to be reduced in the hot flow requirement, by reducing the op
 
 ## Comparison
 
+Since the costs are the driving factors for the comparison of the different options, the following Table summarizes the the total OPEX, CAPEX, TOTEX and ENVEX costs for the base case (without Rivalla&Digester), for the case only with Rivella, for the case only with Digester and for the case with Rivella and Digester. For a graphical representation the costs for each case are plotted in the following Figure.
+
 
 | **Economic Costs**                | **OPEX Total(€/y)** | **CAPEX Total(€/y)** | **TOTEX Total(€/y)** | **ENVEX Total(€/y)** |
 |-----------------------------------|---------------------|----------------------|----------------------|----------------------|
@@ -628,7 +630,7 @@ Exergy is supposed to be reduced in the hot flow requirement, by reducing the op
 | Digester                          | 27819574           | 651824               | 28471398            | 2035461              |
 | Rivella+Digester                  | 10386355           | 726644               | 11112999           | 2450736              |
 
-```{python, echo = T, eval = T, fig.cap='Fig. 5: Bar Chart}
+```{python, echo = T, eval = T}
 
 import matplotlib.pyplot as plt
 import json
@@ -666,6 +668,7 @@ plt.savefig('Figures/EconomicCostComparison.png')
 
 ```
 
+
 ```{python, echo = T, eval = T, fig.cap='Fig. 5: Bar Chart}
 
 import matplotlib.pyplot as plt
@@ -693,7 +696,7 @@ bar1 = ax.bar(index, Cooling_Tower, bar_width, label='Cooling Tower', color='roy
 bar2 = ax.bar(index, Boiler, bar_width, label='Boiler', color='lightcoral', bottom=Cooling_Tower)
 bar3 = ax.bar(index, Cogeneration_engine, bar_width, label='Cogeneration engine', color='limegreen', bottom=np.array(Cooling_Tower) + np.array(Boiler))
 bar4 = ax.bar(index, Heat_pump, bar_width, label='Heat pump', color='red', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine))
-bar5 = ax.bar(index, Refrigeration, bar_width, label='Rerigeration', color='orange', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine)+ np.array(Heat_pump))
+bar5 = ax.bar(index, Refrigeration, bar_width, label='Refrigeration', color='orange', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine)+ np.array(Heat_pump))
 
 # Customize the plot
 ax.set_xlabel('Cases')
