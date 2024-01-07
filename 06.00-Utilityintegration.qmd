@@ -523,6 +523,47 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 | Heat Pump           | 0     | 499,32   | 495,2082836 | -        | 0         | 0            | 0    | 100  |
 | Refrigeration       | 0     | 499,32   | 495,2082836 | -        | 0         | 0            | 0    | 100  |
 
+
+### Economic Costs - Case without Rivella and Digester
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|---------------|----------------|----------------|
+| Cooling Tower       | 5,84     | 5840         | 568935        | 0              | 568935         |
+| Boiler              | 0        | 0            | 0             | 0              | 0              |
+| Cogeneration engine | 1,89     | 11340        | 10495158      | 377044         | 10872202       |
+| Heat Pump           | 0,984    | 5904         | 4086940       | 122410         | 4209350        |
+| Refrigeration       | 1,2      | 6000         | 5051466       | 153459         | 5204925        |
+
+### Economic Costs - Case with Rivella
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|:-------------:|----------------|----------------|
+| Cooling Tower       |     5,73 |         5730 |        559790 |              0 |         559790 |
+| Boiler              |        0 |            0 |             0 |              0 |              0 |
+| Cogeneration engine |     2,28 |        13680 |      12632006 |         453536 |       13085542 |
+| Heat Pump           |     0,97 |         5820 |       4030910 |         120739 |        4151649 |
+| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
+
+### Economic Costs - Case with Digester
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|---------------|----------------|----------------|
+| Cooling Tower       |     5,83 |         5830 |        568709 |              0 |         568709 |
+| Boiler              |        0 |            0 |             0 |              0 |              0 |
+| Cogeneration engine |     1,89 |        11340 |      10473693 |         376276 |       10849969 |
+| Heat Pump           |    0,981 |         5886 |       4076196 |         122090 |        4198286 |
+| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
+
+### Economic Costs - Case with Rivella and Digester
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|---------------|----------------|----------------|
+| Cooling Tower       |     5,72 |         5720 |        559564 |              0 |         559564 |
+| Boiler              |        0 |            0 |             0 |              0 |              0 |
+| Cogeneration engine |     2,28 |        13680 |      12610541 |         452767 |       13063308 |
+| Heat Pump           |    0,967 |         5802 |       4020167 |         120418 |        4140585 |
+| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
+
 ## Adding Utilities to the Grand Composite Curve
 
 ### Dummy case
@@ -571,6 +612,98 @@ For the case with Rivella, with Digester, and with Rivella and Digester, the res
 ### Reducing the operating temperature of the cogeneration engine
 
 Exergy is supposed to be reduced in the hot flow requirement, by reducing the operating temperature of the cogeneration engine.
+
+
+
+## Comparison
+
+
+| **Economic Costs**                | **OPEX Total(€/y)** | **CAPEX Total(€/y)** | **TOTEX Total(€/y)** | **ENVEX Total(€/y)** |
+|-----------------------------------|---------------------|----------------------|----------------------|----------------------|
+| Base (without Rivella & Digestor) | 28232729            | 652913               | 28885642             | 2039632              |
+| Rivella                           | 10799510           | 727733               | 11527243           | 2454908              |
+| Digester                          | 27819574           | 651824               | 28471398            | 2035461              |
+| Rivella+Digester                  | 10386355           | 726644               | 11112999           | 2450736              |
+
+```{python, echo = T, eval = T, fig.cap='Fig. 5: Bar Chart}
+
+import matplotlib.pyplot as plt
+import json
+import numpy as np
+import pandas as pd
+from IPython.display import display, HTML
+
+# Data
+cases = ['Base', 'Rivella', 'Digester', 'Rivella+Digester']
+opex_values = [28.232729, 31.604510, 28.185742, 31.557523]
+capex_values = [0.652913, 0.727733, 0.651824, 0.726644]
+envex_values = [2.039632, 2.454908, 2.035461, 2.450736]
+
+# Bar Width
+bar_width = 0.5
+index = np.arange(len(cases))
+
+# Plotting
+fig, ax = plt.subplots(figsize=(10, 6))
+
+bar1 = ax.bar(index, opex_values, bar_width, label='OPEX', color='royalblue')
+bar2 = ax.bar(index, capex_values, bar_width, label='CAPEX', color='lightcoral', bottom=opex_values)
+bar3 = ax.bar(index, envex_values, bar_width, label='ENVEX', color='limegreen', bottom=np.array(opex_values) + np.array(capex_values))
+
+# Customize the plot
+ax.set_xlabel('Cases')
+ax.set_ylabel('Cost (M€/y)')
+ax.set_title('Economic Costs Breakdown')
+ax.set_xticks(index)
+ax.set_xticklabels(cases)
+ax.legend()
+
+# Save the plot as PNG
+plt.savefig('Figures/EconomicCostComparison.png')
+
+```
+
+```{python, echo = T, eval = T, fig.cap='Fig. 5: Bar Chart}
+
+import matplotlib.pyplot as plt
+import json
+import numpy as np
+import pandas as pd
+from IPython.display import display, HTML
+
+# Data
+cases = ['Base', 'Rivella', 'Digester', 'Rivella+Digester']
+Cooling_Tower = [5840,	5730,	5830,	5720]
+Boiler = [0, 0, 0, 0]
+Cogeneration_engine = [11340,	13680,	11340,	13680]
+Heat_pump= [5904,	5820,	5886,	5802]
+Refrigeration =[6000,	6000,	6000,	6000]
+
+# Bar Width
+bar_width = 0.5
+index = np.arange(len(cases))
+
+# Plotting
+fig, ax = plt.subplots(figsize=(10, 6))
+
+bar1 = ax.bar(index, Cooling_Tower, bar_width, label='Cooling Tower', color='royalblue')
+bar2 = ax.bar(index, Boiler, bar_width, label='Boiler', color='lightcoral', bottom=Cooling_Tower)
+bar3 = ax.bar(index, Cogeneration_engine, bar_width, label='Cogeneration engine', color='limegreen', bottom=np.array(Cooling_Tower) + np.array(Boiler))
+bar4 = ax.bar(index, Heat_pump, bar_width, label='Heat pump', color='red', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine))
+bar5 = ax.bar(index, Refrigeration, bar_width, label='Rerigeration', color='orange', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine)+ np.array(Heat_pump))
+
+# Customize the plot
+ax.set_xlabel('Cases')
+ax.set_ylabel('Size (kW)')
+ax.set_title('Size Distribution Breakdown')
+ax.set_xticks(index)
+ax.set_xticklabels(cases)
+ax.legend()
+
+# Save the plot as PNG
+plt.savefig('Figures/SizeComparison.png')
+
+```
 
 ## (Guidelines)
 
