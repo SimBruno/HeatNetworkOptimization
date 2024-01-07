@@ -575,9 +575,13 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 
 ### Reducing the operating temperature of the cogeneration engine
 
-Exergy is supposed to be reduced in the hot flow requirement, by reducing the operating temperature of the cogeneration engine.
+| Integrated Composite Curve              |        Carnot           |
+| ---------------------------- | ----------------------------- |
+| ![ICC Plot](Figures/icc_150.jpg) | ![Carnot Plot](Figures/carnot_150-1.jpg) |
 
+Even after the optimization, the exergy losses due to the hot flow requirement remain predominant. One of the reasons is the operating temperature of the cogeneration engine, which is 450°C, far away from the maximum heat requirement of the process, which is 150°C. The operating temperature depends physically on the engine and cannot be easily reduced. Let see in this section, by simulation, if there is a benefit to reduce the operating temperature of the cogeneration engine. 
 
+As the maximum heat requirement is 150°C for the whole process, the operating temperature of the cogeneration engine is simulatively reduced to 150°C instead of 450°C. The Carnot plot shows that the exergy losses are reduced for the hot flow. Indeed, the carnot factor is going less than 0.3 (0.6 with 450°C) which drastically reduces the area between the utility and the Grand Composite Curve. Then, using a technology similar to the cogeneration engine, but with a lower operating temperature, is more adapted to the process and is an idea of improvement.  
 
 ## System Integration Comparison
 
