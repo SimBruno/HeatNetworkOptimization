@@ -6,10 +6,11 @@
 
 ## Exergy analysis
 
-To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a unit and the exergy leaving the unit. This exergy analysis includes calculating heat losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
+To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a unit and the exergy leaving the unit. This exergy analysis includes calculating the losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
 
 ### Pasteurization
 
+The first process to be analysed is pasteurization. Heat transfers occurs in the components Refrigeration, Past 1, Past 2, Past 3, Past 4, Past 5, Past 6, Past 7 as well as in the Mixer. 
 #### Refrigeration
 
 $$
