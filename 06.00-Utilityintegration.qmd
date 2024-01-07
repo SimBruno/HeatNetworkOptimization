@@ -173,25 +173,7 @@ for i in range(len(Q_cc)):
 
 hot_utilities1 = total_w - upper_bound1
 
-
-#data_heat_recovery = {'With Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-#        'Heat (kW)': [cold_utilities1, hot_utilities1, cold_utilities1+hot_utilities1, np.round(upper_bound1 - lower_bound1, 2)]}
-
-#dfs = pd.DataFrame(data_heat_recovery)
-#dfs = dfs.set_index('With Rivella and Digester')
-#dfs = dfs.round(2)
-#HTML(dfs.to_html())
-```
-
-
-```{python, echo = F, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-import pandas as pd
-from IPython.display import display, HTML
-
-plt.switch_backend('agg')
+###################################
 
 # read json for heat integration data
 file_name = open('codes_02_heat_recovery/result/brewery-59NoRivellaNoDigester.json')
@@ -273,25 +255,7 @@ for i in range(len(Q_cc)):
 hot_utilities2 = total_w - upper_bound2
 
 
-#data_heat_recovery = {'Without Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
- #       'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
-
-#dfs = pd.DataFrame(data_heat_recovery)
-#dfs = dfs.set_index('Without Rivella and Digester')
-#dfs = dfs.round(2)
-#HTML(dfs.to_html())
-
-```
-
-
-```{python, echo = F, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-import pandas as pd
-from IPython.display import display, HTML
-
-plt.switch_backend('agg')
+###########################################
 
 # read json for heat integration data
 file_name = open('codes_02_heat_recovery/result/brewery-59_no_digester.json')
@@ -373,26 +337,7 @@ for i in range(len(Q_cc)):
 hot_utilities3 = total_w - upper_bound3
 
 
-#data_heat_recovery = {'Only with Rivella': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-#        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
-
-#dfs = pd.DataFrame(data_heat_recovery)
-#dfs = dfs.set_index('Only with Rivella')
-#dfs = dfs.round(2)
-#HTML(dfs.to_html())
-
-```
-
-
-
-```{python, echo = F, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-import pandas as pd
-from IPython.display import display, HTML
-
-plt.switch_backend('agg')
+##################################################
 
 # read json for heat integration data
 file_name = open('codes_02_heat_recovery/result/brewery-59NoRivella.json')
