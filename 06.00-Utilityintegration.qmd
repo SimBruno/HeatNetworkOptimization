@@ -436,12 +436,36 @@ HTML(dfs.to_html())
 It can be noticed that the Grand Composite Curves of these four different cases are quite similar. All of them show the triple plateau caused by the utilization of evaporators in the Evaporators section, and the minimum heat requirements as well as the maximum heat recovery are also quite similar, being of around 16000 kW and 26000 kW respectively in each case. The main difference that can be noticed is the temperature required by each system. The base system, without either the Rivella production or the Digester requires some relatively small temperatures, reaching a maximum of only ca. 90°C. This changes when the Rivella production is added, which requires slightly higher temperatures with a peak of ca. 100°C at the evaporator needed to produce the Rivella itself. The largest difference however is caused by the addition of the Digester. The Digester section introduces a steam dryer powered by superheated steam, thus reaching and requiring high temperatures of 150°C.
 This said, since the subsystems required by the Rivella production and the Digester consume relatively little heat compared to the Evaporation section which is present in each scenario, the addition of these subsystems does not cause a large difference in the maximum heat recovery of the system nor in its minimum heat requirement.
 
-## System Key Performance Indicators (KPI)
+## Energy conversion Technologies
+
+To provide the cold and hot flows required by the facility, Energy Conversion Technologies were chosen to meet this need. The relevant ones are presented in this section.
+
+### Cooling Tower
+
+*Cooling technology*
+
+### Boiler
+
+*Heating technology*
+
+### Cogeneration Engine
+
+*Heating technology*
+
+### Heat Pump
+
+*Heating technology*
+
+### Refrigeration
+
+*Cooling technology*
 
 To characterize the relevance of the system, Key Performance Indicators (KPI) are defined before being computed in the case of this study. The six following KPIs are used:
 
 
-### KPIs definitions
+## Key Performance Indicators (KPIs)
+
+### Definitions
 
 |KPI Name|Acronym|Unit(s)| Description |
 |:--|:--|:---|:----------------|
@@ -453,7 +477,7 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 |Life Cycle Environmental impact|-|[$kg_{CO_{2}eq}$/year]|Advises the emissions due to the life cycle of the energy conversion technology |      
 
 
-### KPIs formulas
+### Formulas
 
 ### Parameters
 
