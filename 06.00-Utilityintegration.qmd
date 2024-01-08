@@ -597,7 +597,7 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 
 For the case with Rivella, with Digester, and with Rivella and Digester, the results are very similar. Only the maximum heat requirement is higher, as mention before, and still way lower than the operating temperature of the cogeneration engine. The Carnot plot shows that the exergy losses are reduced, compared to the first scenario, but is similar to the case without Rivella and Digester. 
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization of the case with Rivella are presented in the following Table.  Compared to the case without Rivella and Digester the size of the used cogeneration engine technollogy got increased.
+The economic costs along with the size of each technology resulting from this optimization of the case with Rivella are presented in the following Table.  Compared to the case without Rivella and Digester the size of the used cogeneration engine technollogy got increased.
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|:-------------:|----------------|----------------|
@@ -613,7 +613,7 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_digester.jpg) | ![Carnot Plot](Figures/carnot_digester.jpg) |
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization of the case with Digester are presented in the following Table. The contributions of each technology are similar to the case without Rivella and Digester. 
+The economic costs along with the size of each technology resulting from this optimization of the case with Digester are presented in the following Table. The contributions of each technology are similar to the case without Rivella and Digester. 
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|---------------|----------------|----------------|
@@ -629,7 +629,7 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_both.jpg) | ![Carnot Plot](Figures/carnot_both.jpg) |
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization for the case with both Rivella and Digester are presented in the following Table. 
+The economic costs along with the size of each technology resulting from this optimization for the case with both Rivella and Digester are presented in the following Table. The contibutions are similar to the Rivella case. 
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|---------------|----------------|----------------|
@@ -749,7 +749,7 @@ plt.savefig('Figures/SizeComparison.png')
 ![Technology Size Contribution for all four cases](Figures/SizeComparison.png)
 
 
-However, before reaching a conclusion about the optimal system, it is crucial to incorporate the selling costs for Rivella and the biogas for the digester. These selling costs are subtracted from the OPEX. The total costs (TOTEX, combining OPEX and CAPEX) for each of the different scenarios are illustrated in the Figure below.
+However, before reaching a conclusion about the optimal system, it is crucial to incorporate the selling costs for Rivella and the biogas for the digester. These selling costs are subtracted from the OPEX. The total costs (TOTEX, combining OPEX, CAPEX and ENVEX) for each of the different scenarios are illustrated in the Figure below.
 
 ```{python, echo = T, eval = T}
 
@@ -761,7 +761,8 @@ from IPython.display import display, HTML
 
 # Data
 cases = ['Base', 'Rivella', 'Digester', 'Rivella+Digester']
-totex_values = [28.232729+0.652913, 10.799510+0.727733, 27.819574+0.651824, 10.386355+0.726644]
+totex_values = [28.232729+0.652913+2.039632, 10.799510+0.727733+2.454908, 27.819574+0.651824+2.035461, 10.386355+0.726644+2.450736]
+
 
 # Bar Width
 bar_width = 0.5
