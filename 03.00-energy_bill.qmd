@@ -156,6 +156,8 @@ The following Table presents a summary of all the calulated exergy losses.
 
 ```
 
+
+
 ```{python compute_pasteurisation, echo = T, eval = T}
 
 #import math
@@ -164,6 +166,7 @@ import numpy as np
 from IPython.display import display, HTML
 
 df = pd.read_csv('pasteurization_process.csv',sep = ';')
+
 
 for i in range(0,len(df.index)):
     globals()[df.iloc[i][1]] = df.iloc[i][2]
@@ -263,7 +266,7 @@ L_steam_in2=m_steam_past3*(2257-373*7.355)
 L_fresh_milk=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*np.log(T_mixure_out/T_past_cent))
 
 
-C Dataframe for Exergy Loss Pasteurization
+# Dataframe for Exergy Loss Pasteurization
 
 Exergy_losses  = 'kW'
 
