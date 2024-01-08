@@ -1,10 +1,15 @@
 # Process description and analysis
 
-> **Task Instructions**
->
->To provide practical solutions to our industrial partner, the dairy factory, our first task is to show that we truly grasp the problem. To a business manager, industrial processes may seem mysterious and complex, like "black boxes." However, as engineers, we need to dig into the details, using mathematics and physics to analyze and design these industrial processes.
->
->In this section, the task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The data collected here will be instrumental in calculating exergy efficiency and energy bills in the following section. 
+In this section, the task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The sections that are going to be analyzed are the following:
+
+1. Pasteurisation
+2. Evaporation
+3. Drum Dryers
+4. Cleaning in Place
+5. Cold Storage & Hot Water
+6. Waste Water and Sludge Production
+7. Rivella Production
+8. Digester
 
 ## Pasteurisation
 
