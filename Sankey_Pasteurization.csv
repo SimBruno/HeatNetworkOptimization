@@ -1,5 +1,5 @@
 layer	source	target 	value
-exergy	gly_in	factory    13
+exergy	gly_in	factory	13
 exergy	fresh_milk	factory	34
 exergy	steam_in	factory	465
 exergy	thickner	factory	1.59
