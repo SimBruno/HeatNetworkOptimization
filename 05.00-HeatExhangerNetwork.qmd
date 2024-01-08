@@ -1,14 +1,11 @@
 # Heat Exchanger Network design (Tasks 6 & 7)
 
-
-After establishing the minimum energy requirement, the primary objective of heat exchanger network design is to strategically position heat exchangers within the process to attain the heat recovery target. This involves identifying the hot and cold streams for heat exchange, specifying the flow rates on both sides of the heat exchanger, and determining the optimal sizing for each heat exchanger to be integrated into the system.
-
-Your reports should include the following aspects:
+Now that pinch point has been determined (task 5) via the Grand Composite Curve it is possible to design the Heat Exchanger Network (HEN) for the plant. First the penalizing exchangers will be determined (task 6) and then the HEN will be designed and optimized (task 7). 
 
 ## Identification of Penalizing Heat Exchangers
 
 <!--Identify and list the heat exchangers that have the greatest impact on the energy penalty. Conversely, define a list of non-penalizing heat exchangers that require no modification. By removing the streams involved, establish subsets of hot and cold streams for which the heat exchanger network (interconnected heat exchangers) needs to be designed.-->
-Thanks to the pinch analysis effectuated in the previous section it is possible to identify penalizing heat exchangers.
+Thanks to the pinch analysis done in the previous section (task 5) it is possible to identify penalizing heat exchangers.
 There are four types of penalizing heat exchangers:
 
 - A cold utility cooling down a hot stream above the pinch (Type 1)
@@ -20,11 +17,11 @@ There are four types of penalizing heat exchangers:
 - A mixer where the fluids it is mixing are not on the same side of the pinch point, i.e. the cooler fluid intake is below the pinch and the warmer fluid intake is above the pinch (Type 4)
  
 
-Thanks to having calculated the pinch point at 67.5 °C in the previous section, it is now easy to find the penalizing heat exchangers in each section.
+Knowing that the pinch point is located at 67.5 °C, it is now easy to find the penalizing heat exchangers in each subsytem of the plant.
 
-Furthermore, it is possible to calculate the penalty caused by each penalizing heat exchanger, as it is simply the amount of heat utilized by said exchanger.
+Furthermore, it is possible to calculate the penalty caused by each penalizing heat exchanger, as the amount of heat utilized by the said exchanger.
 
-The Wastewater and sludge production section will be skipped as it does not utilize any heat exchangers.
+As a final note, wastewater and sludge production sections will be skipped as it does not utilize any heat exchangers.
 
 ### Pasteurisation
 
@@ -112,13 +109,13 @@ df = df.set_index('Exchangers')
 HTML(df.to_html())
 ```
 
-## Application of Pinch Design Method
+## Heat Exchanger Network Design
 
-Determine the composite curves and identify the pinch point for each subset. This step also helps define the list of utility streams to be considered for the heat exchanger network design.
+<!--Determine the composite curves and identify the pinch point for each subset. This step also helps define the list of utility streams to be considered for the heat exchanger network design.
 
-Implement the pinch design method to generate a network configuration. With each heat exchanger placement, calculate the heat exchanged, flow rates, temperature conditions, size, and corresponding cost. Utilize loop and path following techniques to attempt the elimination of small heat exchangers. Evaluate the trade-off between cost (changes in the energy bill) and benefits (investment) in this process.
+Implement the pinch design method to generate a network configuration. With each heat exchanger placement, calculate the heat exchanged, flow rates, temperature conditions, size, and corresponding cost. Utilize loop and path following techniques to attempt the elimination of small heat exchangers. Evaluate the trade-off between cost (changes in the energy bill) and benefits (investment) in this process.-->
 
-### Heat Exchanger Network Design
+### First Design of the Heat Exchanger Network
 
 To perform the HEN design, one first needs to identify the hot and cold streams. The hot streams are the streams that will be used to heat up the cold streams and vice versa. 
 In this design from the results of task 5 and 6, the pinch point is at 67.5 °C for a $\Delta T_{min}$ of 10K.
@@ -127,7 +124,7 @@ However, one constraints is that only penalizing flows will be considered. These
 In the HEN design all temperatures are considered in the corrected domain, i.e. $\Delta T_{min}/2$ is removed for Hot Flows Temperatures and added for Cold Flows Temperatures.
 From the list of the flow determine in task 5, the following flows are penalizing and will be considered for the HEN design:
 
-|  Flow  | Above/Below/Cross Pinch | $T_{in}$ [K] | $T_{out}$ [K] | $T^{*}_{in}$ [K] | $T^{*}_{out}$ [K] | MCp [kW/K] | $Q_{flow}$ [kW] |
+|  Flow  | Above/Below/Cross Pinch | $T_{in}$ [K] | $T_{out}$ [K] | $T^{*}_{in}$ [K] | $T^{*}_{out}$ [K] | Mcp [kW/K] | $Q_{flow}$ [kW] |
 |:------:|:-----------------------:|:----------:|:-----------:|:-----------:|:------------:|:----------:|:-------------:|
 | A-cold |          Cross          |     333    |     348     |    335.5    |     350.5    |    28.6    |     428.6     |
 |  B-hot |          Cross          |     348    |    283.8    |    345.5    |     281.3    |    28.6    |     1834.5    |
@@ -146,14 +143,14 @@ Finally, even if the hot flow from the cold storage process is supposed to be pe
 
 The two following figures show the flows location on the pasteurization and CIP processes
 
-![Past_flows](Figures/pasteurization_task7.jpg)
-![CIP_flows](Figures/cip_task7.jpg)
+![Pasteurization flows](Figures/pasteurization_task7.jpg)
+![CIP flows](Figures/cip_task7.jpg)
 
 
 Now the cold and hot flows are defined, the design can be determine. 
 The rules are taken from the ex3 of the course and are the following:
 
-![HENbeforedesign](Figures/HENflowsbef.jpg)
+![HEN before design](Figures/HENflowsbef.jpg)
 
 Here are the steps to follow to design the HEN:
 
@@ -185,7 +182,7 @@ Let's start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
 
 - Now 2nd feasibility rule is respected.
 
-- E1 is placed between F and B1 and $Q_{E1} = mcp_{B1}*(T_{in,B}-T_{pinch}) = 83.5 kW$
+- E1 is placed between F and B1 and $Q_{E1} = mcp_{B1} \cdot (T_{in,B}-T_{pinch}) = 83.5 kW$
 
 2. Step 2:
 
@@ -195,7 +192,7 @@ Let's start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
 
 - Two biggest mcp flows are A1 and B2 and 2nd feasibility rule is respected.
 
-- E2 is placed between A1 and B2 and $Q_{E2} = mcp_{B2}*(T_{in,B}-T_{pinch}) = 59.5 kW$
+- E2 is placed between A1 and B2 and $Q_{E2} = mcp_{B2} \cdot (T_{in,B}-T_{pinch}) = 59.5 kW$
 
 3. Step 3:
 
@@ -254,7 +251,7 @@ So let's remove the flow C below the pinch from all the following calculations a
 
 - Now 2nd feasibility rule is respected.
 
-- E7 is placed between F1 and H and $Q_{E7} = mcp_{F1}*(T_{pinch} - T_{in,F}) = 58.5 kW$
+- E7 is placed between F1 and H and $Q_{E7} = mcp_{F1} \cdot (T_{pinch} - T_{in,F}) = 58.5 kW$
 
 3. Step 3:
 
@@ -262,7 +259,7 @@ So let's remove the flow C below the pinch from all the following calculations a
 
 - Two biggest mcp flows are F2 and G and 2nd feasibility rule is respected.
 
-- E8 is placed between F2 and G and $Q_{E8} = mcp_{F2}*(T_{pinch} - T_{in,F}) = 25 kW$
+- E8 is placed between F2 and G and $Q_{E8} = mcp_{F2} \cdot (T_{pinch} - T_{in,F}) = 25 kW$
 
 4. Step 4:
 
@@ -295,14 +292,14 @@ So let's remove the flow C below the pinch from all the following calculations a
 
 Here is the final HEN design (note that additionnal temperatures where indicated on flows to help understand what temperature gap the utilities have to fill):
 
-![HENafterdesign](Figures/HENflowsaft.jpg)
+![HEN after design](Figures/HENflowsaft.jpg)
 
 
 It appears that the method used here doesn't prevent from impossible HX. Indeed, it is possible to see that E9 and E10 are impossible as the temperature of the cold flow is higher than the temperature of the hot flow. 
 Because of this infeasibility E9 and E10 will be removed from the following economic analysis. Further on the report, with the help of loop method, it will be possible to remove E9 from the design.
 
 
-### Economic Analysis of the Heat Exchanger Network
+### Economic Analysis of the First Heat Exchanger Network
 
 The economic analysis of the heat exchanger network is done by calculating both the capital cost and the operating cost. The capital cost is calculated by using the following equation (similar to what used in task 4):
 The equations for Investment Cost and Annualized Investment Cost can be find in task 4 where $\Delta T_{min}$ optimization was done. All parameters and assumptions remain the same. Only the temperatures are different and come from the HEN design above.
@@ -393,7 +390,7 @@ for i in range(len(HUtil)):
 |  CU2  |  110.6 |    31.6    |
 |  CU3  |  175.6 |    50.1    |
 |  CU4  |  58.5  |    16.7    |
-| TOTAL |    -   |    753.2  |
+| TOTAL |       |    753.2  |
 
 $*$ the little difference between the CU1 on the graph and the CU1 on the table is due to the removal of E10 HX from the design while doing the table for the reasons exposed above.
 
@@ -401,7 +398,7 @@ In order to assess the economic feasibility of the HEN, the total annualized inv
 
 The old cost for the HX involved in this HEN design is: 789.3 k€/yr
 Thus the payback time is computed with the following equation:
-$$t_{payback} = \frac{INV_{tot,new}}{(a)(OC_{old}-OC_{new})} = 174 \text{years}$$
+$$t_{payback} = \frac{INV_{tot,new}}{(a)(OC_{old}-OC_{new})} = 174 \text{ years}$$
 
 where $a$ is the annualization factor of 0.08, $OC_{old}$ is the old operating cost and $OC_{new}$ is the new operating cost.
 

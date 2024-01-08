@@ -1,19 +1,22 @@
-# Process description and analysis
+# Processes description and analysis (Task 1)
 
-In this section, the task is to compute the thermodynamic properties of all the streams within each section of the dairy factory. The sections that are going to be analyzed are the following:
+In this section, the task is to compute the thermodynamic properties as well as the mass flows and heat exchanged on each heat exchangers of all the streams within each subsystem of the dairy factory. The sections that are going to be analyzed are the following:
 
-1. Pasteurisation
+1. Pasteurization
 2. Evaporation
 3. Drum Dryers
 4. Cleaning in Place
 5. Cold Storage & Hot Water
 6. Waste Water and Sludge Production
+
+In addition, in order to add value to the waste/outputs of some of the subsystems, 2 additionnal systems will be analysed:
+
 7. Rivella Production
 8. Digester
 
-## Pasteurisation
+## Pasteurization
 
-![Pasteurisation](Figures/pasteurisation.svg)
+![Pasteurization](Figures/pasteurisation.svg)
 
 In this section the mass and energy balances for each chemical operation of the milk pasteurisation are computed. The pasteurisation aims to produce cream and milk from fresh milk with the intergation of a thickener.
 
@@ -738,16 +741,27 @@ Assumptions:
 
 - Perfect splitter
 
+The mass flows going through each heat exchange are thus:
+
+- $m_{HX1} = m11 = 1.320 kg/s$
+
+- $m_{HX2} = m16 = 0.800 kg/s$
+
+- $m_{HX3} = m20 = 0.477 kg/s$
+
+- $m_{HX4} = m19 = 0.312 kg/s$
 
 ```{python mass, echo = T, eval = T}
 m19=m14-m_w2
 m20=m15-m_w3
 #print(' mHEX4 = m19 = ', m19, '\n', 'mHEX3 = m20 = ', m20, '\n', 'mHEX2 = m16 = ', m16, '\n', 'mHEX1 = m11 = ', m11, '\n',)
-print(f'mHEX4 = m19 = {m19:.3f} (kg/s)\n'
-      f'mHEX3 = m20 = {m20:.3f} (kg/s)\n'
-      f'mHEX2 = m16 = {m16:.3f} (kg/s)\n'
-      f'mHEX1 = m11 = {m11:.3f} (kg/s)\n')
+#print(f'mHEX4 = m19 = {m19:.3f} (kg/s)\n'
+      #f'mHEX3 = m20 = {m20:.3f} (kg/s)\n'
+      #f'mHEX2 = m16 = {m16:.3f} (kg/s)\n'
+      #f'mHEX1 = m11 = {m11:.3f} (kg/s)\n')
 ```
+
+
 
 ### HEX Heat Demand and Temperature Steps
 
@@ -773,9 +787,9 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
     return Q, Thotout
 ```
 
-\textit{Note}: However, after completing calculations, it appears the flows entering HX3 were not respecting the condition ($T_{cold,in}<T_{hot,out}$). This comes from the fact the hot inlet flow e20 was too low. 
+$\textit{Note}$: However, after completing calculations, it appears the flows entering HX3 were not respecting the condition ($T_{cold,in}<T_{hot,out}$). This comes from the fact the hot inlet flow e20 was too low. 
 One solution could have been to reduce e18 mass flow. However, the problem was solved by first determining all mass and heat balance for the three evaporator before handling the HX. This decision (at first validated by some TAs) made it was impossible to change e18 without changing the whole system (it was discovered to late in the semester). 
-Therefore to solve in -a hopefully more original- a convenient way this issue, it is assumed a steam flow can be added to make e20 reach a certain value such that $T_{cold,in}<T_{hot,out}$ in the HX3. 
+Therefore to solve in a - hopefully more original and-  convenient way this issue, it is assumed a steam flow can be added to make e20 reach a certain value such that $T_{cold,in}<T_{hot,out}$ in the HX3. 
 If it was to be reperformed the mass and heat balance of such system would be determined by starting with evap1, then HX4, then evap2, then HX3, etc, until HX1. This would let more flexibility to adapt the system to the temperature constraints. 
 
 ```{python HX, echo = T, eval = T}
@@ -1448,6 +1462,20 @@ HTML(dfsd.to_html())
 
 ![Cleaning in Place](Figures/CIP.svg)
 
+The Cleaning in Place subsystem is composed of 5 main parts:
+
+- Mixer
+
+- Heater
+
+- Showers
+
+- Splitter
+
+- Cooler
+
+
+
 Assumptions: 
 
 - For safety purposes the glass needs to contact with water which is at least at 65°C. Each glass bottle weights 370 g and has 500 mL of capacity. 
@@ -1600,7 +1628,10 @@ datatable(CIP_heat)
 
 ## Cold Storage & Hot Water
 ![Hot water and cold storage](Figures/hotwatercoldstorage.png)
-Here are reported calculation of air mass flow required to remove 500kW of heat from a cold storage and the heat required to heat 1kg/s of water from 15°C to 55°C.
+
+These two little subsystems are quite simple. 
+By the use of an air mass flow, 500kW of heat are removed from a cold storage. Simple thermodynamic calculations, as reported in the previous subsytems, enable to get the air mass flow must be of 100kg/s.
+The hot water system will heat up 1kg/s of water from 15° to 55°C and thus produce 167.3kW of heat.
 
 ```{python Hot Water, echo=T}
 from pyxosmose.state import State
@@ -1617,7 +1648,7 @@ Q_hot=m_water*(h_out-h_in)
 #print Q_hot rounded at 2 digits
 #print('The heat required to heat 1kg/s of water from 15°C to 55°C is', round(Q_hot,2), 'W.')
 ```
-The heat required to heat 1kg/s of water from 15°C to 55°C is 167253.23 W.
+
 
 ```{python Cold Storage, echo=T}
 T_in=273
@@ -1627,11 +1658,13 @@ Cp_air=1000
 m_air=Q_fridge/(Cp_air*(T_in-T_out))
 #print('The air mass flow required to remove 500kW of heat from a cold storage is', m_air, 'kg/s.')
 ```
-The air mass flow required to remove 500kW of heat from a cold storage is 100.0 kg/s.
+
 
 ## WasteWater and Sludge Production 
 
 ![Wastewater](Figures/Wastewater.svg)
+
+This subsytem analyses how are treated the waste water from the evaporation process. No heat Exchanger are present so this system won't be really useful for further energy saving analyses.
 
 For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($dw_{tot}=dw_{dry}+dw_{liq}$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% fry matter and 86.7wt% water (@shiDairyProcessingSludge2021). From this paper, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
 
@@ -1671,7 +1704,7 @@ Table:Discharge water and sludge production streams mass composition
 
 ## Rivella Production
 
-![Rivella](Figures/Rivella.svg)
+![Rivella Production](Figures/Rivella.svg)
 
 Having a better understanding of dairy process, it is now possible to evaluate the energy and mass balance of Rivella production to be able to compare later its costs with the digester.
 The process is described in the following figure:
@@ -1701,9 +1734,11 @@ At the end of the concentration process the whey will have the following charact
 * mass flow rate to be determined.
 
 We assume, the following: in the fermentation we have heating from 4 to 25°C, the mixer is isothermal and the evaporator is adiabatic.
-Also the bacterias are added at T = 25°C and without disturbing the flow rate of the whey (m1 = m3, m4 = 0 $m/ s$) and the aromas are added at T = 25°C with 2g aromas/100g of whey.
+Also the bacterias are added at T = 25°C and without disturbing the flow rate of the whey (m1 = m3, m4 = 0 $m/s$) and the aromas are added at T = 25°C with 2g aromas/100g of whey.
 Bacteria and aromas have the same heat capacity as water ($c_p=4184\,J/kgK$).
 The pressure stays constant at 1 bar.
+
+The heat exchanged during the evaporation is found to be of 579.4kW.
 
 ```{python ConcentrationWhey, echo = T, eval = T}
 
@@ -1762,7 +1797,7 @@ cp7=R7["cpmass"]
 
 Qevap = m5*cp5*(T7-T5) - m5*h5 + m6*h6 + m7*h7 #J/s
 msteam = Qevap/hfg #kg/s
-print('Qevap =', round(Qevap,2), 'W')
+#print('Qevap =', round(Qevap,2), 'W')
 ```
 
 ### The production of Rivella Green 
@@ -1779,6 +1814,8 @@ The sugar and water are added are added at T = 25°C (will thus cool the fluid a
 CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (the content of gas in each bottle is not known).
 The Rivella Green exits at T = 10°C.
 The pressure stays constant at 1 bar during the entire production.
+
+The heat exchanged in the HX1 is found to be 40.1kW, while the HXGreen between R13 and R14 exchanges 12.7kW.
 
 ```{python RivellaGreen, echo = T, eval = T}
 #Fixed Parameters
@@ -1831,7 +1868,7 @@ T13=((m10*cp10*(T10-TA)+m11*cp11*(T11-TA)+m12*cp12*(T12-TA))/(m13*cp13))+TA
 #HX2: cooler1
 QHX2=m13*cp13*(T13-T14) #J/s
 
-print(' QHX1 =', round(QHX1,2), 'W', '\n', 'QHXgreen =', round(QHX2,2), 'W')
+#print(' QHX1 =', round(QHX1,2), 'W', '\n', 'QHXgreen =', round(QHX2,2), 'W')
 ```
 
 ### The production of Rivella Red 
@@ -1848,6 +1885,7 @@ CO2 is added without change of temperature and pressure (isothermal mixer) and w
 The Rivella Red exits as Rivella Green at T = 10°C.
 The pressure stays constant at 1 bar during the entire production.
 
+The heat exchanged in the HXRed between flows 20 and 21 is 28.9kW.
 ```{python RivellaRed, echo = T, eval = T}
 #Fixed Parameters
 m17=0.7*m7 #kg.s-1
@@ -1890,7 +1928,7 @@ T20=((m17*cp17*(T17-TA)+m18*cp18*(T18-TA)+m19*cp19*(T19-TA))/(m20*cp20))+TA
 #HX2: cooler1
 QHX3=-m20*cp20*(T21-T20) #J/s
 
-print('QHXred =', round(QHX3,2), 'W')
+#print('QHXred =', round(QHX3,2), 'W')
 ```
 
 ### Summary for the Rivella production section

@@ -1,11 +1,11 @@
 # Pinch analysis (Tasks 4 & 5)
 After having determined the energy and mass exchanged in the entire subsystems (task 1), performed an exergy analysis (task2) and computed the energy bill of the factory (task 3), it is now time to see where improvement can be achieved and tried different approach to optimize the system
 
-First, in task 4, optimization of the minimum temperature difference ($\DeltaT$) in heat exchangers, will be performed. The goal will be to see if in 2 processes (namely Pasteurization and Cleaning In Place), it is possible to optimize the $\DeltaT_{min}$ of some of the HX to reduce the energy bill. 
+First, in task 4, optimization of the minimum temperature difference ($\Delta T$) in heat exchangers, will be performed. The goal will be to see if in 2 processes (namely Pasteurization and Cleaning In Place), it is possible to optimize the $\Delta T_{min}$ of some of the HX to reduce the energy bill. 
 
 Then, in task 5, a first look at global optimization of the entire factory will be achieved by ploting the Hot and Cold Compiste curves as well as the Grand Composite Curve. This will then enable to determine a crucial Temperature, the pinch point, from which a further optimization can be achieved in task 7 with the HEN design.
 
-## Optimization of $\Delta$T minimum
+## Optimization of $\Delta T_{min}$
 
 <!---
 > **Task Instructions**
@@ -17,15 +17,15 @@ Then, in task 5, a first look at global optimization of the entire factory will 
 >- Optimization Results: Present your optimization outcomes using graphical representations or tables. If possible, consider leveraging R and Python libraries to create figures and visualizations, as this may enhance your presentation. **You will receive bonus points if you meet to do so.**
 --->
 
-The goal of this part is to determine an optimized dTmin such that costs are minimized. 
+The goal of this part is to determine an optimized $\Delta T_{min}$ such that costs are minimized for the considered subsystems. 
 In all scenarios we will do the following:
 
-- Determine the area of the HX in term of the dTmin
+- Determine the area of the HX in term of the $\Delta T_{min}$
 - Determine the cost of the HX in term of the the Area
 
 The costs will be computed for both France and Germany and will be composed of CAPEX and OPEX.
 
-The idea is too be able to determine if this optimized dTmin enables costs reduction compared to the assumed ∆Tmin of 5K in the Mass/Energy Balances and Energy Bill.
+The idea is too be able to determine if this optimized $\Delta T_{min}$ enables costs reduction compared to the assumed ∆Tmin of 5K in the Mass/Energy Balances and Energy Bill.
 
 Four different scenarios will be considered:
 
@@ -34,12 +34,12 @@ Four different scenarios will be considered:
 - An addditional heat recovery for pasteurization
 - Heat Recovery in Cleaning In Place (CIP) process
 
-The three first scenari focus on the pasterization process whereas the later is about the CIP process.
+The three first scenarios focus on the pasteurization process whereas the later is about the CIP process.
 
 ### General Method
 
 #### Initialisation
-First, the T-h diagram of the cold and hot streams is plotted to determined if the dTmin is on the left or right of the diagram (i.e. between $T_{hot,in}$ and $T_{cold,out}$ or between $T_{hot,out}$ and $T_{cold,in}$). This will influence in the following formulas of CAPEX.
+First, the T-h diagram of the cold and hot streams is plotted to determined if the $\Delta T_{min}$ is on the left or right of the diagram (i.e. between $T_{hot,in}$ and $T_{cold,out}$ or between $T_{hot,out}$ and $T_{cold,in}$). This will influence in the following formulas of CAPEX.
 
 In the case of $h_1 < h_2$. The equation of T-h diagram is:
 
@@ -51,9 +51,9 @@ $$
 T_{hot}(h) = \frac{h}{m_2 c_{p,2}} + T_{2} - \frac{h_2}{m_2 c_{p,2}}
 $${#eq-slope_hot}
 
-Then, the dTmin is graphically determined on the right or on the left as the minimum difference between the two curves.
+Then, the $\Delta T_{min}$ is graphically determined on the right or on the left as the minimum difference between the two curves.
 
-If dTmin is on the right:
+If $\Delta T_{min}$ is on the right:
 $$
 T_{cold,out} = T_{hot,in} - dT
 $${#eq-right1}
@@ -61,7 +61,7 @@ $$
 T_{cold,in} = T_{cold}(h_1)
 $${#eq-right2}
 
-If dTmin is on the left:
+If $\Delta T_{min}$ is on the left:
 $$
 T_{cold,out} = T_{cold}(h_2)
 $${#eq-left1}
@@ -133,11 +133,11 @@ Operating cost depends on three factors:
     - $Q_{HEX}$ is the heat exchanged between the two streams
     - $COP = 3.5$ is the coefficient of performance of the heat pump
 
-- Water consumption. However, water is considered as being used in a closed loop. Therefore, the cost in not considered in operation cost. It is neglected in CAPEX since the cost is small compared to the heat exchanger cost.
+- Water consumption: however, water is considered as being used in a closed loop. Therefore, the cost in not considered in operation cost. It is also neglected in CAPEX since the cost is small compared to the heat exchangers cost.
 
 ### Past 5 only
 
-Here, Past 5 heat exchanger cost is optimized with respect to dTmin. In the following code, 1 stands for cold stream, and 2 for hot stream. When there is a T_#number, it is related to the entrance of the stream and _prime relate to the exiting. The _Number stands for the past number. 
+Here, Past 5 heat exchanger cost is optimized with respect to $\Delta T_{min}$. In the following code, 1 stands for cold stream, and 2 for hot stream. When there is a T_#number, it is related to the entrance of the stream and _prime relate to the exiting. The _Number stands for the past number. 
 
 Example: T2_prime_2 stands for the $T_{hot,out}$ of the past2 HX, T1_5 stands for the $T_{cold,in}$ of the past5 HX.
 
@@ -426,7 +426,7 @@ Past5_opt_ger_sc1 = Past5_opt_ger_sc1.round(2)
 HTML(Past5_opt_ger_sc1.to_html(index=False))
 ```
 
-The T-h diagram shows that the dTmin is on the right of the curves. This determines the equations to use for the CAPEX.
+The T-h diagram shows that the $\Delta T_{min}$ is on the right of the curves. This determines the equations to use for the CAPEX.
 
 The minimum value of TOTEX is graphically determined and is reported in the previous tables. The first table is for France and the second one for Germany.
 
@@ -586,7 +586,7 @@ HTML(Past1_opt_ger_sc2.to_html(index=False))
 
 The first graph show dT is on the left and thus the corresponding equation presented at the beginning of this section are used.
 
-The optimisation gives a dTmin which varies between Germany and France. This leads to different CAPEX and OPEX for both countries.
+The optimisation gives a $\Delta T_{min}$ which varies between Germany and France. This leads to different CAPEX and OPEX for both countries.
 
 For the OPEX, the costs of past3 (heating) and past 4 (cooling) were to be inluded. 
 Past 3 equation becomes the following: $Q_{past3} = m_{hot}*cp_{hot}*(T_{past2,out}-348)$ where $m_{hot}$ is the flow coming out of past2. Past 4 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
@@ -747,11 +747,11 @@ For the OPEX the costs of past 6 (heating) and past 7 (cooling) were to be inclu
 Past 6 equation becomes the following: $Q_{past6} = m_{hot}*cp_{hot}*(T_{hot,in,past5}-T_{cold,out,past5})$ where $m_{hot}$ is the flow coming out of past5. Past 7 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
 Of course the heating OPEX (past 6) will use gas costs whereas the cooling OPEX (past 7) will use electricity costs and consider a COP of 3 as in energy bill. Both processes again assume the same operating time as for Energy Bill.
 
-The optimisation gives a dTmin for past 5 of 6.3K leading to an area of 5.21$m^2$ and a larger TOTEX in Germany than France because of the higher price of electricity in Germany (both CAPEX are the same but OPEX vary). Compared to case where only past5 were optimized, it presents a higher dTmin but a lower Area and thus lower costs. Considering only the costs of past5, it may seem more interesting to optimize past1 and past5 simultaneously. However one have to look at the whole picture and don't forget that past1 was also optimized (thus consider total costs of both past1 and past5).
+The optimisation gives a $\Delta T_{min}$ for past 5 of 6.3K leading to an area of 5.21$m^2$ and a larger TOTEX in Germany than France because of the higher price of electricity in Germany (both CAPEX are the same but OPEX vary). Compared to case where only past5 were optimized, it presents a higher $\Delta T_{min}$ but a lower Area and thus lower costs. Considering only the costs of past5, it may seem more interesting to optimize past1 and past5 simultaneously. However one have to look at the whole picture and don't forget that past1 was also optimized (thus consider total costs of both past1 and past5).
 
 #### Both costs combined 
 
-Finaly, let's combine both costs from past 1 and past 5 to get the overall CAPEX, OPEX, and TOTEX for the two pasteurizers. This total costs will then be comapred to the energy bill without optimization over dTmin. 
+Finaly, let's combine both costs from past 1 and past 5 to get the overall CAPEX, OPEX, and TOTEX for the two pasteurizers. This total costs will then be comapred to the energy bill without optimization over $\Delta T_{min}$. 
 
 ```{python past1+5_overall, echo = T, eval = T}
 ####################################
@@ -922,7 +922,7 @@ The new HX will placed such that CIP6 flow is first used to preheat CIP1 to CIP1
 
 ![Optimized CIP](Figures/CIPoptimized.png)
 
-Let's try to apply the method used for the pasterization:
+Let's try to apply the method used for the pasteurization:
 
 ```{python cip_heat_recovery, echo = T, eval = T}
 from pyxosmose.state import State
@@ -1075,15 +1075,15 @@ HTML(CIP_opt_ger.to_html(index=False))
 
 ```
 
-In this scenario the OPEX is dependent on the the cooling and heating HX of the CIP process. First  new flows are redetermined for m_cip1 and m_cip5 such that $m_{cip1} = m_{cip2}*\frac{T_{cip2}-T_{cip5}}{T_{cip1}-T_{cip5}}$ and $m_{cip5}=m_{cip2}-m_{cip1}$ where $T_{cip1}$=$T_{cip2}$=$T_{cold,out,newHX}$ the new exiting temperature cip1' hotter than cip1 from the task2.
-From this, $Q_{steam} = m_{cip2}*cp1*(353-T_{cip2})$ and $Q_{cooling} = m_{hot,newHX}*cp_{hot,newHX}*(T_{hot,out,newHX}-303)$ 
+In this scenario the OPEX is dependent on the the cooling and heating HX of the CIP process. First  new flows are redetermined for m_cip1 and m_cip5 such that $m_{cip1} = m_{cip2}*\frac{T_{cip2}-T_{cip5}}{T_{cip1}-T_{cip5}}$ and $m_{cip5}=m_{cip2}-m_{cip1}$ where $T_{cip1}$=$T_{cip2}$=$T_{cold,out,newHX}$ is the new exiting temperature cip1' hotter than cip1 from the task2.
+From this, $Q_{steam} = m_{cip2} \cdot cp1 \cdot (353-T_{cip2})$ and $Q_{cooling} = m_{hot,newHX} \cdot cp_{hot,newHX} \cdot (T_{hot,out,newHX}-303)$ 
 
 
 It can be observed that the optimum dT is 24°C which brings CIP1' to ($75-24=51°C$) instead of 25°C. Thus compared to the case without optimization CIP2 will be cooler than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require more steam to heat up until 80°C. This doesn't seem to be efficient. This will be checked by comparing the costs with the Energy Bill.
 
 ### Comparison with non-optimalized case:
 
-In each case presented above, optimized dTmin have been selected to reduce cost of the considered system. But then even by selecting this minimum cost, is this heat recovery optimization really worth it? To check this, comparison will now be made with the non-optimized cases from the Energy Bill.
+In each case presented above, optimized $\Delta T_{min}$ have been selected to reduce cost of the considered system. But then even by selecting this minimum cost, is this heat recovery optimization really worth it? To check this, comparison will now be made with the non-optimized cases from the Energy Bill.
 
 The following table sumarize the cost for the optimized (with heat recovery) and non-optimized (without heat recovery) OPEX for each process. The costs are given for both France and Germany. Only OPEX are considered since in the Energy Bill only OPEX were computed so it is not possible to compare CAPEX and TOTEX.
 
