@@ -777,7 +777,7 @@ Overall_opt_ger_sc2 = Overall_opt_ger_sc2.round(2)
 HTML(Overall_opt_ger_sc2.to_html(index=False))
 ```
 
-### Past 5 + recovery HEX
+### Pasteurization with Recovery HEX
 
 The only possibility to recover heat in the pasteurisation section is by adding a new heat exchanger to preheat the thickener with the ouput milk flow. The following figure illustrate the location of this new heat exchanger.
 
@@ -792,28 +792,120 @@ Recall:
 - $T_{past,d1} = 10.8°C$
 - $T_{thickener,in} = 4°C$
 
-The goal is to increase the thickener temperature entering in the mixer with the heat excess of the pasterized milk going out of the system. Considering the huge mass flow difference, it can be assumed that $m_{past,d1} \approx m_{past,d2} \approx m_{thickener,out} = 10.8°C$. To compute the cp of the thickener, the function mixture is used, assuming the thickener is composed of 100% fat. With all this information, the heat exchanged in the recovery HEX can be computed.
+The goal is to increase the thickener temperature entering in the mixer with the heat excess of the pasterized milk going out of the system. Considering the huge mass flow difference, it can be assumed that $T_{past,d1} \approx T_{past,d2} \approx T_{thickener,out} = 10.8°C$. To compute the cp of the thickener, the function mixture is used, assuming the thickener is composed of 100% fat. With all this information, the heat exchanged in the recovery HEX can be computed.
 
 ```{python Qrecovery, echo = T, eval = T}
 from pyxosmose.state import State
 from codes_01_energy_bill.coolprop_functions import mixture
 
 m_thickener = 0.07
-T_thickener_in = 4
-T_thickener_out = 10.8
+T_thickener_in = 277
+T_thickener_out = 283.8
 
 State = mixture(T = T_thickener_out, P = 100000, frac_water = 0, frac_fat = 1)
 cp = State["cpmass"]
 
 Q = m_thickener * cp * (T_thickener_out - T_thickener_in)
-print('Q_recovery =', round(Q, 3), 'kW')
+#print('Q_recovery =', round(Q, 3), 'W')
 ```
+The heat exchanged is thus, of 1kW. 
 
 Now, let's compute the output temperature of the mixer.
 
-- $m_{cr_past_x} = m_{thickener} + m_{cr_past_a} = 0.07 + 0.48 = 0.55 kg/s$
-- $T_{cr_past_a} = 65.9°C$
+- $m_{crpast,x} = m_{thickener} + m_{crpast,a} = 0.07 + 0.48 = 0.55 kg/s$
+- $T_{crpast,a} = 65.9°C$
 - $T_{thickener} = 10.8°C$
+
+For this the same equations for non-isothermal mixer used in mass & energy balance section are reused.
+```{python Tcrpastx, echo = T, eval = T}
+from pyxosmose.state import State
+from codes_01_energy_bill.coolprop_functions import mixture
+
+m_thickener = 0.07
+T_thickener = 283.8
+cp_thickener = 4.175
+m_cr_past_a = 0.48
+T_cr_past_a = 338.9
+cp_cr_past_a = 3.5
+m_cr_past_x = m_thickener + m_cr_past_a
+cp_cr_past_x = 3.5
+
+T_cr_past_x = (m_thickener * cp_thickener * T_thickener + m_cr_past_a * cp_cr_past_a * T_cr_past_a) / (m_cr_past_x * cp_cr_past_x)
+#print('T_cr_past_x =', round(T_cr_past_x, 3), 'K')
+```
+
+This leads to $T_{crpast,x}=65.9°C$. Compared to the original pasteurisation process, there is thus an increase of 12.40°C. This will reduced the heat require on the past6 process
+```{python TOTEX_Pastrecovery, echo = T, eval = T}
+Q=1006 #W
+alpha= 1000 #W/m^2°C, assumption based on alpha_H20
+U = alpha/2
+LMTD = 283.8 #because T_hot,in = T_hot,out = T_cold,out = 283.8°C so applying LMTD formula would make no sense
+Area = Q/(U*LMTD)
+
+#Find the CAPEX
+
+CEPCI2019=603.1 
+CEPCI1998=389.5 #https://personalpages.manchester.ac.uk/staff/tom.rodgers/Interactive_graphs/CEPCI.html?reactors/CEPCI/index.html
+K1=3.6788 #sl 12 T4.1 assumption spiral plate HX
+K2=0.4412
+FBM=4.74 #assumption fluid sl 10 T4.1
+i=0.05 #sl 8 T4.2
+e=0.92 #€/$ exchange rate 2023 Nov 
+n=20
+
+Cp = CEPCI2019/CEPCI1998 * 10**(K1+K2*np.log(Area))
+
+CBM = Cp*FBM*e
+
+ANNUALIZATIONFACTOR = (i*(1+i)**n)/((1+i)**n-1)
+
+CAPEX = ANNUALIZATIONFACTOR*CBM
+
+#Find the OPEX
+
+top = 24*0.95*365 #h/year
+gas_fr = 0.08 # €/kWh
+gas_ger = 0.08 # €/kWh 
+elec_fr = 0.12 # €/kWh
+elec_ger = 0.21 # €/kWh
+COP = 3.5 #same assumption in Energy Bill
+
+
+#Only past6 is impacted by the addition of the new HX since past 4 will still receive a flow of 10.8°C as in the original case
+m_crpastx = 0.55
+cp_crpastx = 3500
+T_crpastx = 338.9
+T_crpastb = 348
+Qpast6 = m_crpastx * cp_crpastx * (T_crpastb - T_crpastx) #Q in W since cp in J/kgK
+OP_steam_past6_fr = gas_fr * Qpast6/1000 * top 
+OP_steam_past6_ger = gas_ger * Qpast6/1000 * top
+
+OPEX_fr = OP_steam_past6_fr 
+OPEX_ger = OP_steam_past6_ger   
+
+#Find the TOTEX
+TOTEX_fr = CAPEX + OPEX_fr
+TOTEX_ger = CAPEX + OPEX_ger
+
+
+area_fr_opt_hx = Area
+area_ger_opt_hx = Area
+CAPEX_fr_opt_hx = CAPEX
+CAPEX_ger_opt_hx = CAPEX
+OPEX_fr_opt_hx = OPEX_fr
+OPEX_ger_opt_hx = OPEX_ger
+TOTEX_fr_opt_hx = TOTEX_fr
+TOTEX_ger_opt_hx = TOTEX_ger
+
+HX_opt_fr = pd.DataFrame({'Area_fr[m^2]': area_fr_opt_hx, 'CAPEX_fr[€/yr]': CAPEX_fr_opt_hx, 'OPEX_fr[€/yr]': OPEX_fr_opt_hx, 'TOTEX_fr[€/yr]': TOTEX_fr_opt_hx}, index=[0])
+HX_opt_fr = HX_opt_fr.round(2)
+HTML(HX_opt_fr.to_html(index=False))
+
+HX_opt_ger = pd.DataFrame({'Area_ger[m^2]': area_ger_opt_hx, 'CAPEX_ger[€/yr]': CAPEX_ger_opt_hx, 'OPEX_ger[€/yr]': OPEX_ger_opt_hx, 'TOTEX_ger[€/yr]': TOTEX_ger_opt_hx}, index=[0])
+HX_opt_ger = HX_opt_ger.round(2)
+HTML(HX_opt_ger.to_html(index=False))
+```
+
 
 ### Cleaning in Place
 
@@ -824,7 +916,7 @@ NB: The same could have been done by preheating the CIP2 for it to be closer to 
  
 In chapter 2 when determining heat and mass balances, the following relation had been determined between the flows temperatures:
 
-- $T_cip6=75°C > T_{cip1}=25°C$
+- $T_{cip6}=75°C > T_{cip1}=25°C$
 
 The new HX will placed such that CIP6 flow is first used to preheat CIP1 to CIP1' (with $T_{cip1'} > T_{cip1}$) and the exiting flows called CIP6' (such that $T_{cip6'}< T_{cip6}$) is then used to be cooled where CIP6 was previously. Hence, a system with less cooling is required since $T_{cip6'}< T_{cip6}$, as well as with also less heating required since $T_{cip1'} > T_{cip1}$.
 
@@ -1045,17 +1137,17 @@ The following table sumarize the cost for the optimized (with heat recovery) and
     <td class="tg-rh1i">665505.52</td>
   </tr>
   <tr>
-    <td class="tg-c3ow" colspan="3">Scenario 3: Past5+ new HX</td>
+    <td class="tg-c3ow" colspan="3">Scenario 3: Pasteurization with new HX</td>
   </tr>
   <tr>
     <td class="tg-0pky">France</td>
-    <td class="tg-c3ow">-</td>
-    <td class="tg-c3ow">Not possible</td>
+    <td class="tg-c3ow">23707.71</td>
+    <td class="tg-fpwh">11662.45</td>
   </tr>
   <tr>
     <td class="tg-0pky">Germany</td>
-    <td class="tg-c3ow">-</td>
-    <td class="tg-c3ow">Not possible </td>
+    <td class="tg-c3ow">23707.71</td>
+    <td class="tg-fpwh">11662.45</td>
   </tr>
   <tr>
     <td class="tg-c3ow" colspan="3">Scenario 4: CIP</td>
@@ -1206,8 +1298,6 @@ ax.plot(Q_hc, T_hc_ori, "-r")
 # fill the area between the original and shifted curves
 ax.fill_between(Q_cc, T_cc_ori, T_cc, color="blue", alpha=0.25)
 ax.fill_between(Q_hc, T_hc, T_hc_ori, color="red", alpha=0.25)
-
-
 
 
 # add the lables and title

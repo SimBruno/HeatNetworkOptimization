@@ -518,6 +518,11 @@ HTML(OPEX.to_html())
 #print('OPEX_CIP_fr', OPEX_CIP_fr)
 #print('OPEX_CIP_ger', OPEX_CIP_ger)
 
+#OPEX_past_6_fr = Qpast_6*0.001 * gas_fr * top 
+#OPEX_past_6_ger = Qpast_6*0.001 * gas_gr * top
+#print('OPEX_past_6_fr', OPEX_past_6_fr)
+#print('OPEX_past_6_ger', OPEX_past_6_ger)
+
 #TASK7 Comparison
 #OPEXcool_fr_task7 = (Qpast_7+Qclean_cool)*0.001 * elec_fr * top
 #OPEXheat_fr_task7 = (Qpast_3 + Qpast_6+Qclean_heat)*0.001 * gas_fr * top
