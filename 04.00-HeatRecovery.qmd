@@ -1,9 +1,9 @@
+# Pinch analysis (Tasks 4 & 5)
+After having determined the energy and mass exchanged in the entire subsystems (task 1), performed an exergy analysis (task2) and computed the energy bill of the factory (task 3), it is now time to see where improvement can be achieved and tried different approach to optimize the system
 
-# Pinch analysis
-Starting from this chapter, you will embark on optimizing the energy efficiency of the dairy factory. This section is divided into two parts:
+First, in task 4, optimization of the minimum temperature difference ($\DeltaT$) in heat exchangers, will be performed. The goal will be to see if in 2 processes (namely Pasteurization and Cleaning In Place), it is possible to optimize the $\DeltaT_{min}$ of some of the HX to reduce the energy bill. 
 
-- Optimization of the minimum temperature difference ($\Delta$T) in heat exchangers.
-- Determining the minimum energy requirement of the factory through the application of pinch analysis.
+Then, in task 5, a first look at global optimization of the entire factory will be achieved by ploting the Hot and Cold Compiste curves as well as the Grand Composite Curve. This will then enable to determine a crucial Temperature, the pinch point, from which a further optimization can be achieved in task 7 with the HEN design.
 
 ## Optimization of $\Delta$T minimum
 

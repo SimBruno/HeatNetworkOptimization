@@ -1,4 +1,4 @@
-# Heat Exchanger Network design
+# Heat Exchanger Network design (Tasks 6 & 7)
 
 
 After establishing the minimum energy requirement, the primary objective of heat exchanger network design is to strategically position heat exchangers within the process to attain the heat recovery target. This involves identifying the hot and cold streams for heat exchange, specifying the flow rates on both sides of the heat exchanger, and determining the optimal sizing for each heat exchanger to be integrated into the system.
