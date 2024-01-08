@@ -535,7 +535,7 @@ Given/Known data:
 
 Assumptions:
 
-- Steam at point 22 is assumed to be 1 bar, at 373 K (saturated steam)
+- Steam at point 24 is assumed to be 1 bar, at 373 K (saturated steam)
 - Perfect evaporator at constant temperatures and constant pressure
 
 ```{python evap, echo = T, eval = T}
@@ -1046,6 +1046,10 @@ T23=T21
 p23=p21
 State_e23 = mixture(T=T23, P=p23, frac_water=p_water_23, frac_fat=p_fat_23) # this is a dictionary!!
 
+
+T24=373
+p24=p21
+State_e24 = mixture(T=T24, P=p24, frac_water=0.8554, frac_fat=0.1446) # this is a dictionary!!
 #Exit flows of 3 HXs 
 
 Texit2= Thot2
@@ -1068,6 +1072,8 @@ State_exit4 = State(pair='TP', fluid='water', temperature=Texit4, pressure=pexit
 State_exit4.StateCalc()
 # And print the dictionary for revision
 State_exit4 = State_exit4.__dict__
+
+
 
 #Exctraction of entropy
 s1=State_e1["entropy"]
@@ -1093,6 +1099,7 @@ s20=State_e20["entropy"]
 s21=State_e21["entropy"]
 s22=State_e22["entropy"]
 s23=State_e23["entropy"]
+s24=State_e24["entropy"]
 sexit2=State_exit2["entropy"]
 sexit3=State_exit3["entropy"]
 sexit4=State_exit4["entropy"]
@@ -1120,6 +1127,7 @@ h20=State_e20["enthalpy"]
 h21=State_e21["enthalpy"]
 h22=State_e22["enthalpy"]
 h23=State_e23["enthalpy"]
+h24=State_e24["enthalpy"]
 hexit2=State_exit2["enthalpy"]
 hexit3=State_exit3["enthalpy"]
 hexit4=State_exit4["enthalpy"]
@@ -1144,8 +1152,8 @@ datarecap = {'Point': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '
         'Temperature (K)': [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10,T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,T21, T22, T23, T24, Texit2, Texit3, Texit4],
         'Pressure (Pa)': [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,p21, p22, p23, p24, pexit2, pexit3, pexit4],
         'Mass flow (kg/s)': [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15, m16, m17, m18, m19, m20,m21, m22, m23, m24, mexit2, mexit3, mexit4],
-        'Enthalpy (J/mol)': [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10,h11, h12, h13, h14, h15, h16, h17, h18, h19, h20,h21, h22, h23, '', hexit2, hexit3, hexit4],
-        'Entropy (J/K)': [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, '', sexit2, sexit3, sexit4]}
+        'Enthalpy (J/mol)': [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10,h11, h12, h13, h14, h15, h16, h17, h18, h19, h20,h21, h22, h23, h24, hexit2, hexit3, hexit4],
+        'Entropy (J/K)': [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, sexit2, sexit3, sexit4]}
 dfrecap = pd.DataFrame(datarecap)
 dfrecap = dfrecap.set_index('Point')
 dfrecap = dfrecap.round(2)
