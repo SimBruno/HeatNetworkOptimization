@@ -11,15 +11,9 @@ editor: visual
 | Lorenzo PRECHT | 310969 |
 | Valentine REHN | 342655 |
 
-In the introduction, consider addressing the following questions relevant to your project:
+The dairy industry, like many others, confronts challenges related to efficiency and sustainability. As part of the "ME-451 Advanced Energetics 2023/2024" course, a project has been initiated to address these challenges through a case study.
+Mrs. Pacometer, the owner of a dairy processing facility, recognizing the need for improvements in both energy and economic efficiency, approached PinchSim (us) to conduct a comprehensive study. The key processes within her dairy factory that will be subject to analysis include Milk Pasteurization, Milk Evaporation, Drum Dryers, Cleaning in Place, Cold Storage and Hot Water, Wastewater and Sludge Production, Rivella, and Digester. The study encompasses a range of tasks, including the determination of mass and energy balances, exergy analysis, implementation of an energy bill, identification of pinch points, heat exchanger network design. and optimization of utility integration, among others.
 
-- What is the background and motivation behind your project? Why do you wish to undertake process integration and optimization for the dairy factory?
-- What are the primary challenges and issues you aim to tackle in this study? Is it focused on heat exchanger network design and/or utility integration?
-- Is there existing work similar to yours in this domain? If so, what are the contributions and limitations of their research?
-- What contributions do you intend to make through your project?
-- How have you organized your project report to effectively convey your findings and insights?
+In the pursuit of efficiency improvements, Mrs. Pacometer attended an industrial round-table where strategies for cost reduction and income generation were discussed. Two particularly intriguing propositions emerged to boost income. Mr. Rivella proposed utilizing surplus whey to produce the iconic Swiss drink Rivella, while Mrs. Green suggested the use of both whey and sludge for biogas production. The goal of this study is to assess the viability of these innovative ideas and determine if they indeed contribute to the objectives of Mrs. Pacometer and reduce the total costs.
 
-You do not need to answer all of these questions explicitly, but ensure that your introduction provides a clear and comprehensive understanding of the problem and its context.
-
-
-This project involves a comprehensive examination of how Mrs. Pacometer, a dairy owner, can enhance the efficiency of her dairy process energetically and economically. 
+All in all, the study aims to propose modifications based on the results of the analysis, with a focus on optimizing processes, introducing innovative co-products, and evaluating the integration of energy-efficient technologies. The ultimate objective is to provide Mrs. Pacometer with insights that will not only enhance the efficiency of her dairy processing facility but also contribute to the industry's overall sustainability and economic viability.
