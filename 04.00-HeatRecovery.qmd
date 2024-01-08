@@ -785,98 +785,35 @@ The only possibility to recover heat in the pasteurisation section is by adding 
 
 Assumption: crpast_b is fixed to 75°C. This assumption allows that past5 does not need to be reoptimized.
 
-```{python past5 & HX recovery, echo = T, eval = T}
+Recall:
+
+- $m_{past,d1} = 7.52 kg/s$
+- $m_{thickener} = 0.07 kg/s$
+- $T_{past,d1} = 10.8°C$
+- $T_{thickener,in} = 4°C$
+
+The goal is to increase the thickener temperature entering in the mixer with the heat excess of the pasterized milk going out of the system. Considering the huge mass flow difference, it can be assumed that $m_{past,d1} \approx m_{past,d2} \approx m_{thickener,out} = 10.8°C$. To compute the cp of the thickener, the function mixture is used, assuming the thickener is composed of 100% fat. With all this information, the heat exchanged in the recovery HEX can be computed.
+
+```{python Qrecovery, echo = T, eval = T}
 from pyxosmose.state import State
+from codes_01_energy_bill.coolprop_functions import mixture
 
-T1_hx = 277  #T_cip1 in CH2
-T2_hx = 283.8  #T_cip6 in CH2
+m_thickener = 0.07
+T_thickener_in = 4
+T_thickener_out = 10.8
 
-p1_hx = 100000
+State = mixture(T = T_thickener_out, P = 100000, frac_water = 0, frac_fat = 1)
+cp = State["cpmass"]
 
-m1_hx = 0.07 #m_cip2 in CH2
-m2_hx = 7.52 #m_cip6 in CH2
-
-State_Cold_1_hx = mixture(T=T1_hx, P=p1_hx, frac_water=0.5, frac_fat=0.5)
-State_Cold_2_hx = mixture(T=T2_hx, P=p1_hx, frac_water=0.883, frac_fat=0.117)
-
-h1_hx = State_Cold_1_hx["enthalpy"] * m1_hx  
-h2_hx = State_Cold_2_hx["enthalpy"] * m2_hx
-
-print(' h1 =', round(h1_hx, 3), 'kJ/kg', '\n',
-       'h2 =', round(h2_hx, 3), 'kJ/kg')
+Q = m_thickener * cp * (T_thickener_out - T_thickener_in)
+print('Q_recovery =', round(Q, 3), 'kW')
 ```
 
-In this case, $h_1 > h_2$. The equation of T-h diagram is then:
+Now, let's compute the output temperature of the mixer.
 
-$$
-T_{cold}(h) = -\frac{h}{m_1 c_{p,1}} + T_{1} + \frac{h_1}{m_1 c_{p,1}}
-$${#eq-slope_cold}
-
-$$
-T_{hot}(h) = -\frac{h}{m_2 c_{p,2}} + T_{2} + \frac{h_2}{m_2 c_{p,2}}
-$${#eq-slope_hot}
-
-```{python past5 & HX recovery 2, echo = T, eval = T}
-cp1_hx = State_Cold_1_hx["cpmass"]
-cp2_hx = State_Cold_2_hx["cpmass"]
-
-slope1_hx = 1/(m1_hx*cp1_hx)
-slope2_hx = 1/(m2_hx*cp2_hx)
-
-#Plot the two lines with T on the y-axis and h on the x-axis
-#h is the enthalpy of the stream between h1 and h2
-N = 100
-
-if h1_hx < h2_hx:
-    h_hx = np.linspace(h1_hx, h2_hx, N)
-    C1_hx = T1_hx - slope1_hx*h1_hx
-    T1v_hx = slope1_hx*h_hx + C1_hx
-    C2_hx = T2_hx - slope2_hx*h2_hx
-    T2v_hx = slope2_hx*h_hx + C2_hx 
-else:
-    h_hx = np.linspace(h2_hx, h1_hx, N)
-    C1_hx = T1_hx + slope1_hx*h1_hx
-    T1v_hx = -slope1_hx*h_hx + C1_hx
-    C2_hx = T2_hx + slope2_hx*h2_hx
-    T2v_hx = -slope2_hx*h_hx + C2_hx
-
-
-# Create trace for Cold Stream
-trace_cold = go.Scatter(x=h_hx, y=T1v_hx, mode='lines', name='Cold Stream')
-# Create trace for Hot Stream
-trace_hot = go.Scatter(x=h_hx, y=T2v_hx, mode='lines', name='Hot Stream')
-# Create layout
-layout = go.Layout(
-    title='Temperature vs Enthalpy',
-    xaxis=dict(title='Enthalpy (J)'),
-    yaxis=dict(title='Temperature (K)'),
-    legend=dict(x=1, y=1, traceorder='normal'),
-    showlegend=True
-)
-# Create figure
-fig = go.Figure(data=[trace_cold, trace_hot], layout=layout)
-# Plot the vertical line at dTmin
-dt_hx = T2v_hx - T1v_hx
-dTmin_hx = dt_hx.min()
-
-min_index_hx = dt_hx.argmin()
-
-fig.add_shape(
-    type='line',
-    x0=h_hx[min_index_hx],
-    x1=h_hx[min_index_hx],
-    y0=min(T1v_hx[min_index_hx], T2v_hx[min_index_hx]),
-    y1=max(T1v_hx[min_index_hx], T2v_hx[min_index_hx]),
-    line=dict(color='red', dash='dash')
-)
-
-print(' m_cold =', m1_hx, 'kg/s', '\n',
-       'm_hot =', m2_hx, 'kg/s', '\n',
-       'slope_cold =', slope1_hx, 'K/J', '\n',
-       'slope_hot =', slope2_hx, 'K/J')
-```
-
-The cold line is over the hot line, which does not make sense in a thermodynamic point of view. This is due to the high difference between the two slopes. This is explained by the difference in mass flow. The thickener flow is about 100 times smaller than the output milk flow. It is not profitable to preheat the thickener with the output milk flow. There is no other place to use a recovery heat exchanger so no heat recovery is possible in the pasteurisation section.
+- $m_{cr_past_x} = m_{thickener} + m_{cr_past_a} = 0.07 + 0.48 = 0.55 kg/s$
+- $T_{cr_past_a} = 65.9°C$
+- $T_{thickener} = 10.8°C$
 
 ### Cleaning in Place
 

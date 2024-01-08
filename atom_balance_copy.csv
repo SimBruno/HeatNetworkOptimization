@@ -1,10 +1,10 @@
 layer	source	target 	value
-exergy	gly_in	factory    92
-exergy	fresh_milk	factory	0.40
-exergy	steam_in	factory	52.67
+exergy	gly_in	factory    13
+exergy	fresh_milk	factory	34
+exergy	steam_in	factory	715
 exergy	thickner	factory	1.59
-exergy	factory	milk	1.30
-exergy	factory	cream	0.06
+exergy	factory	milk	12
+exergy	factory	cream	4
 exergy	factory	past1_loss	44.1
 exergy	factory	past2_loss	3.7
 exergy	factory	past3_loss	37.5
@@ -13,7 +13,7 @@ exergy	factory	past5_loss	1.64
 exergy	factory	past6_loss	115.5
 exergy	factory	past7_loss	77.7
 exergy	factory	refr_loss	38.8
-exergy	factory	refr_mixer	2.12
-exergy	factory	steam_out	0.09
-exergy	factory	gly_out	69
+exergy	factory	mixer_loss	2.12
+exergy	factory	steam_out	120
+exergy	factory	gly_out	14
 

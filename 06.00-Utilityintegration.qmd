@@ -173,25 +173,7 @@ for i in range(len(Q_cc)):
 
 hot_utilities1 = total_w - upper_bound1
 
-
-#data_heat_recovery = {'With Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-#        'Heat (kW)': [cold_utilities1, hot_utilities1, cold_utilities1+hot_utilities1, np.round(upper_bound1 - lower_bound1, 2)]}
-
-#dfs = pd.DataFrame(data_heat_recovery)
-#dfs = dfs.set_index('With Rivella and Digester')
-#dfs = dfs.round(2)
-#HTML(dfs.to_html())
-```
-
-
-```{python, echo = F, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-import pandas as pd
-from IPython.display import display, HTML
-
-plt.switch_backend('agg')
+###################################
 
 # read json for heat integration data
 file_name = open('codes_02_heat_recovery/result/brewery-59NoRivellaNoDigester.json')
@@ -273,25 +255,7 @@ for i in range(len(Q_cc)):
 hot_utilities2 = total_w - upper_bound2
 
 
-#data_heat_recovery = {'Without Rivella and Digester': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
- #       'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
-
-#dfs = pd.DataFrame(data_heat_recovery)
-#dfs = dfs.set_index('Without Rivella and Digester')
-#dfs = dfs.round(2)
-#HTML(dfs.to_html())
-
-```
-
-
-```{python, echo = F, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-import pandas as pd
-from IPython.display import display, HTML
-
-plt.switch_backend('agg')
+###########################################
 
 # read json for heat integration data
 file_name = open('codes_02_heat_recovery/result/brewery-59_no_digester.json')
@@ -373,26 +337,7 @@ for i in range(len(Q_cc)):
 hot_utilities3 = total_w - upper_bound3
 
 
-#data_heat_recovery = {'Only with Rivella': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
-#        'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
-
-#dfs = pd.DataFrame(data_heat_recovery)
-#dfs = dfs.set_index('Only with Rivella')
-#dfs = dfs.round(2)
-#HTML(dfs.to_html())
-
-```
-
-
-
-```{python, echo = F, eval = T}
-import matplotlib.pyplot as plt
-import json
-import numpy as np
-import pandas as pd
-from IPython.display import display, HTML
-
-plt.switch_backend('agg')
+##################################################
 
 # read json for heat integration data
 file_name = open('codes_02_heat_recovery/result/brewery-59NoRivella.json')
@@ -488,33 +433,115 @@ HTML(dfs.to_html())
 ```
 
 
+It can be noticed that the Grand Composite Curves of these four different cases are quite similar. All of them show the triple plateau caused by the utilization of evaporators in the Evaporators section, and the minimum heat requirements as well as the maximum heat recovery are also quite similar, being of around 16000 kW and 26000 kW respectively in each case. The main difference that can be noticed is the temperature required by each system. The base system, without either the Rivella production or the Digester requires some relatively small temperatures, reaching a maximum of only ca. 90°C. This changes when the Rivella production is added, which requires slightly higher temperatures with a peak of ca. 100°C at the evaporator needed to produce the Rivella itself. The largest difference however is caused by the addition of the Digester. The Digester section introduces a steam dryer powered by superheated steam, thus reaching and requiring high temperatures of 150°C.
+This said, since the subsystems required by the Rivella production and the Digester consume relatively little heat compared to the Evaporation section which is present in each scenario, the addition of these subsystems does not cause a large difference in the maximum heat recovery of the system nor in its minimum heat requirement.
 
 
 
-%1. Generating the Grand composite curve (GCC) of the process system and analysing the temperature levels and the amount for the heat deficits and surplus in the system. 
+## Energy Conversion Technologies
 
-## System Key Performance Indicators (KPI)
+To provide the cold and hot flows required by the facility, Energy Conversion Technologies were chosen to meet this need. The relevant ones are presented in this section.
+
+### Cooling Tower
+
+*Cooling technology* 
+
+A cooling tower is a device using a thermic contact surface between air and water to trigger water's evaporation, thus cooling down the remaining water. This process requires an electricity supply.
+
+### Boiler
+
+*Heating technology*
+
+A boiler is a simple utility using natural gas (fuel) and air (combustive agent) to provoke combustion, thus providing a heat flow. Both fluids and solids can be heated up this way. The hot air can be recovered to provide a second hot flow. 
+
+
+### Cogeneration Engine
+
+*Heating technology*
+
+In the general case, cogeneration refers to a system converting a resource into two products. In this case, the device works as a boiler, but this time it produces both heat and electricity. This electricity is obtained thanks to turbines. Using this system reduces the amount of electricity extracted from the grid, and consequently reduces the operation expenditures of the complete facility.
+
+
+### Heat Pump
+
+*Heating technology*
+
+In this case is considered a mechanical vapor compression heat pump. This utility provides heat from a vapor compression cycle supplied by electricity and using refrigerant as working fluid. In the most particular case of a Mechanical Vapor Compression (MVR), no refrigerant is used, but the process flow which is to be heated. 
+
+### Refrigeration
+
+*Cooling technology*
+
+The Refrigeration relies on the same system as the Heat Pump but uses the cold source rather than the heat sink. 
+
+### Applications
+
+- Cooling devices: The cooling tower is used over ambient temperature (25°C) and the Refrigeration system below.
+
+
+## Key Performance Indicators (KPIs)
 
 To characterize the relevance of the system, Key Performance Indicators (KPI) are defined before being computed in the case of this study. The six following KPIs are used:
 
-
-### KPIs definitions
+### Definitions
 
 |KPI Name|Acronym|Unit(s)| Description |
 |:--|:--|:---|:----------------|
-|Operating Expenditure|OPEX|[CHF/year]|Represents the cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis|
-|Capital Expenditure|CAPEX|[CHF]|Indicates the investment associated with energy conversion units|
-|Total Expenditure|TOTEX|[CHF/year]| Sums up the total cost of the energy supply considering the annualized investment and operating cost|
-|Exergy Losses|-|[kW] or in [kJ/$kg_{product}$]| Evaluates the energy losses within the energy conversion technology implemented. Measured using [kJ/$kg_{product}$] when converting the resources to useful heat, electricity, cooling, and refrigeration needs|
-|Emissions|-|[$kg_{CO_{2}eq}$/year] |Advises the emissions due to the energy conversion technology |      
+|Operating Expenditure|OPEX|[€/year]|Represents the cost of the resources and the waste flows to supply the energy requirements of the process on a yearly basis|
+|Capital Expenditure|CAPEX|[€]|Indicates the investment associated with energy conversion units|
+|Environmental expenditures| ENVEX |[€/year]| Refers to the costs due to $CO_2$ taxes|
+|Total Expenditure|TOTEX|[€/year]| Sums up the total cost of the energy supply considering the annualized investment and operating cost|
+|Exergy Losses|-|[kW] or in [kJ/$kg_{product}$]| Evaluate the energy losses within the energy conversion technology implemented. Measured using [kJ/$kg_{product}$] when converting the resources to useful heat, electricity, cooling, and refrigeration needs|
+|Emissions|-|[$kg_{CO_{2}eq}$/year] |Advises the emissions due to the energy conversion technology operation|      
 |Life Cycle Environmental impact|-|[$kg_{CO_{2}eq}$/year]|Advises the emissions due to the life cycle of the energy conversion technology |      
 
 
-### KPIs formulas
+### Formulas
+
+- OPEX: as maintenance and manpower costs are neglected, only resource costs are considered. In our case, only electricity and natural gas (NG) are used. Considering the yearly operation time $t_{op}$, $C$ the cost of a resource and $\dot Q$ its energy flow, OPEX is given by:
+
+\begin{align}
+OPEX = [C_{electricity}\dot Q_{electricity} + C_{NG}\dot Q_{NG}]*t_{op}
+\end{align}
+
+- CAPEX: CAPEX normally designates the cost of a technology during its lifetime. To annualize it, the following formula is used:
+
+\begin{align}
+C_{inv} = \frac{i(1+i)^n}{(1+i)^n-1}c_{inv}
+\end{align}
+
+In this formula, $c_{inv}$ designates whether the fixed investment cost or the variable investment cost. The two other parameters n and I, respectively refer to the lifetime and the interest rate, stated as equal to 8% in this study.
+
+The investment cost must also be scaled with the CEPCI. According the requirements of the study, the CEPCI which should be chosen is the 2019 one, which is equal to 603.1. 
+
+Finally:
+
+\begin{align}
+CAPEX = C_{inv1}+ C_{inv2} \dot Q_{unit}
+\end{align}
+
+In this formula, $C_{inv~1/2}$ are annualized and scaled using the correct CEPCI. The $\dot Q_{unit}$ refers to the power purchased for the unit.
+
+- ENVEX: the ENVEX is equal to the total taxes paid every year due to carbon dioxyde emissions. 
+
+\begin{align}
+ENVEX = [e_{electricity}\dot Q_{electricity} + e_{NG}\dot Q_{NG}]*t_{op}*CO2_{tax}
+\end{align}
+
+In this formula, e indicates the environmental emissions of the resource. 
+
+- TOTEX: is equal to the sum of the 3 previous KPIs
+
+\begin{align}
+TOTEX = CAPEX+OPEX+ENVEX
+\end{align}
+
+- Exergy Losses: determined using graphical solving. 
+
 
 ### Parameters
 
- @cinv
+In this subsections are listed the parameters used to evaluate the KPIs. The fixed investment costs $c_{inv1}$ data were extracted from @cinv. The variable costs $c_{inv2}$ were provided for this study in the materials. The impact of electricity is assumed to be 0, and the one from Natural Gas is extracted from [?]. As the idea is to optimize the system without boundary, no limitation is applied on the conversion technologies: their proportional use can be included in the entire interval [O%,100%].
 
 
 | Variable            | $cost_1$ | $cost_2$    | $cinv_1$       | $cinv_2$    | $imp_1$      | $imp_2$         | $f_{min}$ | $f_{max}$ |
@@ -526,46 +553,6 @@ To characterize the relevance of the system, Key Performance Indicators (KPI) ar
 | Heat Pump           | 0     | 499,32   | 495,2082836 | -        | 0         | 0            | 0    | 100  |
 | Refrigeration       | 0     | 499,32   | 495,2082836 | -        | 0         | 0            | 0    | 100  |
 
-
-### Economic Costs - Case without Rivella and Digester
-
-| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
-|---------------------|----------|--------------|---------------|----------------|----------------|
-| Cooling Tower       | 5,84     | 5840         | 568935        | 0              | 568935         |
-| Boiler              | 0        | 0            | 0             | 0              | 0              |
-| Cogeneration engine | 1,89     | 11340        | 10495158      | 377044         | 10872202       |
-| Heat Pump           | 0,984    | 5904         | 4086940       | 122410         | 4209350        |
-| Refrigeration       | 1,2      | 6000         | 5051466       | 153459         | 5204925        |
-
-### Economic Costs - Case with Rivella
-
-| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
-|---------------------|----------|--------------|:-------------:|----------------|----------------|
-| Cooling Tower       |     5,73 |         5730 |        559790 |              0 |         559790 |
-| Boiler              |        0 |            0 |             0 |              0 |              0 |
-| Cogeneration engine |     2,28 |        13680 |      12632006 |         453536 |       13085542 |
-| Heat Pump           |     0,97 |         5820 |       4030910 |         120739 |        4151649 |
-| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
-
-### Economic Costs - Case with Digester
-
-| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
-|---------------------|----------|--------------|---------------|----------------|----------------|
-| Cooling Tower       |     5,83 |         5830 |        568709 |              0 |         568709 |
-| Boiler              |        0 |            0 |             0 |              0 |              0 |
-| Cogeneration engine |     1,89 |        11340 |      10473693 |         376276 |       10849969 |
-| Heat Pump           |    0,981 |         5886 |       4076196 |         122090 |        4198286 |
-| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
-
-### Economic Costs - Case with Rivella and Digester
-
-| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
-|---------------------|----------|--------------|---------------|----------------|----------------|
-| Cooling Tower       |     5,72 |         5720 |        559564 |              0 |         559564 |
-| Boiler              |        0 |            0 |             0 |              0 |              0 |
-| Cogeneration engine |     2,28 |        13680 |      12610541 |         452767 |       13063308 |
-| Heat Pump           |    0,967 |         5802 |       4020167 |         120418 |        4140585 |
-| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
 
 ## Adding Utilities to the Grand Composite Curve
 
@@ -584,7 +571,7 @@ In this initial case, utility units are added to the Grand Composite Curve, with
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_base.jpg) | ![Carnot Plot](Figures/carnot_base-1.jpg) |
 
-Let first optimize the case without Rivella and Digester. The target is to reduced the area between the utility and the Grand Composite Curve, which represents the exergy losses. Indeed, reducing the area means that the heat generation fits better the heat requirement. To do so, the following steps are applied:
+First the case without Rivella and Digester is optimized. The target is to reduce the area between the utility and the Grand Composite Curve, which represents the exergy losses. Indeed, reducing the area means that the heat generation fits better the heat requirement. To do so, the following steps are applied:
 
 - The first step is to reduce the major exergy losses, which are in the hot flow requirement. To do so, a cogeneration engine is added in the optimization. The operating temperature of cogeneration engine is 450°C, while boiler is 1050°C. Then, it is more adapted to use a cogeneration engine according to the hot flow requirements, which are at maximum about 150°C for the digester, 100°C for the rivella and 80°C for the process without digester and rivella.
 - Secondly, a heat pump is added to the Grand Composite Curve, around the pinch point, to enlace the three evaporator stages.
@@ -592,13 +579,33 @@ Let first optimize the case without Rivella and Digester. The target is to reduc
 
 The Carnot plot shows that the exergy losses are reduced, for hot and cold flows, and the boiler is not used anymore.
 
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero.
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|---------------|----------------|----------------|
+| Cooling Tower       | 5,84     | 5840         | 568935        | 0              | 568935         |
+| Boiler              | 0        | 0            | 0             | 0              | 0              |
+| Cogeneration engine | 1,89     | 11340        | 10495158      | 377044         | 10872202       |
+| Heat Pump           | 0,984    | 5904         | 4086940       | 122410         | 4209350        |
+| Refrigeration       | 1,2      | 6000         | 5051466       | 153459         | 5204925        |
+
 ### Optimization of case with Rivella
 
 | Integrated Composite Curve              |        Carnot           |
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_rivella.jpg) | ![Carnot Plot](Figures/carnot_rivella.jpg) |
 
-For the case with Rivella, with Digester, and with Rivella and Digester, the results are very similar. Only the maximum heat requirement is higher, as mention before, and still way lower than the operating temperature of the cogeneration engine. The Carnot plot shows that the exergy losses are reduced, compared to the first scenario, but is similar to the case without Rivella and Digester.
+For the case with Rivella, with Digester, and with Rivella and Digester, the results are very similar. Only the maximum heat requirement is higher, as mention before, and still way lower than the operating temperature of the cogeneration engine. The Carnot plot shows that the exergy losses are reduced, compared to the first scenario, but is similar to the case without Rivella and Digester. 
+
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero. Compared to the case without Rivella and Digester the size of the used cogeneration engine technollogy got increased.
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|:-------------:|----------------|----------------|
+| Cooling Tower       |     5,73 |         5730 |        559790 |              0 |         559790 |
+| Boiler              |        0 |            0 |             0 |              0 |              0 |
+| Cogeneration engine |     2,28 |        13680 |      12632006 |         453536 |       13085542 |
+| Heat Pump           |     0,97 |         5820 |       4030910 |         120739 |        4151649 |
+| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
 
 ### Optimization of case with Digester
 
@@ -606,29 +613,55 @@ For the case with Rivella, with Digester, and with Rivella and Digester, the res
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_digester.jpg) | ![Carnot Plot](Figures/carnot_digester.jpg) |
 
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero. The contributions of each technology are similar to the case without Rivella and Digester. 
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|---------------|----------------|----------------|
+| Cooling Tower       |     5,83 |         5830 |        568709 |              0 |         568709 |
+| Boiler              |        0 |            0 |             0 |              0 |              0 |
+| Cogeneration engine |     1,89 |        11340 |      10473693 |         376276 |       10849969 |
+| Heat Pump           |    0,981 |         5886 |       4076196 |         122090 |        4198286 |
+| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
+
 ### Optimization of case with both Rivella and Digester
 
 | Integrated Composite Curve              |        Carnot           |
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_both.jpg) | ![Carnot Plot](Figures/carnot_both.jpg) |
 
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero. 
+
+| **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
+|---------------------|----------|--------------|---------------|----------------|----------------|
+| Cooling Tower       |     5,72 |         5720 |        559564 |              0 |         559564 |
+| Boiler              |        0 |            0 |             0 |              0 |              0 |
+| Cogeneration engine |     2,28 |        13680 |      12610541 |         452767 |       13063308 |
+| Heat Pump           |    0,967 |         5802 |       4020167 |         120418 |        4140585 |
+| Refrigeration       |      1,2 |         6000 |       5051466 |         153459 |        5204925 |
+
 ### Reducing the operating temperature of the cogeneration engine
 
-Exergy is supposed to be reduced in the hot flow requirement, by reducing the operating temperature of the cogeneration engine.
+| Integrated Composite Curve              |        Carnot           |
+| ---------------------------- | ----------------------------- |
+| ![ICC Plot](Figures/icc_150.jpg) | ![Carnot Plot](Figures/carnot_150-1.jpg) |
+
+Even after the optimization, the exergy losses due to the hot flow requirement remain predominant. One of the reasons is the operating temperature of the cogeneration engine, which is 450°C, far away from the maximum heat requirement of the process, which is 150°C. The operating temperature depends physically on the engine and cannot be easily reduced. Let see in this section, by simulation, if there is a benefit to reduce the operating temperature of the cogeneration engine. 
+
+As the maximum heat requirement is 150°C for the whole process, the operating temperature of the cogeneration engine is simulatively reduced to 150°C instead of 450°C. The Carnot plot shows that the exergy losses are reduced for the hot flow. Indeed, the carnot factor is going less than 0.3 (0.6 with 450°C) which drastically reduces the area between the utility and the Grand Composite Curve. Then, using a technology similar to the cogeneration engine, but with a lower operating temperature, is more adapted to the process and is an idea of improvement.  
+
+## System Integration Comparison
+
+Since costs are the driving factors for comparing different options, the following table summarizes the total OPEX, CAPEX and ENVEX costs for the base case (without Rivella & Digester), the case only with Rivella, the case only with the Digester, and the case with both Rivella and Digester. For a graphical representation, the costs for each case are plotted in the Figure below.
 
 
+| **Economic Costs**                | **OPEX Total(M€/y)** | **CAPEX Total(M€/y)**  | **ENVEX Total(M€/y)** |
+|-----------------------------------|---------------------|----------------------|----------------------|
+| Base (without Rivella & Digestor) | 28.232729           | 0.652913             | 2.039632             |
+| Rivella                           | 31.60451            | 0.727733             | 2.454908             |
+| Digester                          | 28.185742           | 0.651824             | 2.035461             |
+| Rivella+Digester                  | 31.557523           | 0.726644             | 2.450736             |
 
-## Comparison
-
-
-| **Economic Costs**                | **OPEX Total(€/y)** | **CAPEX Total(€/y)** | **TOTEX Total(€/y)** | **ENVEX Total(€/y)** |
-|-----------------------------------|---------------------|----------------------|----------------------|----------------------|
-| Base (without Rivella & Digestor) | 28232729            | 652913               | 28885642             | 2039632              |
-| Rivella                           | 10799510           | 727733               | 11527243           | 2454908              |
-| Digester                          | 27819574           | 651824               | 28471398            | 2035461              |
-| Rivella+Digester                  | 10386355           | 726644               | 11112999           | 2450736              |
-
-```{python, echo = T, eval = T, fig.cap='Fig. 5: Bar Chart}
+```{python, echo = T, eval = T}
 
 import matplotlib.pyplot as plt
 import json
@@ -656,15 +689,19 @@ bar3 = ax.bar(index, envex_values, bar_width, label='ENVEX', color='limegreen', 
 # Customize the plot
 ax.set_xlabel('Cases')
 ax.set_ylabel('Cost (M€/y)')
-ax.set_title('Economic Costs Breakdown')
+ax.set_title('Total Economic Costs Comparison')
 ax.set_xticks(index)
 ax.set_xticklabels(cases)
 ax.legend()
 
 # Save the plot as PNG
-plt.savefig('Figures/EconomicCostComparison.png')
+plt.savefig('Figures/EconomicCosts.png')
 
 ```
+
+![Economic Costs comparison for all four cases](Figures/EconomicCosts.png)
+
+The Figure shows that the primary driving costs in all cases are the operating costs, with environmental and investment costs significantly lower in comparison. Futhermore, one can observe that, compared to the base case, the scenario with Rivella incurs significantly higher costs, mainly due to increased operating expenses. The digester case, on the other hand, exhibits similar costs compared to the base case. The reason for these higher operating costs stems from the larger size of the employed cogeneration engine technology. The Figure below shows the size contribution from each technology in the four cases. The boiler contribution is zero for all cases.
 
 ```{python, echo = T, eval = T, fig.cap='Fig. 5: Bar Chart}
 
@@ -693,12 +730,12 @@ bar1 = ax.bar(index, Cooling_Tower, bar_width, label='Cooling Tower', color='roy
 bar2 = ax.bar(index, Boiler, bar_width, label='Boiler', color='lightcoral', bottom=Cooling_Tower)
 bar3 = ax.bar(index, Cogeneration_engine, bar_width, label='Cogeneration engine', color='limegreen', bottom=np.array(Cooling_Tower) + np.array(Boiler))
 bar4 = ax.bar(index, Heat_pump, bar_width, label='Heat pump', color='red', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine))
-bar5 = ax.bar(index, Refrigeration, bar_width, label='Rerigeration', color='orange', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine)+ np.array(Heat_pump))
+bar5 = ax.bar(index, Refrigeration, bar_width, label='Refrigeration', color='orange', bottom=np.array(Cooling_Tower) + np.array(Boiler)+ np.array(Cogeneration_engine)+ np.array(Heat_pump))
 
 # Customize the plot
 ax.set_xlabel('Cases')
 ax.set_ylabel('Size (kW)')
-ax.set_title('Size Distribution Breakdown')
+ax.set_title('Size Distribution Comparison')
 ax.set_xticks(index)
 ax.set_xticklabels(cases)
 ax.legend()
@@ -707,6 +744,51 @@ ax.legend()
 plt.savefig('Figures/SizeComparison.png')
 
 ```
+
+
+![Technology Size Contribution for all four cases](Figures/SizeComparison.png)
+
+
+However, before reaching a conclusion about the optimal system, it is crucial to incorporate the selling costs for Rivella and the biogas for the digester. These selling costs are subtracted from the OPEX. The total costs (TOTEX, combining OPEX and CAPEX) for each of the different scenarios are illustrated in the Figure below.
+
+```{python, echo = T, eval = T}
+
+import matplotlib.pyplot as plt
+import json
+import numpy as np
+import pandas as pd
+from IPython.display import display, HTML
+
+# Data
+cases = ['Base', 'Rivella', 'Digester', 'Rivella+Digester']
+totex_values = [28.232729+0.652913, 10.799510+0.727733, 27.819574+0.651824, 10.386355+0.726644]
+
+# Bar Width
+bar_width = 0.5
+index = np.arange(len(cases))
+
+# Plotting
+fig, ax = plt.subplots(figsize=(10, 6))
+
+bar1 = ax.bar(index, totex_values, bar_width, label='TOTEX', color='orange')
+
+# Customize the plot
+ax.set_xlabel('Cases')
+ax.set_ylabel('Cost (M€/y)')
+ax.set_title('TOTEX Comparison')
+ax.set_xticks(index)
+ax.set_xticklabels(cases)
+ax.legend()
+
+# Save the plot as PNG
+plt.savefig('Figures/TOTEX.png')
+
+```
+
+![TOTEX comparison for all four cases](Figures/TOTEX.png)
+
+From this Figure, it is now evident that incorporating Rivella production is very interesting from a total cost perspective. The costs of the digester are comparable to the base case and significantly higher than when Rivella is included. All in all, one must still keep in mind that these are just the utility costs. Other contribution costs such as installation cost might significantly change the overall result.
+
 
 ## (Guidelines)
 
