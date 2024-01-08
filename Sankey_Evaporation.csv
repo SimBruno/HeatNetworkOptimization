@@ -1,0 +1,18 @@
+layer	source	target 	value
+exergy	past_milk	factory	77
+exergy	steam_in	factory	396
+exergy	gly_in	factory	21
+exergy	factory	gly_out	22
+exergy	factory	concentrated_milk	179
+exergy	factory	whey_out	61
+exergy	factory	wastewater	1.2
+exergy	factory	heat_exchanger_P1	22.2
+exergy	factory	heat_exchanger_P2	5.1
+exergy	factory	heat_exchanger_P3	19.6
+exergy	factory	heat_exchanger_P4	20
+exergy	factory	heat_exchanger_P5	2.2
+exergy	factory	evaporator_1	62.3
+exergy	factory	evaporator_2	97.9
+exergy	factory	evaporator_3	4.6
+
+

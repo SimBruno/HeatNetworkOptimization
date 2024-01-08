@@ -1,0 +1,14 @@
+{
+  "hash": "48c3c62d0ce8ab1c2ea70de7a9314956",
+  "result": {
+    "markdown": "---\nadvisor: Prof. François Maréchal\nunitname:\n  faculty: School of Engineering\n  institute: Mechanical Engineering\n  laboratory: \"Industrial Process and Energy Systems Engineering\"\nvenv: ./venv\n---\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n# Abstract {-}\n\nThis is the template for the Advanced Energetics project report. Its purpose is to guide you in creating a high-quality report. It includes both general writing instructions and project-specific guidelines. When submitting your final group report, please replace the guidelines with your own content.\n\n**Grading standards [^1]**\n\nThe project report will be evaluated based on the following criterias:\n\n- Report quality (25%), including\n  - Report structure\n  - Scientific writing\n  - Bibliography and references\n  - Quality of figures, tables and graphs\n- Report content (75%), including\n  - Abstract\n  - Introduction and conclusion\n  - Process description and analysis\n  - Energy bill\n  - Pinch analysis and heat exchanger network design\n  - Utility integration\n\n\n**How to write an abstract**\n\nLet us begin with the abstract. A standard abstract typically comprises the following components:\n\n- Project Background\n- Identified Problems\n- Methods Employed for Problem Solving\n- Highlights of key results\n- Significance of the results\n\nAn illustrative example for your reference is provided below:\n\n> Changing market demand and increasing environmental regulations challenges the refining industry to shift crude slates and reconfigure production processes while reducing emissions. \n> Yet sellers and buyers remain unaware of the carbon footprint of individual marketable networks, and each crude oil has different specifications and is processed in different destination markets. Here we show the global refining carbon intensity at a country level and crude level are 13.9–62.1 kg of CO2-equivalent (CO2e) per barrel and 10.1–72.1 kgCO2e per barrel, respectively, with a volume-weighted average of 40.7 kgCO2e per barrel (equivalent to 7.3 gCO2e MJ−1) and energy use of 606 MJ per barrel. We used bottom-up engineering-based refinery modelling on crude oils representing 93% of 2015 global refining throughput. On the basis of projected oil consumption under 2 °C scenarios, the industry could save 56–79 GtCO2e to 2100 by targeting primary emission sources. These results provide guidance on climate-sensitive refining choices and future investment in emissions mitigation technologies. \n>\n> -- @jing2020carbon\n\n\n[^1]: We start with complete transparency and clarity.",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

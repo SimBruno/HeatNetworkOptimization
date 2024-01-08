@@ -105,7 +105,7 @@ $$
 L_{past6\_1} = \dot{m}_{cream}c_{p_{cream\_mixed}}\left((T_{crpast\_x} - T_{crpast\_b}) - T_a \ln\left(\frac{T_{crpast\_x}}{T_{crpast\_b}}\right)\right)
 $$
 $$
-L_{past6\_2} = \dot{m}_{steam\_past6}c_{p_{steam}} (\Delta h_6 - T_a \Delta s_6)
+L_{past6\_2} = \dot{m}_{steam\_{past6}}c_{p_{steam}} (\Delta h_6 - T_a \Delta s_6)
 $$
 $$
 L_{past6} = L_{past6\_1} + L_{past6\_2}
@@ -156,8 +156,6 @@ The following Table presents a summary of all the calulated exergy losses.
 
 ```
 
-
-
 ```{python compute_pasteurisation, echo = T, eval = T}
 
 #import math
@@ -166,7 +164,6 @@ import numpy as np
 from IPython.display import display, HTML
 
 df = pd.read_csv('pasteurization_process.csv',sep = ';')
-
 
 for i in range(0,len(df.index)):
     globals()[df.iloc[i][1]] = df.iloc[i][2]
@@ -266,7 +263,7 @@ L_steam_in2=m_steam_past3*(2257-373*7.355)
 L_fresh_milk=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*np.log(T_mixure_out/T_past_cent))
 
 
-# Dataframe for Exergy Loss Pasteurization
+#C Dataframe for Exergy Loss Pasteurization
 
 Exergy_losses  = 'kW'
 
@@ -274,10 +271,12 @@ Variables_Names = ['L_Refrigeration','L_Past1','L_Past2','L_Past3','L_Past4','L_
 Variables_Values = np.divide([L_ref,L_past1,L_past2,L_past3,L_past4,L_past5,L_past6,L_past7,L_mixer,L_tot_past],1000)
 Variables_Units =  Exergy_losses
 df = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
+
 display(df)
-HTML(df.to_html(index=False))
+display(HTML(df.to_html(index=False)))
 
 ```
+
 
 Do visually represent the exergy flows in the system, a Sankey diagram is plotted. It shows the exergy in-flows and out-flows with respect to the factory. I can be noticed that the largest in-flow contribution comes from the steam. 
 
@@ -302,13 +301,13 @@ $$
 L_{heat1} = m_{11}(h_{11} - T_a s_{11}) - m_{12}(h_{12} - T_a s_{12}) + m_1(h_1 - T_a s_1) - m_2(h_2 - T_a s_2)
 $$
 $$
-L_{heat2} = m_2(h_2 - T_a s_2) - m_3(h_3 - T_a s_3) + m_{16}(h_{16} - T_a s_{16})
+L_{heat2} = m_2(h_2 - T_a s_2) - m_3(h_3 - T_a s_3) + m_{16}(h_{16} - T_a s_{16})- m_{ex2}(h_{ex2} - T_a s_{ex2})
 $$
 $$
-L_{heat3} = m_3(h_3 - T_a s_3) - m_4(h_4 - T_a s_4) + m_{20}(h_{20} - T_a s_{20})
+L_{heat3} = m_3(h_3 - T_a s_3) - m_4(h_4 - T_a s_4) + m_{20}(h_{20} - T_a s_{20})-m_{ex3}(h_{ex3} - T_a s_{ex3})
 $$
 $$
-L_{heat4} = m_4(h_4 - T_a s_4) - m_5(h_5 - T_a s_5) + m_{19}(h_{19} - T_a s_{19})
+L_{heat4} = m_4(h_4 - T_a s_4) - m_5(h_5 - T_a s_5) + m_{19}(h_{19} - T_a s_{19})- m_{ex4}(h_{ex4} - T_a s_{ex4})
 $$
 
 
@@ -352,6 +351,18 @@ for i in range(0,len(dfrecap.index)):
     globals()['h'+str(i+1)] = dfrecap['Enthalpy (J/mol)'].iloc[i]
     globals()['s'+str(i+1)] = dfrecap['Entropy (J/K)'].iloc[i]
 
+m_ex2=0.8
+h_ex2=122642.15967891106
+s_ex2=426.49113053055
+
+m_ex3=0.9
+h_ex3=206397.68253099348
+s_ex3=694.6484331540266
+
+m_ex4=0.31
+h_ex4=270918.9238699816
+s_ex4=890.092650494589
+
 
 #Exergy for heat exchangers
 
@@ -359,13 +370,23 @@ Ta=298
 
 L_heat1 = m11*(h11-Ta*s11)-m12*(h12-Ta*s12)+m1*(h1-Ta*s1)-m2*(h2-Ta*s2)
 
-L_heat2= -m2*(h2-Ta*s2)+m3*(h3-Ta*s3)-m16*(h16-Ta*s16)
+L_heat2= -m2*(h2-Ta*s2)+m3*(h3-Ta*s3)-m16*(h16-Ta*s16)+m_ex2*(h_ex2-Ta*s_ex2)
 
 
-L_heat3=-m3*(h3-Ta*s3)+m4*(h4-Ta*s4)-m20*(h20-Ta*s20)
+L_heat3=-m3*(h3-Ta*s3)+m4*(h4-Ta*s4)-m20*(h20-Ta*s20)+m_ex3*(h_ex3-Ta*s_ex3)
 
 
-L_heat4=-m4*(h4-Ta*s4)+m5*(h5-Ta*s5)+m15*(h15-Ta*s15)
+L_heat4=-m4*(h4-Ta*s4)+m5*(h5-Ta*s5)+m15*(h15-Ta*s15)+m_ex4*(h_ex4-Ta*s_ex4)
+
+L_heat5_1=m12*(h12-Ta*s12)-m13*(h13-Ta*s13)
+
+m_gly=3.469
+Cp_gly=2294
+T_glyin=270
+T_glyout=277
+
+L_heat5_2=m_gly*Cp_gly*((T_glyin-T_glyout)-T_a*np.log(T_glyin/T_glyout))
+L_heat5=L_heat5_1+L_heat5_2
 
 
 #Exergy for evaporators
@@ -384,17 +405,32 @@ L_eva3=-m10*(h10-Ta*s10)+m18*(h18-Ta*s18)+m16*(h16-Ta*s16)+m11*(h11-Ta*s11)
 L_tot_eva= L_heat1+L_heat2+L_heat3+L_heat4+L_eva1+L_eva2+L_eva3
 
 
+#Sankey Calculations
+
+Whey_out=m22*(h22-Ta*s22)/1000
+Wastewater=m23*(h23-Ta*s23)/1000
+steam_in=m23*(h24-Ta*s24)/1000
+concentrated_milk=m13*(h13-Ta*s13)/1000
+
+
 # Dataframe for Exergy Loss Evaporation
 
 Exergy_losses  = 'kW'
 
-Variables_Names = ['L_heat1','L_heat2','L_heat3','L_heat4','L_eva1','L_eva2','L_eva3','L_tot_eva']
-Variables_Values = np.divide([L_heat1,L_heat2,L_heat3,L_heat4,L_eva1,L_eva2,L_eva3,L_tot_eva],1000)
+Variables_Names = ['L_heat1','L_heat2','L_heat3','L_heat4','L_heat5','L_eva1','L_eva2','L_eva3','L_tot_eva']
+Variables_Values = np.divide([L_heat1,L_heat2,L_heat3,L_heat4,L_heat5,L_eva1,L_eva2,L_eva3,L_tot_eva],1000)
 Variables_Units =  Exergy_losses
 df_2 = pd.DataFrame(data = {'Exergy loss': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
 display(df_2)
 display(HTML(df_2.to_html(index=False)))
+```
+
+
+```{r sankey-function, echo = T, eval = T, warning = F, message=F}
+source("./sankey_ipese.R") # introduce the sankey function from the source file
+df = read.csv('Sankey_Evaporation.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
+sankey_ipese(df = df, unit = 'kW', title = 'Sankey diagram Evaporation') # replace the unit and title here
 ```
 
 ### Suggested modifications
