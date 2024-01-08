@@ -140,7 +140,7 @@ $$
 
 #### Total
 
-The amount of exergy that is lost in the pasteurization process is calculated b adding all the exergy losses of the heat exchangers. 
+The amount of exergy that is lost in the pasteurization process is calculated by adding all the exergy losses of the heat exchangers. 
 $$
 L_{tot\_past} = L_{ref} + L_{past1} + L_{past2} + L_{past3} + L_{past4} + L_{past5} + L_{past6} + L_{past7} + L_{mixer}
 $$
@@ -202,7 +202,7 @@ L_past2=L_past2_1+L_past2_2
 L_past3_1=m_milk*Cp_raw_milk*((T_past_b-T_past_a)-T_a*np.log(T_past_b/T_past_a))
 
 L_past3_2=m_steam_past3*(delta_h_steam-T_a*delta_s_steam)
-print(L_past3_2)
+
 
 L_past3=L_past3_1#L_past3_2-
 
@@ -226,7 +226,7 @@ L_past5=L_past5_1+L_past5_2
 #Past 6
 L_past6_1=m_cream*Cp_cream_mixed*((T_crpast_x-T_crpast_b)-T_a*np.log(T_crpast_x/T_crpast_b))
 L_past6_2=m_steam_past6*(delta_h_steam-Ta*delta_s_steam)
-print(L_past3_2)
+
 
 L_past6=L_past6_1+L_past6_2
 
@@ -263,7 +263,7 @@ L_steam_in2=m_steam_past3*(2257-373*7.355)
 L_fresh_milk=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*np.log(T_mixure_out/T_past_cent))
 
 
-# Dataframe for Exergy Loss Pasteurization
+C Dataframe for Exergy Loss Pasteurization
 
 Exergy_losses  = 'kW'
 
@@ -276,30 +276,42 @@ HTML(df.to_html(index=False))
 
 ```
 
+Do visually represent the exergy flows in the system, a Sankey diagram is plotted. It shows the exergy in-flows and out-flows with respect to the factory. I can be noticed that the largest in-flow contribution comes from the steam. 
+
 ```{r sankey-function, echo = T, eval = T, warning = F, message=F}
 source("./sankey_ipese.R") # introduce the sankey function from the source file
-df = read.csv('atom_balance_copy.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
+df = read.csv('Sankey_Pasteurization.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
 sankey_ipese(df = df, unit = 'kW', title = 'Sankey diagram Pasteurization') # replace the unit and title here
 ```
 
 ### Evaporation 
 
+The second process to be analysed is evaporation. Heat transfers occur in the heat exchangers, heat evaporators and splitters. Since the splitters are isenthalpic no exergy is lost. The exergy losses for the heat exchangers and the heat evaporators can be calculated with the following general equation: 
+
+$$
+L= m((h_{in} - h_{out})-T_a(s_{in} - s_{out}))
+$$
+
 #### Heat Exchanger
+
+There are four heat exchangers in the system: P1, P2, P3 and P4. The exergy that is lost for each of the heat exchangers can be calculated with the following equations:
 $$
 L_{heat1} = m_{11}(h_{11} - T_a s_{11}) - m_{12}(h_{12} - T_a s_{12}) + m_1(h_1 - T_a s_1) - m_2(h_2 - T_a s_2)
 $$
 $$
-L_{heat2} = -m_2(h_2 - T_a s_2) + m_3(h_3 - T_a s_3) - m_{16}(h_{16} - T_a s_{16})
+L_{heat2} = m_2(h_2 - T_a s_2) - m_3(h_3 - T_a s_3) + m_{16}(h_{16} - T_a s_{16})
 $$
 $$
-L_{heat3} = -m_3(h_3 - T_a s_3) + m_4(h_4 - T_a s_4) - m_{20}(h_{20} - T_a s_{20})
+L_{heat3} = m_3(h_3 - T_a s_3) - m_4(h_4 - T_a s_4) + m_{20}(h_{20} - T_a s_{20})
 $$
 $$
-L_{heat4} = -m_4(h_4 - T_a s_4) + m_5(h_5 - T_a s_5) + m_{15}(h_{15} - T_a s_{15})
+L_{heat4} = m_4(h_4 - T_a s_4) - m_5(h_5 - T_a s_5) + m_{19}(h_{19} - T_a s_{19})
 $$
 
 
 #### Heat Evaporator
+
+There are three heat evaporators in the system: EVAP 1, EVAP 2 and EVAP 3. The exergy that is lost for each of the heat evaporators can be calculated with the following equations:
 $$
 L_{eva1} = -m_6(h_6 - T_a s_6) + m_7(h_7 - T_a s_7) + m_{14}(h_{14} - T_a s_{14}) - m_{21}(h_{21} - T_a s_{21})
 $$
@@ -310,18 +322,16 @@ $$
 L_{eva3} = -m_{10}(h_{10} - T_a s_{10}) + m_{18}(h_{18} - T_a s_{18}) + m_{16}(h_{16} - T_a s_{16}) + m_{11}(h_{11} - T_a s_{11})
 $$
 
-#### Splitter
-There are no exergy losses in the splitters since they are isenthalpic
-
-
 #### Total
-
+The amount of exergy that is lost in the evaporation process is calculated by adding all the exergy losses of the heat exchangers. 
 $$
 \dot{L}_{evaporation}=\Sigma\dot{L}_{HX}+\Sigma\dot{L}_{evaporator}+\Sigma\dot{L}_{splitter}
 $$
 
 
-#### Results Exergy Analysis Evaporation
+#### Summary of Evaporation Exergy Results
+
+The following Table presents a summary of all the calulated exergy losses.
 
 ```{python HX, echo = T, eval = T}
 
