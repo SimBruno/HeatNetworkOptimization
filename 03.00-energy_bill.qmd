@@ -92,7 +92,7 @@ $$
 L_{past5\_1} = \dot{m}_{int}c_{p_{cream}}\left((T_{cream} - T_{crpast\_a}) - T_a \ln\left(\frac{T_{cream}}{T_{crpast\_a}}\right)\right)
 $$
 $$
-L_{past5\_2} = \dot{m}_{cream}c_{p_{cream}}\left((T_{crpast\_b} - T_{crpast\_c}) - T_a \ln\left(\frac{T_{crpast\_b}}{T_{crpast\_c}}\right)\right)
+L_{past5\_2} = \dot{m}_{cream}c_{p_{cream\_mixed}}\left((T_{crpast\_b} - T_{crpast\_c}) - T_a \ln\left(\frac{T_{crpast\_b}}{T_{crpast\_c}}\right)\right)
 $$
 $$
 L_{past5} = L_{past5\_1} + L_{past5\_2}
@@ -255,13 +255,10 @@ L_tot_past= L_ref+L_past1+L_past2+L_past3+L_past4+L_past5+L_past6+L_past7+L_mixe
 #Calculations for Sankey Diagram
 
 L_steam_in=m_steam_past3*(2880000-480*7.343)
-
-
 L_steam_out=m_steam_past3*(461000-383*1.418)
 L_steam_in2=m_steam_past3*(2257-373*7.355)
 
 L_fresh_milk=m_fmilk*Cp_fmilk*((T_mixure_out-T_past_cent)-T_a*np.log(T_mixure_out/T_past_cent))
-
 
 #C Dataframe for Exergy Loss Pasteurization
 
@@ -278,13 +275,23 @@ display(HTML(df.to_html(index=False)))
 ```
 
 
-Do visually represent the exergy flows in the system, a Sankey diagram is plotted. It shows the exergy in-flows and out-flows with respect to the factory. I can be noticed that the largest in-flow contribution comes from the steam. 
+To visually represent the exergy flows in the system, a Sankey diagram is plotted. It shows the exergy in-flows and out-flows with respect to the factory. 
 
 ```{r sankey-function, echo = T, eval = T, warning = F, message=F}
 source("./sankey_ipese.R") # introduce the sankey function from the source file
 df = read.csv('Sankey_Pasteurization.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
 sankey_ipese(df = df, unit = 'kW', title = 'Sankey diagram Pasteurization') # replace the unit and title here
 ```
+
+####  Exergy Efficiency Pasteurisation
+
+The efficiency of the pasteurisation process can be calculated with the following formula:
+
+$$
+\eta _{ex}=\frac{\dot{E}_{in}}{\dot{E}_{out}}=1-\frac{\dot{L}}{\dot{E}_{in}}
+$$
+
+As a result an exergy efficiency of 70.3% is obtained.
 
 ### Evaporation 
 
@@ -296,7 +303,7 @@ $$
 
 #### Heat Exchanger
 
-There are four heat exchangers in the system: P1, P2, P3 and P4. The exergy that is lost for each of the heat exchangers can be calculated with the following equations:
+There are five heat exchangers in the system: P1, P2, P3, P4 and P5. The exergy that is lost for each of the heat exchangers can be calculated with the following equations:
 $$
 L_{heat1} = m_{11}(h_{11} - T_a s_{11}) - m_{12}(h_{12} - T_a s_{12}) + m_1(h_1 - T_a s_1) - m_2(h_2 - T_a s_2)
 $$
@@ -309,19 +316,21 @@ $$
 $$
 L_{heat4} = m_4(h_4 - T_a s_4) - m_5(h_5 - T_a s_5) + m_{19}(h_{19} - T_a s_{19})- m_{ex4}(h_{ex4} - T_a s_{ex4})
 $$
-
+$$
+L_{heat5} = m_12(h_12 - T_a s_12) - m_13(h_13 - T_a s_13) + m_{gly}c_{p_{gly}}\left((T_{in\_gly} - T_{out\_gly}) - T_a \ln\left(\frac{T_{in\_gly}}{T_{out\_gly}}\right)\right)
+$$
 
 #### Heat Evaporator
 
 There are three heat evaporators in the system: EVAP 1, EVAP 2 and EVAP 3. The exergy that is lost for each of the heat evaporators can be calculated with the following equations:
 $$
-L_{eva1} = -m_6(h_6 - T_a s_6) + m_7(h_7 - T_a s_7) + m_{14}(h_{14} - T_a s_{14}) - m_{21}(h_{21} - T_a s_{21})
+L_{eva1} = m_6(h_6 - T_a s_6) - m_7(h_7 - T_a s_7) - m_{14}(h_{14} - T_a s_{14}) + m_{21}(h_{21} - T_a s_{21})
 $$
 $$
-L_{eva2} = -m_8(h_8 - T_a s_8) - m_{17}(h_{17} - T_a s_{17}) + m_{15}(h_{15} - T_a s_{15}) + m_9(h_9 - T_a s_9)
+L_{eva2} = m_8(h_8 - T_a s_8) + m_{17}(h_{17} - T_a s_{17}) - m_{15}(h_{15} - T_a s_{15}) - m_9(h_9 - T_a s_9)
 $$
 $$
-L_{eva3} = -m_{10}(h_{10} - T_a s_{10}) + m_{18}(h_{18} - T_a s_{18}) + m_{16}(h_{16} - T_a s_{16}) + m_{11}(h_{11} - T_a s_{11})
+L_{eva3} = m_{10}(h_{10} - T_a s_{10}) + m_{18}(h_{18} - T_a s_{18}) - m_{16}(h_{16} - T_a s_{16}) - m_{11}(h_{11} - T_a s_{11})
 $$
 
 #### Total
@@ -426,16 +435,19 @@ display(df_2)
 display(HTML(df_2.to_html(index=False)))
 ```
 
-
+The following Figure shows the Sankey diagram for the Evaporation process. 
 ```{r sankey-function, echo = T, eval = T, warning = F, message=F}
 source("./sankey_ipese.R") # introduce the sankey function from the source file
 df = read.csv('Sankey_Evaporation.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
 sankey_ipese(df = df, unit = 'kW', title = 'Sankey diagram Evaporation') # replace the unit and title here
 ```
+#### Exergy Efficiency Evaporation
+
+Based on the obtained results an exergy efficiency of 46% is obtained.
 
 ### Suggested modifications
 
-From the previous calculations, one can see that the total exergy lost to the environment from the pasteurization and evaporation processes is more than 1700 kW. This value indicates that the inefficiencies in both processes are very large. For the pasteurization process, the exergy loss is especially significant in Past 3, as steam enters and leaves the system. In the evaporation part, the exergy loss is particularly high in Evaporator 1 and Evaporator 2.
+From the previous calculations, one can see that the total exergy lost to the environment from the pasteurization and evaporation processes is more than 500 kW. This value indicates that the inefficiencies in both processes are very large. For the pasteurization process, the exergy loss is especially significant in Past 6, as steam enters and leaves the system. In the evaporation part, the exergy loss is particularly high in Evaporator 1 and Evaporator 2.
 
 To decrease the overall exergy losses in the system, different strategies can be implemented. Since the exergy efficiencies are so large the best option is to improve the general energy efficiency by upgrading to more energy-efficient equipment and using insulation.
 
