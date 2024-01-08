@@ -2,7 +2,10 @@
 
 ```{python evap, echo = T, eval = T}
 ```
-# Exergy analysis and Energy bill
+# Exergy analysis and Energy bill (Tasks 2 & 3)
+
+In the following section, exergy analysis will first be performed to assess how far from ideal case the system is. The idea is to assess where energy is not useful and where it is, and thus evaluate where improvment could be performed.
+In a second part, the energy operating costs will be computed to assess how much cooling and heating utilities cost. 
 
 ## Exergy analysis
 
@@ -436,7 +439,7 @@ display(HTML(df_2.to_html(index=False)))
 ```
 
 The following Figure shows the Sankey diagram for the Evaporation process. 
-```{r sankey-function, echo = T, eval = T, warning = F, message=F}
+```{r sankey-function2, echo = T, eval = T, warning = F, message=F}
 source("./sankey_ipese.R") # introduce the sankey function from the source file
 df = read.csv('Sankey_Evaporation.csv',sep = '\t') # replace the atom_balance.csv with your exergy analysis results
 sankey_ipese(df = df, unit = 'kW', title = 'Sankey diagram Evaporation') # replace the unit and title here
@@ -456,7 +459,7 @@ To decrease the overall exergy losses in the system, different strategies can be
 
 
 ## Energy bill
-
+In this section OPEX will be computed to assess how much cooling and heating utilities cost. The OPEX is dependent on both heating./cooling demand and the price of the utilities. The price of electricity and natural gas in France and Germany, for non-household consummers, are given in the following table and are taken from the following sources @noauthor_electricity_nodate and @noauthor_natural_nodate:
 ```{python Price Table, echo = T, eval = T}
 #print dataframe with the price of electricity and natural gas in France and Germany
 import pandas as pd
@@ -492,14 +495,22 @@ Now, let list all the assumptions used to computed the energy bill:
 The electricity consumption for cooling is computed as follow:
 
 $$
-Elec(kW)= Q(kW) / COP
+Elec(kW)= \frac{Q(kW)}{COP}
 $${#eq-cool_elec}
 
-The OPEX cost is computed as follow:
+And for heating:
 
 $$
-OPEX(M€/y)= Q(kW) \cdot t_{\text{op}} (h/y) \cdot price(€/kWh) \cdot 10^{-6} (M€/€)
+Q_{heat}(kW)= Q_{fuel} = \frac{Q(kW)}{\eta_{steamprod}}
+$${#eq-heat_ng}
+
+The OPEX cost is then computed as follow:
+
+$$
+OPEX(M€/y)= [Q_{heat}(kW)\cdot price_{gas}(€/kWh) + Elec(kW)\cdot price_{elec}(€/kWh)] \cdot t_{\text{op}} (h/y)  \cdot 10^{-6} (M€/€)
 $${#eq-opex}
+
+Thus, only heat exchanger or evaporator which requires the use of external cold or hot utilities are taken into account in the OPEX. The other heat exchangers are not considered since they are internal and thus selfsustainable.
 
 ```{python Energy Bill, echo = T, eval = T}
 top = 24*0.95*365 #h/year

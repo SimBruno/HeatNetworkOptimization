@@ -1,4 +1,4 @@
-# Energy conversion integration
+# Energy conversion integration (Tasks 8 & 9)
 
 Once the heat recovery is implemented, the energy balance of the process system is closed by converting energy resources like natural and electricity into useful heat, cold or refrigeration heat loads for the process.
 
