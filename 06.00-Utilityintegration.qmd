@@ -579,7 +579,7 @@ First the case without Rivella and Digester is optimized. The target is to reduc
 
 The Carnot plot shows that the exergy losses are reduced, for hot and cold flows, and the boiler is not used anymore.
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero.
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization of the case without Tivella and Digester are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero.
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|---------------|----------------|----------------|
@@ -597,7 +597,7 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 
 For the case with Rivella, with Digester, and with Rivella and Digester, the results are very similar. Only the maximum heat requirement is higher, as mention before, and still way lower than the operating temperature of the cogeneration engine. The Carnot plot shows that the exergy losses are reduced, compared to the first scenario, but is similar to the case without Rivella and Digester. 
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero. Compared to the case without Rivella and Digester the size of the used cogeneration engine technollogy got increased.
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization of the case with Rivella are presented in the following Table.  Compared to the case without Rivella and Digester the size of the used cogeneration engine technollogy got increased.
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|:-------------:|----------------|----------------|
@@ -613,7 +613,7 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_digester.jpg) | ![Carnot Plot](Figures/carnot_digester.jpg) |
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero. The contributions of each technology are similar to the case without Rivella and Digester. 
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization of the case with Digester are presented in the following Table. The contributions of each technology are similar to the case without Rivella and Digester. 
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|---------------|----------------|----------------|
@@ -629,7 +629,7 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_both.jpg) | ![Carnot Plot](Figures/carnot_both.jpg) |
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero. 
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization for the case with both Rivella and Digester are presented in the following Table. 
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|---------------|----------------|----------------|
