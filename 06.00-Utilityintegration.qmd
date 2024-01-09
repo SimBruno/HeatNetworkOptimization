@@ -433,10 +433,11 @@ HTML(dfs.to_html())
 ```
 
 
-It can be noticed that the Grand Composite Curves of these four different cases are quite similar. All of them show the triple plateau caused by the utilization of evaporators in the Evaporators section, and the minimum heat requirements as well as the maximum heat recovery are also quite similar, being of around 16000 kW and 26000 kW respectively in each case. The main difference that can be noticed is the temperature required by each system. The base system, without either the Rivella production or the Digester requires some relatively small temperatures, reaching a maximum of only ca. 90°C. This changes when the Rivella production is added, which requires slightly higher temperatures with a peak of ca. 100°C at the evaporator needed to produce the Rivella itself. The largest difference however is caused by the addition of the Digester. The Digester section introduces a steam dryer powered by superheated steam, thus reaching and requiring high temperatures of 150°C.
+It can be noticed that the Grand Composite Curves of these four different cases are quite similar. All of them show the triple plateau caused by the utilization of evaporators in the Evaporators section, and the minimum heat requirements as well as the maximum heat recovery are also quite similar, being of around 16000 kW and 26000 kW respectively in each case. 
+
+The main difference that can be noticed is the temperature required by each system. The base system, without either the Rivella production or the Digester requires some relatively small temperatures, reaching a maximum of only ca. 90°C. This changes when the Rivella production is added, which requires slightly higher temperatures with a peak of ca. 100°C at the evaporator needed to produce the Rivella itself. The largest difference however is caused by the addition of the Digester. The Digester section introduces a steam dryer powered by superheated steam, thus reaching and requiring high temperatures of 150°C.
+
 This said, since the subsystems required by the Rivella production and the Digester consume relatively little heat compared to the Evaporation section which is present in each scenario, the addition of these subsystems does not cause a large difference in the maximum heat recovery of the system nor in its minimum heat requirement.
-
-
 
 ## Energy Conversion Technologies
 
@@ -446,14 +447,13 @@ To provide the cold and hot flows required by the facility, Energy Conversion Te
 
 *Cooling technology* 
 
-A cooling tower is a device using a thermic contact surface between air and water to trigger water's evaporation, thus cooling down the remaining water. This process requires an electricity supply.
+A cooling tower is a device that uses a thermic contact surface between air and water to trigger the water's evaporation, thus cooling down the remaining water. This process requires an electricity supply.
 
 ### Boiler
 
 *Heating technology*
 
-A boiler is a simple utility using natural gas (fuel) and air (combustive agent) to provoke combustion, thus providing a heat flow. Both fluids and solids can be heated up this way. The hot air can be recovered to provide a second hot flow. 
-
+A boiler is a simple utility that uses natural gas (fuel) and air (combustive agent) to provoke combustion, thus providing a heat flow. Both fluids and solids can be heated up this way. The hot air can be recovered to provide a second hot flow. 
 
 ### Cogeneration Engine
 
@@ -461,22 +461,21 @@ A boiler is a simple utility using natural gas (fuel) and air (combustive agent)
 
 In the general case, cogeneration refers to a system converting a resource into two products. In this case, the device works as a boiler, but this time it produces both heat and electricity. This electricity is obtained thanks to turbines. Using this system reduces the amount of electricity extracted from the grid, and consequently reduces the operation expenditures of the complete facility.
 
-
 ### Heat Pump
 
 *Heating technology*
 
-In this case is considered a mechanical vapor compression heat pump. This utility provides heat from a vapor compression cycle supplied by electricity and using refrigerant as working fluid. In the most particular case of a Mechanical Vapor Compression (MVR), no refrigerant is used, but the process flow which is to be heated. 
+In this case is considered a mechanical vapor compression heat pump. This utility provides heat from a vapor compression cycle supplied by electricity and using refrigerant as working fluid. In the most particular case of a Mechanical Vapor Compression (MVR), no refrigerant is used except for the process flow which is to be heated. 
 
 ### Refrigeration
 
 *Cooling technology*
 
-The Refrigeration relies on the same system as the Heat Pump but uses the cold source rather than the heat sink. 
+The Refrigeration relies on the same system as the Heat Pump but uses a cold source rather than a heat sink. 
 
 ### Applications
 
-- Cooling devices: The cooling tower is used over ambient temperature (25°C) and the Refrigeration system below.
+- Cooling devices: The cooling tower is used over the ambient temperature (25°C) and the Refrigeration system below the ambient temperature.
 
 
 ## Key Performance Indicators (KPIs)
@@ -510,11 +509,11 @@ OPEX = [C_{electricity}\dot Q_{electricity} + C_{NG}\dot Q_{NG}]*t_{op}
 C_{inv} = \frac{i(1+i)^n}{(1+i)^n-1}c_{inv}
 \end{align}
 
-In this formula, $c_{inv}$ designates whether the fixed investment cost or the variable investment cost. The two other parameters n and I, respectively refer to the lifetime and the interest rate, stated as equal to 8% in this study.
+In this formula, $c_{inv}$ designates either the fixed investment cost or the variable investment cost. The two other parameters n and I respectively refer to the lifetime and the interest rate, stated as equal to 8% in this study.
 
-The investment cost must also be scaled with the CEPCI. According the requirements of the study, the CEPCI which should be chosen is the 2019 one, which is equal to 603.1. 
+The investment cost must also be scaled with the CEPCI. According to the requirements of the study, the CEPCI which should be chosen is the 2019 one, which is equal to 603.1. 
 
-Finally:
+Finally, we obtain that:
 
 \begin{align}
 CAPEX = C_{inv1}+ C_{inv2} \dot Q_{unit}
@@ -528,7 +527,7 @@ In this formula, $C_{inv~1/2}$ are annualized and scaled using the correct CEPCI
 ENVEX = [e_{electricity}\dot Q_{electricity} + e_{NG}\dot Q_{NG}]*t_{op}*CO2_{tax}
 \end{align}
 
-In this formula, e indicates the environmental emissions of the resource. 
+In this formula, $e$ indicates the environmental emissions of the resource. 
 
 - TOTEX: is equal to the sum of the 3 previous KPIs
 
@@ -541,7 +540,7 @@ TOTEX = CAPEX+OPEX+ENVEX
 
 ### Parameters
 
-In this subsections are listed the parameters used to evaluate the KPIs. The fixed investment costs $c_{inv1}$ data were extracted from @cinv. The variable costs $c_{inv2}$ were provided for this study in the materials. The impact of electricity is assumed to be 0, and the one from Natural Gas is extracted from [?]. As the idea is to optimize the system without boundary, no limitation is applied on the conversion technologies: their proportional use can be included in the entire interval [O%,100%].
+In this subsections are listed the parameters used to evaluate the KPIs. The fixed investment costs $c_{inv1}$ data were extracted from @cinv. The variable costs $c_{inv2}$ were provided for this study in the materials. The impact of electricity is assumed to be 0, and the one from Natural Gas is extracted from [?]. Since the idea is to optimize the system without boundary, no limitation is applied on the conversion technologies: their proportional use can be included in the entire interval [O%,100%].
 
 
 | Variable            | $cost_1$ | $cost_2$    | $cinv_1$       | $cinv_2$    | $imp_1$      | $imp_2$         | $f_{min}$ | $f_{max}$ |
@@ -563,7 +562,7 @@ In this subsections are listed the parameters used to evaluate the KPIs. The fix
 | ![ICC Plot](Figures/icc_dummy.jpg) | ![Carnot Plot](Figures/carnot_dummy-1.jpg) |
 
 
-In this initial case, utility units are added to the Grand Composite Curve, with the default parameters, and cost and emission factors from the previous section. Here, only boiler, cooling tower and refrigeration units are considered. As highlighted in the Carnot plot, there is a lot of exergy losses, especially in the hot flow requirement (boiler). The target of this task is to reduce these losses by adding more efficient and more adapted units. 
+In this initial case, utility units are added to the Grand Composite Curve, with the default parameters, and cost and emission factors from the previous section. Here, only boiler, cooling tower and refrigeration units are considered. As highlighted in the Carnot plot, there is a lot of exergy losses, especially in the hot flow requirement (boiler). The target of this task is to reduce these losses by adding more efficient and better adapted units. 
 
 ### Optimization of case without Rivella and Digester
 
@@ -571,15 +570,15 @@ In this initial case, utility units are added to the Grand Composite Curve, with
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_base.jpg) | ![Carnot Plot](Figures/carnot_base-1.jpg) |
 
-First the case without Rivella and Digester is optimized. The target is to reduce the area between the utility and the Grand Composite Curve, which represents the exergy losses. Indeed, reducing the area means that the heat generation fits better the heat requirement. To do so, the following steps are applied:
+First the case without Rivella and Digester is optimized. The goal is to reduce the area between the utility and the Grand Composite Curve, which represents the exergy losses. Indeed, reducing the area means that the heat generation fits better the heat requirement. To do so, the following steps are applied:
 
-- The first step is to reduce the major exergy losses, which are in the hot flow requirement. To do so, a cogeneration engine is added in the optimization. The operating temperature of cogeneration engine is 450°C, while boiler is 1050°C. Then, it is more adapted to use a cogeneration engine according to the hot flow requirements, which are at maximum about 150°C for the digester, 100°C for the rivella and 80°C for the process without digester and rivella.
-- Secondly, a heat pump is added to the Grand Composite Curve, around the pinch point, to enlace the three evaporator stages.
+- The first step is to reduce the major exergy losses, which are in the hot flow requirement. To do so, a cogeneration engine is added in the optimization. The operating temperature of cogeneration engine is 450°C, while boiler is 1050°C. Thus, it is better to use a cogeneration engine for the hot flow requirements, which are at maximum about 150°C for the digester, 100°C for the rivella and 80°C for the process without digester and rivella.
+- Secondly, a heat pump is added to the Grand Composite Curve, around the pinch point, to optimize the three evaporator stages.
 - Finally, the refrigeration unit and the cooling tower are used, at different and adapted temperature levels, to minimize the exergy losses for the cold flow requirement.
 
 The Carnot plot shows that the exergy losses are reduced, for hot and cold flows, and the boiler is not used anymore.
 
-The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization of the case without Tivella and Digester are presented in the following Table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero.
+The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each technology resulting from this optimization of the case without Tivella and Digester are presented in the following table. The costs associated with the boiler are zero, and likewise, the CAPEX for the Cooling Tower is also zero.
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|---------------|----------------|----------------|
@@ -595,9 +594,9 @@ The various economic costs (OPEX, CAPEX, and TOTEX) along with the size of each 
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_rivella.jpg) | ![Carnot Plot](Figures/carnot_rivella.jpg) |
 
-For the case with Rivella, with Digester, and with Rivella and Digester, the results are very similar. Only the maximum heat requirement is higher, as mention before, and still way lower than the operating temperature of the cogeneration engine. The Carnot plot shows that the exergy losses are reduced, compared to the first scenario, but is similar to the case without Rivella and Digester. 
+For the case with Rivella, with Digester, and with Rivella and Digester, the results are very similar. Only the maximum temperature requirement is higher, as mentioned before, and still way lower than the operating temperature of the cogeneration engine. The Carnot plot shows that the exergy losses are reduced, compared to the first scenario, but it is similar to the case without Rivella and Digester. 
 
-The economic costs along with the size of each technology resulting from this optimization of the case with Rivella are presented in the following Table.  Compared to the case without Rivella and Digester the size of the used cogeneration engine technollogy got increased.
+The economic costs along with the size of each technology resulting from this optimization of the case with Rivella are presented in the following Table.  Compared to the case without Rivella and Digester the size of the used cogeneration engine technollogy was increased.
 
 | **Technology**      | **Mult** | **Size(kW)** | **OPEX(€/y)** | **CAPEX(€/y)** | **TOTEX(€/y)** |
 |---------------------|----------|--------------|:-------------:|----------------|----------------|
@@ -645,9 +644,9 @@ The economic costs along with the size of each technology resulting from this op
 | ---------------------------- | ----------------------------- |
 | ![ICC Plot](Figures/icc_150.jpg) | ![Carnot Plot](Figures/carnot_150-1.jpg) |
 
-Even after the optimization, the exergy losses due to the hot flow requirement remain predominant. One of the reasons is the operating temperature of the cogeneration engine, which is 450°C, far away from the maximum heat requirement of the process, which is 150°C. The operating temperature depends physically on the engine and cannot be easily reduced. Let see in this section, by simulation, if there is a benefit to reduce the operating temperature of the cogeneration engine. 
+Even after the optimization, the exergy losses due to the hot flow requirement remain predominant. One of the reasons is the operating temperature of the cogeneration engine, which is 450°C, much higher than the maximum temperature requirement of the process, which is 150°C. The operating temperature depends physically on the engine and cannot be easily reduced. In this section we will attempt to see, by simulation, if there is a benefit to reducing the operating temperature of the cogeneration engine. 
 
-As the maximum heat requirement is 150°C for the whole process, the operating temperature of the cogeneration engine is simulatively reduced to 150°C instead of 450°C. The Carnot plot shows that the exergy losses are reduced for the hot flow. Indeed, the carnot factor is going less than 0.3 (0.6 with 450°C) which drastically reduces the area between the utility and the Grand Composite Curve. Then, using a technology similar to the cogeneration engine, but with a lower operating temperature, is more adapted to the process and is an idea of improvement.  
+As the maximum heat requirement is 150°C for the whole process, the operating temperature of the cogeneration engine is simulatively reduced to 150°C instead of 450°C. The Carnot plot shows that the exergy losses are reduced for the hot flow. Indeed, the carnot factor is going to less than 0.3 (0.6 with 450°C) which drastically reduces the area between the utility and the Grand Composite Curve. Thus, using a technology similar to the cogeneration engine, but with a lower operating temperature, would be more adapted to the process and would be a way to improve the system.  
 
 ## System Integration Comparison
 
@@ -701,7 +700,9 @@ plt.savefig('Figures/EconomicCosts.png')
 
 ![Economic Costs comparison for all four cases](Figures/EconomicCosts.png)
 
-The Figure shows that the primary driving costs in all cases are the operating costs, with environmental and investment costs significantly lower in comparison. Futhermore, one can observe that, compared to the base case, the scenario with Rivella incurs significantly higher costs, mainly due to increased operating expenses. The digester case, on the other hand, exhibits similar costs compared to the base case. The reason for these higher operating costs stems from the larger size of the employed cogeneration engine technology. The Figure below shows the size contribution from each technology in the four cases. The boiler contribution is zero for all cases.
+The Figure shows that the primary driving costs in all cases are the operating costs, with environmental and investment costs being significantly lower in comparison. Futhermore, one can observe that, compared to the base case, the scenario with Rivella incurs significantly higher costs, mainly due to increased operating expenses. The digester case, on the other hand, exhibits similar costs compared to the base case. The reason for these higher operating costs stems from the larger size of the employed cogeneration engine technology. 
+
+The Figure below shows the size contribution from each technology in the four cases. The boiler contribution is zero for all cases.
 
 ```{python, echo = T, eval = T, fig.cap='Fig. 5: Bar Chart}
 
@@ -749,7 +750,7 @@ plt.savefig('Figures/SizeComparison.png')
 ![Technology Size Contribution for all four cases](Figures/SizeComparison.png)
 
 
-However, before reaching a conclusion about the optimal system, it is crucial to incorporate the selling costs for Rivella and the biogas for the digester. These selling costs are subtracted from the OPEX. The total costs (TOTEX, combining OPEX, CAPEX and ENVEX) for each of the different scenarios are illustrated in the Figure below.
+This said, before reaching a conclusion about the optimal system it is crucial to incorporate the selling costs for Rivella and the biogas from the digester. These selling costs are thus subtracted from the OPEX. The total costs (TOTEX, combining OPEX, CAPEX and ENVEX) for each of the different scenarios are illustrated in the Figure below.
 
 ```{python, echo = T, eval = T}
 
@@ -788,4 +789,6 @@ plt.savefig('Figures/TOTEX.png')
 
 ![TOTEX comparison for all four cases](Figures/TOTEX.png)
 
-From this Figure, it is now evident that incorporating Rivella production is very interesting from a total cost perspective. The costs of the digester are comparable to the base case and significantly higher than when Rivella is included. All in all, one must still keep in mind that these are just the utility costs. Other contribution costs such as installation cost might significantly change the overall result.
+From this Figure, it is now evident that incorporating a Rivella production is very interesting from a total cost perspective. The costs of the digester are comparable to the base case and significantly higher than when Rivella is included. 
+
+All in all, however, one must still keep in mind that these are just the utility costs. Other contribution costs such as installation cost might significantly change the overall result.
