@@ -1,15 +1,4 @@
----
-title: "Group 6/F: Process Integration and Optimization for a Dairy Factory"
-editor: visual
----
 # Introduction {#intro}
-| Name           | Sciper |
-|----------------|--------|
-|  Simon BRUNO   | 310348 |
-| Corentin JAIRE | 310573 |
-|  Lina KUHLMANN | 312893 |
-| Lorenzo PRECHT | 310969 |
-| Valentine REHN | 342655 |
 
 The dairy industry, like many others, confronts challenges related to efficiency and sustainability. As part of the "ME-451 Advanced Energetics 2023/2024" course, a project has been initiated to address these challenges through a case study.
 Mrs. Pacometer, the owner of a dairy processing facility, recognizing the need for improvements in both energy and economic efficiency, approached PinchSim (us) to conduct a comprehensive study. The key processes within her dairy factory that will be subject to analysis include Milk Pasteurization, Milk Evaporation, Drum Dryers, Cleaning in Place, Cold Storage and Hot Water, Wastewater and Sludge Production, Rivella, and Digester. The study encompasses a range of tasks, including the determination of mass and energy balances, exergy analysis, implementation of an energy bill, identification of pinch points, heat exchanger network design. and optimization of utility integration, among others.
