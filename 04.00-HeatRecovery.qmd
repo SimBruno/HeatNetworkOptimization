@@ -1198,7 +1198,7 @@ The following table summarizes the cost for the optimized (with heat recovery) a
 
 ## Minimum energy requirement
 
-The minimum energy requirement, including both heat and cooling demand, can be determined through the application of pinch analysis. <!--In the Survival Guide, you can find an example of using QRosmose to conduct pinch analysis for a brewery plant. For your project, you are expected to employ the same methodology to analyze the dairy factory. While more detailed tutorials will be provided during the semester, the TA team will also be available to assist you as needed.-->
+The minimum energy requirement, including both heating and cooling demand, can be determined through the application of a pinch analysis. <!--In the Survival Guide, you can find an example of using QRosmose to conduct pinch analysis for a brewery plant. For your project, you are expected to employ the same methodology to analyze the dairy factory. While more detailed tutorials will be provided during the semester, the TA team will also be available to assist you as needed.-->
 
 <!--In your report, we would like to see the following:-->
 
@@ -1211,7 +1211,7 @@ Furthermore, feel free to utilize R and Python code chunks to generate visually 
 
 When designing a process, engineers primarily address three concerns: they aim to recover process heat wherever possible, maximize process-to-process exchanges, and minimize the Heat Exchanger Network (HEN). 
 
-To achieve this, H-T diagrams are employed to determine the minimal temperature difference between hot and cold exchanges, defining it as the pinch point. Subsequently, the process is partitioned into cold and hot areas, both in relation to the pinch point. 
+To achieve this, H-T diagrams are employed to determine the minimal temperature differences between hot and cold exchanges, defining it as the pinch point. Subsequently, the process is partitioned into cold and hot areas, both in relation to the pinch point. 
 
 The fundamental concept of pinch analysis is to optimize heat exchanges between these two areas. 
 
@@ -1221,11 +1221,11 @@ This methodology is thus known as the pinch point analysis, and we will show the
 
 ### Analysis Results
 
-In this section we will show the results of our pinch analysis. First we will show the composite curves (Fig. 1) and the grand composite curve (Fig. 2). 
+In this section we will show the results of our pinch analysis. First we will show the Composite Curves (Fig. 1) and the Grand Composite Curve (Fig. 2). 
 
-From the composite curves we are then able to extrapolate the energy requirements, the heat recovery and the utilities, by separating the graph in three portions with two green dotted lines, showing the boundaries of the utilities and the heat recovery.
+From the composite curves we are then able to extrapolate the energy requirements, the heat recovery and the utilities. By separating the graph in three portions with two green dotted lines we show the boundaries of the utilities and the heat recovery.
 
-We can also use the graph of the grand composite curve to determine the temperature of the pinch points. These are the points where the heat load is equal to 0, meaning that the heats of the corrected cold and hot streams are the same in these points. We do not consider the two points at the edges of the temperature values since they're not pinch points.
+We can then use the graph of the grand composite curve to determine the temperature of the pinch points. These are the points where the heat load is equal to 0, meaning that the heats of the corrected cold and hot streams are the same in these points.
 
 We will start by showing the composite curves first:
 
@@ -1350,7 +1350,7 @@ plt.show()
 figure.savefig("composite_curves.png", format="png", dpi=600)
 ```
 
-It is important to note the three plateaux performed by each composite curve between 60°C to 70°C, which correspond to the heat exchanged via the evaporators in the evaporator section. As these plateaux are located on top of each other, they indicate that it would be possible to reuse a large part of their heat.
+It is important to note the three plateaux performed by each composite curve between 60°C to 70°C, which correspond to the heat exchanged via the evaporators in the evaporator section. As these plateaux are located on top of each other, they indicate that it would be possible to reuse an important part of their heat.
 
 Next is the grand composite curve:
 ```{python, echo = T, eval = T, fig.cap='Fig. 2: Grand Composite Curve'}
