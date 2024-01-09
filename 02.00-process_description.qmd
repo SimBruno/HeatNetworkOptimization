@@ -23,7 +23,7 @@ In this section the mass and energy balances for each chemical operation of the 
 
 ### Mass Flows 
 
-Because of the mass flow conservation, we have:
+Because of the mass flow conservation:
 
 
 $$
@@ -47,11 +47,11 @@ The following heat capacities are already provided :
 
 - $c_{p,Cream~ac} = 3.4 kJ/(kgK)$ (cream after centrifuge)
 
-From Litterature @NAGHAVI201864 we chose:
+According to @NAGHAVI201864, the thickener heat capacity is:
 
 - $c_{p,thickener} = c_{p,alginate} = 4.175 kJ/(kg.K)$ 
 
-Assuming that the mixer provides an ideal mix, we have:
+Assuming that the mixer provides an ideal mix:
 
 $$
 \begin{align*}
@@ -239,7 +239,7 @@ Q_past1 = heat_exchanger_Q(T_past_cent,T_mixure_out,m_fmilk,Cp_fmilk)
 Q_past2 = heat_exchanger_Q(T_past_a,T_milk_0,m_milk,Cp_raw_milk)
 Q_past3 = heat_exchanger_Q(T_past_a,T_past_b,m_milk,Cp_raw_milk)
 Q_past4 = heat_exchanger_Q(T_past_d,T_milk,m_milk,Cp_raw_milk)
-Q_past5 = heat_exchanger_Q(T_crpast_a,T_crpast_b,m_cream,Cp_cream_mixed)
+Q_past5 = heat_exchanger_Q(T_cream_0,T_crpast_a,m_int,Cp_cream)
 Q_past6 = heat_exchanger_Q(T_crpast_x,T_crpast_b,m_cream,Cp_cream_mixed)
 Q_past7 = heat_exchanger_Q(T_cream,T_crpast_c,m_cream,Cp_cream_mixed)
 
@@ -333,12 +333,6 @@ Variables_Values = [delta_h_steam]
 Variables_Units =  Specific_enthalpy 
 df_pasteurization_enthalpy = pd.DataFrame(data = {'Specific Enthalpy': Variables_Names, 'Value':Variables_Values, 'Unit': Variables_Units})
 
-#HTML(df_pasteurization_heat_flow.to_html(index=False))
-#HTML(df_pasteurization_temperatures.to_html(index=False))
-#HTML(df_pasteurization_mf_in.to_html(index=False))
-#HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
-#HTML(df_pasteurization_heat_capacities.to_html(index=False))
-
 
 ```
 
@@ -394,22 +388,57 @@ df_pasteurization_csv = pd.concat([df_1,df_2,df_3,df_4,df_5,df_6,df_7], axis = 0
 df_pasteurization_csv.to_csv('pasteurization_process.csv',sep=';')
 ```
 
-```{python display_pasteurisation, echo = T, eval = T}
+```{python display_pasteurisation, echo = F, eval = T}
 
 import pandas as pd
 import numpy as np
 from IPython.display import display, HTML
 
-df_pasteurization_heat_flow = df_pasteurization_heat_flow.round(2)
-df_pasteurization_temperatures = df_pasteurization_temperatures.round(2)
-df_pasteurization_mf_steam_gly = df_pasteurization_mf_steam_gly.round(2)
-df_pasteurization_heat_capacities = df_pasteurization_heat_capacities.round(2)
+def to_degree(x):
+    return x -273.15
 
-HTML(df_pasteurization_heat_flow.to_html(index=False))
-HTML(df_pasteurization_temperatures.to_html(index=False))
-HTML(df_pasteurization_mf_in.to_html(index=False))
-HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
-HTML(df_pasteurization_heat_capacities.to_html(index=False))
+#First_table
+Names = ['Ambiant','Fresh_Milk','Mixure_out','Past_cent','Milk_0','Past_a','Past_b','Past_c','Past_d','Milk','cream_0','crpast_a','Thickener','crpast_x','crpast_b','crpast_c','Cream']
+Temperatures = [T_a,T_fmilk,T_mixure_out,T_past_cent,T_milk_0,T_past_a,T_past_b,T_past_c,T_past_d,T_milk,T_cream_0,T_crpast_a,T_thick,T_crpast_x,T_crpast_b,T_crpast_c,T_cream]
+Mass_flows = [np.nan,m_fmilk,m_fmilk,m_fmilk,m_milk,m_milk,m_milk,m_milk,m_milk,m_milk,m_int,m_int,m_thick,m_cream,m_cream,m_cream,m_cream]
+Heat_capacities = [np.nan,Cp_fmilk,Cp_fmilk,Cp_fmilk,Cp_raw_milk,Cp_raw_milk,Cp_raw_milk,Cp_raw_milk,Cp_raw_milk,Cp_raw_milk,Cp_cream,Cp_cream,Cp_alboline,Cp_cream_mixed,Cp_cream_mixed,Cp_cream_mixed,Cp_cream_mixed]
+Table_1 = pd.DataFrame(data = {'Temperature (°C)' : Temperatures, 'Mass Flow (kg/s)':Mass_flows, 'Heat Capacity (J/(kg.K))':Heat_capacities},index=Names)
+Table_1['Temperature (°C)'] = Table_1['Temperature (°C)'].apply(to_degree)
+Table_1['Temperature (°C)'] = Table_1['Temperature (°C)'].round(2)
+Table_1['Heat Capacity (J/(kg.K))'] = Table_1['Heat Capacity (J/(kg.K))'].round(-1)
+
+HTML(Table_1.to_html(index=True,na_rep='-'))
+
+#Second_table
+
+Names = ['Gliwater In - Refrigeration','Gliwater Out - Refrigeration','Steam In - Past3','Steam Out - Past3','Gliwater In - Past4','Gliwater Out - Past4','Steam In - Past6','Steam Out - Past6','Gliwater In - Past7','Gliwater Out - Past7' ]
+Temperatures = [T_glywater_in,T_glywater_out,T_steam_in,T_steam_out,T_glywater_in,T_glywater_out,T_steam_in,T_steam_out,T_glywater_in,T_glywater_out]
+Mass_flows = [m_gly_ref,m_gly_ref,m_steam_past3,m_steam_past3,m_gly_past4,m_gly_past4,m_steam_past6,m_steam_past6,m_gly_past7,m_gly_past7 ]
+Heat_capacities = [Cp_glywater,Cp_glywater,Cp_steam,Cp_steam,Cp_glywater,Cp_glywater,Cp_steam,Cp_steam,Cp_glywater,Cp_glywater]
+Table_2 = pd.DataFrame(data = {'Temperature (°C)' : Temperatures, 'Mass Flow (kg/s)':Mass_flows, 'Heat Capacity (J/(kg.K))':Heat_capacities},index=Names)
+Table_2['Temperature (°C)'] = Table_2['Temperature (°C)'].apply(to_degree)
+Table_2['Temperature (°C)'] = Table_2['Temperature (°C)'].round(1)
+Table_2['Mass Flow (kg/s)'] = Table_2['Mass Flow (kg/s)'].round(1)
+Table_2['Heat Capacity (J/(kg.K))'] = Table_2['Heat Capacity (J/(kg.K))'].round(-2)
+
+HTML(Table_2.to_html(index=True,na_rep='-'))
+
+#Third_table
+
+Table_3 = pd.DataFrame(data={'Refrigeration':Q_refrigeration/1000,'Past1':Q_past1/1000,'Past2':Q_past2/1000,'Past3':Q_past3/1000,'Past4':Q_past4/1000,'Past5':Q_past5/1000,'Past6':Q_past6/1000,'Past7':Q_past7/1000},index=['Heat Flow (kJ/s)'])
+Table_3=Table_3.round(1)
+HTML(Table_3.to_html(index=True,na_rep='-'))
+
+#df_pasteurization_heat_flow = df_pasteurization_heat_flow.round(2)
+#df_pasteurization_temperatures = df_pasteurization_temperatures.round(2)
+#df_pasteurization_mf_steam_gly = df_pasteurization_mf_steam_gly.round(2)
+#df_pasteurization_heat_capacities = df_pasteurization_heat_capacities.round(2)
+
+#HTML(df_pasteurization_heat_flow.to_html(index=False))
+#HTML(df_pasteurization_temperatures.to_html(index=False))
+#HTML(df_pasteurization_mf_in.to_html(index=False))
+#HTML(df_pasteurization_mf_steam_gly.to_html(index=False))
+#HTML(df_pasteurization_heat_capacities.to_html(index=False))
 ```
 
 <!---
