@@ -1,8 +1,7 @@
 
-
 ```{python evap, echo = T, eval = T}
 ```
-# Exergy analysis and Energy bill 
+# Exergy analysis and Energy bill (Tasks 2 & 3) 
 
 In the following section, an exergy analysis will be performed to assess how far from the ideal case the system is. The idea is to assess where energy is not useful and where it is, and thus evaluate where improvement could be performed.
 
