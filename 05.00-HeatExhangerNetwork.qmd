@@ -9,11 +9,8 @@ Thanks to the pinch analysis done in the previous section (task 5) it is possibl
 There are four types of penalizing heat exchangers:
 
 - A cold utility cooling down a hot stream above the pinch (Type 1)
-
 - A hot utility heating up a cold stream below the pinch (Type 2)
-
 - A heat exchanger heating up a cold stream under the pinch using a hot stream above the pinch (Type 3)
-
 - A mixer where the fluids it is mixing are not on the same side of the pinch point, i.e. the cooler fluid intake is below the pinch and the warmer fluid intake is above the pinch (Type 4)
  
 
@@ -157,15 +154,12 @@ Here are the steps to follow to design the HEN:
 1. Feasibility Rules
 
 - Number of streams rules: above pinch: $N_{cold} \geq N_{hot}$, below pinch: $N_{cold} \leq N_{hot}$,
-
 - Cp rules: above pinch: $mcp_{cold} \geq mcp_{hot}$ and $\sum mcp_{cold, remaining} \geq \sum mcp_{hot, remaining}$, below pinch: $mcp_{cold} \leq mcp_{hot}$ and $\sum mcp_{cold, remaining} \leq \sum mcp_{hot, remaining}$.
 
 2. Heuristic Rules
 
 - Choose the biggest mcp flow from the remaining flows to select where to place the HX, 
-
 - If Feasibility rules are not respected, splitting must be done,
-
 - When all flows have been connected with HX, add Cold Utilities and Hot Utilities to reach the target temperatures of respective hot and cold flows.
 
 Let's start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
@@ -173,59 +167,42 @@ Let's start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
 1. Step 1:
 
 - $N_{cold} = 3$ and $N_{hot} = 4$ thus splitting needed to respect 1st feasibility rule.
-
 - Splitting of flow A into A1 and A2 such that: $mcp_{A1} =  11.9 kW/K$ and $mcp_{A2} = 16.7 kW/K$. This splitting will be useful for E2 HX.
-
 - Two biggest mcp flows are F and B. BUT $mcp_{cold} \leq mcp_{hot}$ 
-
 - Splitting of flow B into B1 and B2 such that: $mcp_{B1} =  16.7 kW/K$ and $mcp_{B2} = 11.9 kW/K$. 
-
 - Now 2nd feasibility rule is respected.
-
 - E1 is placed between F and B1 and $Q_{E1} = mcp_{B1} \cdot (T_{in,B}-T_{pinch}) = 83.5 kW$
 
 2. Step 2:
 
 - $N_{cold} = 3$ and $N_{hot} = 4$ thus splitting needed to respect 1st feasibility rule.
-
 - Splitting A2 into 2 streams A2a and A2b such that: $mcp_{A2a} =  11.7 kW/K$ and $mcp_{A2b} = 5 kW/K$. This splitting will be useful for E3 HX.
-
 - Two biggest mcp flows are A1 and B2 and 2nd feasibility rule is respected.
-
 - E2 is placed between A1 and B2 and $Q_{E2} = mcp_{B2} \cdot (T_{in,B}-T_{pinch}) = 59.5 kW$
 
 3. Step 3:
 
 - $N_{cold} = 3$ and $N_{hot} = 3$ thus no splitting needed.
-
 - Two biggest mcp flows are A2a and H and 2nd feasibility rule is respected.
-
 - E3 is placed between A2a and H and $Q_{E3} = Q_{H} = 58.5 kW$
 
 4. Step 4:
 
 - $N_{cold} = 2$ and $N_{hot} = 2$ thus no splitting needed.
-
 - Two biggest mcp flows are A2b and G and 2nd feasibility rule is respected.
-
 - E4 is placed between A2b and G and $Q_{E4} = Q_{G} = 25.1 kW$
 
 5. Step 5:
 
 - $N_{cold} = 1$ and $N_{hot} = 1$ thus no splitting needed.
-
 - Two biggest mcp flows are D and E and 2nd feasibility rule is respected.
-
 - E5 is placed between D and E and $Q_{E5} = Q_{D} = 9.6 kW$
 
 6. Step 6:
 
 - Place the Hot Utilities to reach the target temperatures of the cold flows.
-
 - HU1 is placed after all splitting of A and $Q_{HU1} = Q_{A} - Q_{E2} -  Q_{E3} - Q_{E4} = 142.6 kW$
-
 - HU2 is placed after E5 on flow D and $Q_{HU2} = Q_{D} - Q_{E5} = 9.7 kW$
-
 - HU3 is placed after E1 on flow F and $Q_{HU3} = Q_{F} - Q_{E1} = 167.5 kW$
 
 Let's now continue with the design below the pinch point (recall $T_{pinch}=67.5°C$).
@@ -234,59 +211,42 @@ Let's now continue with the design below the pinch point (recall $T_{pinch}=67.5
 
 - First it can be noticed that $\sum mcp_{hot} \leq \sum mcp_{cold}$. This is only due to the 1.6 kW/K of the flow C. Thus no matter how we connect the flows the 2nd feasibility rule  will never be respected. 
 So let's remove the flow C below the pinch from all the following calculations at first, and then handle it at the end.
-
 - $N_{hot} = 4$ and $N_{cold} = 3$ (w/o flow C) thus no splitting needed.
-
 - Two biggest mcp flows are A and B and 2nd feasibility rule is respected.
-
 - E6 is placed between A and B and $Q_{E6} = Q_{A} = 142.9 kW$
 
 2. Step 2:
 
 - $N_{hot} = 3$ and $N_{cold} = 2$ (w/o flow C) thus no splitting needed.
-
 - Two biggest mcp flows are F and H BUT 2nd feasibility rule is respected (i.e., $mcp_{hot} \leq mcp_{cold}$).
-
 - Splitting of flow F into F1 and F2 such that: $mcp_{F1} = 11.7 kW/K$ and $mcp_{F2} = 5.0 kW/K$.
-
 - Now 2nd feasibility rule is respected.
-
 - E7 is placed between F1 and H and $Q_{E7} = mcp_{F1} \cdot (T_{pinch} - T_{in,F}) = 58.5 kW$
 
 3. Step 3:
 
 - $N_{hot} = 2$ and $N_{cold} = 2$ (w/o flow C) thus no splitting needed.
-
 - Two biggest mcp flows are F2 and G and 2nd feasibility rule is respected.
-
 - E8 is placed between F2 and G and $Q_{E8} = mcp_{F2} \cdot (T_{pinch} - T_{in,F}) = 25 kW$
 
 4. Step 4:
 
 - $N_{hot} = 1$ and $N_{cold} = 1$ (w/o flow C) thus no splitting needed.
-
 - Two biggest mcp flows are D and E and 2nd feasibility rule is respected.
-
 - E9 is placed between D and E and $Q_{E9} = Q_{D} = 16.36 kW$
 
 5. Step 5:
 
 - Let's now handle flow C. It is possible to use the rest of heat from flow B to heat up flow C. 
-
 - Feasibility rules are respected.
-
 - $Q_{E10} = Q_{C} = 17.52 kW$
 
 6. Step 6:
 
 - Place the Cold Utilities to reach the target temperatures of the hot flows.
-
 - CU1 is placed after all splitting of B and $Q_{CU1} = Q_{B} - Q_{E6} -Q_{E10} = 1531.2 kW$
-
 - CU2 is placed after E9 on flow E and $Q_{CU2} = Q_{E} - Q_{E9} = 110.6 kW$
-
 - CU3 is placed after E8 on flow G and $Q_{CU3} = Q_{G} - Q_{E8} = 175.6 kW$
-
 - CU4 is placed after E7 on flow F1 and $Q_{CU4} = Q_{H} - Q_{E7} = 58.5 kW$
 
 
@@ -294,10 +254,8 @@ Here is the final HEN design (note that additionnal temperatures where indicated
 
 ![HEN after design](Figures/HENflowsaft.jpg)
 
-
 It appears that the method used here doesn't prevent from impossible HX. Indeed, it is possible to see that E9 and E10 are impossible as the temperature of the cold flow is higher than the temperature of the hot flow. 
 Because of this infeasibility E9 and E10 will be removed from the following economic analysis. Further on the report, with the help of loop method, it will be possible to remove E9 from the design.
-
 
 ### Economic Analysis of the First Heat Exchanger Network
 
