@@ -2,14 +2,15 @@
 
 ```{python evap, echo = T, eval = T}
 ```
-# Exergy analysis and Energy bill (Tasks 2 & 3)
+# Exergy analysis and Energy bill 
 
-In the following section, exergy analysis will first be performed to assess how far from ideal case the system is. The idea is to assess where energy is not useful and where it is, and thus evaluate where improvment could be performed.
-In a second part, the energy operating costs will be computed to assess how much cooling and heating utilities cost. 
+In the following section, an exergy analysis will be performed to assess how far from the ideal case the system is. The idea is to assess where energy is not useful and where it is, and thus evaluate where improvement could be performed.
+
+In a second part, the energy operating costs will be computed to assess how much the cooling and heating utilities cost. 
 
 ## Exergy analysis
 
-To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a unit and the exergy leaving the unit. This exergy analysis includes calculating the losses for each component experiencing heat transfer, covering both pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
+To evaluate the losses and inefficiencies in the dairy production, an exergy analysis is performed. An exergy loss is the difference between the exergy entering a unit and the exergy leaving the unit. This exergy analysis includes calculating the losses for each component experiencing heat transfer, covering both the pasteurization and evaporation processes. The ambient temperature is set at $T_a = 25°C + 273K = 293K$.
 
 ### Pasteurization
 
@@ -50,7 +51,7 @@ $$
 
 #### Past 2
 
-In the heat exchanger dedicated to Past 2, exergy is dissipated through two milk streams.
+In the heat exchanger dedicated to Past 2, exergy is dissipated through the two milk streams.
 $$
 L_{past2\_1} = \dot{m}_{milk}c_{p_{raw\_milk}}\left((T_{milk\_0} - T_{past\_a}) - T_a \ln\left(\frac{T_{milk\_0}}{T_{past\_a}}\right)\right)
 $$
@@ -90,7 +91,7 @@ $$
 
 #### Past 5
 
-In the heat exchanger dedicated to Past 5, exergy is dissipated through two cream streams.
+In the heat exchanger dedicated to Past 5, exergy is dissipated through the two cream streams.
 $$
 L_{past5\_1} = \dot{m}_{int}c_{p_{cream}}\left((T_{cream} - T_{crpast\_a}) - T_a \ln\left(\frac{T_{cream}}{T_{crpast\_a}}\right)\right)
 $$
@@ -130,7 +131,7 @@ $$
 
 #### Mixer
 
-In the heat exchanger dedicated to the mixer, exergy is dissipated through the cream and thickner streams.
+In the heat exchanger dedicated to the mixer, exergy is dissipated through the cream and thickener streams.
 $$
 L_{mixer\_1} = \dot{m}_{cream}c_{p_{cream}}\left((T_{crpast\_a} - T_{crpast\_x}) - T_a \ln\left(\frac{T_{crpast\_a}}{T_{crpast\_x}}\right)\right)
 $$
@@ -150,7 +151,7 @@ $$
 
 #### Summary of Pasteurization Exergy Results
 
-The following Table presents a summary of all the calulated exergy losses.
+The following table presents a summary of all the calulated exergy losses:
 
 ```{r path, echo = F}
 #path <- file.path('./venv/Scripts/python.exe')
@@ -277,7 +278,6 @@ HTML(df.to_html(index=False))
 
 ```
 
-
 To visually represent the exergy flows in the system, a Sankey diagram is plotted. It shows the exergy in-flows and out-flows with respect to the factory. 
 
 ```{r sankey-function, echo = T, eval = T, warning = F, message=F}
@@ -298,7 +298,11 @@ As a result an exergy efficiency of 70.3% is obtained.
 
 ### Evaporation 
 
-The second process to be analysed is evaporation. Heat transfers occur in the heat exchangers, heat evaporators and splitters. Since the splitters are isenthalpic no exergy is lost. The exergy losses for the heat exchangers and the heat evaporators can be calculated with the following general equation: 
+The second process to be analysed is the evaporation process. Heat transfers occur in the heat exchangers, heat evaporators and splitters. 
+
+Since the splitters are isenthalpic no exergy is lost. 
+
+The exergy losses for the heat exchangers and the heat evaporators can be calculated with the following general equation: 
 
 $$
 L= m((h_{in} - h_{out})-T_a(s_{in} - s_{out}))
@@ -325,7 +329,8 @@ $$
 
 #### Heat Evaporator
 
-There are three heat evaporators in the system: EVAP 1, EVAP 2 and EVAP 3. The exergy that is lost for each of the heat evaporators can be calculated with the following equations:
+There are three heat evaporators in the system: EVAP 1, EVAP 2 and EVAP 3.
+The exergy that is lost for each of the heat evaporators can be calculated with the following equations:
 $$
 L_{eva1} = m_6(h_6 - T_a s_6) - m_7(h_7 - T_a s_7) - m_{14}(h_{14} - T_a s_{14}) + m_{21}(h_{21} - T_a s_{21})
 $$
@@ -337,7 +342,7 @@ L_{eva3} = m_{10}(h_{10} - T_a s_{10}) + m_{18}(h_{18} - T_a s_{18}) - m_{16}(h_
 $$
 
 #### Total
-The amount of exergy that is lost in the evaporation process is calculated by adding all the exergy losses of the heat exchangers. 
+The amount of exergy that is lost in the evaporation process is calculated by adding together all the exergy losses of the heat exchangers. 
 $$
 \dot{L}_{evaporation}=\Sigma\dot{L}_{HX}+\Sigma\dot{L}_{evaporator}+\Sigma\dot{L}_{splitter}
 $$
@@ -345,7 +350,7 @@ $$
 
 #### Summary of Evaporation Exergy Results
 
-The following Table presents a summary of all the calulated exergy losses.
+The following Table presents a summary of all the calulated exergy losses of the evaporation process:
 
 ```{python HX, echo = T, eval = T}
 
@@ -434,10 +439,12 @@ Based on the obtained results an exergy efficiency of 46% is obtained.
 
 From the previous calculations, one can see that the total exergy lost to the environment from the pasteurization and evaporation processes is more than 500 kW. This value indicates that the inefficiencies in both processes are very large. For the pasteurization process, the exergy loss is especially significant in Past 6, as steam enters and leaves the system. In the evaporation part, the exergy loss is particularly high in Evaporator 1 and Evaporator 2.
 
-To decrease the overall exergy losses in the system, different strategies can be implemented. Since the exergy efficiencies are so large the best option is to improve the general energy efficiency by upgrading to more energy-efficient equipment and using insulation.
+To decrease the overall exergy losses in the system, different strategies can be implemented. Since the exergy efficiencies are so large the best option would be to improve the general energy efficiency by upgrading to more energy-efficient equipment and using insulation.
 
 ## Energy bill
-In this section OPEX will be computed to assess how much cooling and heating utilities cost. The OPEX is dependent on both heating./cooling demand and the price of the utilities. The price of electricity and natural gas in France and Germany, for non-household consummers, are given in the following table and are taken from the following sources @noauthor_electricity_nodate and @noauthor_natural_nodate:
+In this section the OPEX will be computed to assess how much the cooling and heating utilities cost. The OPEX is dependent on both the heating and the cooling demand and the price of the utilities. 
+
+The price of electricity and natural gas in France and Germany, for non-household consumers, are given in the following table and are taken from @noauthor_electricity_nodate and @noauthor_natural_nodate:
 ```{python Price Table, echo = T, eval = T}
 #print dataframe with the price of electricity and natural gas in France and Germany
 import pandas as pd
@@ -454,11 +461,11 @@ price = price.round(3)
 HTML(price.to_html())
 ```
 
-Now, let list all the assumptions used to computed the energy bill:
+A few assumptions were used to compute the energy bill:
 
 - The factory is running 95% of the time (8322 hours per year)
 - COP of the refrigeration system is 3.5
-- All water is used in closed loop. The cost is not taken into account in OPEX but will be in CAPEX.
+- All water is used in closed loops. Its cost is not taken into account in the OPEX but will be consideered for the calculations of the CAPEX.
 
 |                     |            Heating            |           Cooling           |
 |:-------------------:|:-----------------------------:|:---------------------------:|
@@ -470,25 +477,25 @@ Now, let list all the assumptions used to computed the energy bill:
 |       Rivella       |         Qrivella_heat         |                             |
 |       Digester      | Qdigester_dq, Qdigester_steam |                             |
 
-The electricity consumption for cooling is computed as follow:
+The electricity consumption required for the cooling is computed as follows:
 
 $$
 Elec(kW)= \frac{Q(kW)}{COP}
 $${#eq-cool_elec}
 
-And for heating:
+And for the heating:
 
 $$
 Q_{heat}(kW)= Q_{fuel} = \frac{Q(kW)}{\eta_{steamprod}}
 $${#eq-heat_ng}
 
-The OPEX cost is then computed as follow:
+The OPEX cost is then computed as follows:
 
 $$
 OPEX(M€/y)= [Q_{heat}(kW)\cdot price_{gas}(€/kWh) + Elec(kW)\cdot price_{elec}(€/kWh)] \cdot t_{\text{op}} (h/y)  \cdot 10^{-6} (M€/€)
 $${#eq-opex}
 
-Thus, only heat exchanger or evaporator which requires the use of external cold or hot utilities are taken into account in the OPEX. The other heat exchangers are not considered since they are internal and thus selfsustainable.
+Thus, only heat exchangers or evaporators which require the use of external cold or hot utilities are taken into account in the OPEX. The other heat exchangers are not considered since they are internal and thus selfsustainable.
 
 ```{python Energy Bill, echo = T, eval = T}
 top = 24*0.95*365 #h/year
