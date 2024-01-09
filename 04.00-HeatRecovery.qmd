@@ -1,9 +1,9 @@
 # Pinch analysis (Tasks 4 & 5)
-After having determined the energy and mass exchanged in the entire subsystems (task 1), performed an exergy analysis (task2) and computed the energy bill of the factory (task 3), it is now time to see where improvement can be achieved and tried different approach to optimize the system
+After having determined the energy and mass exchanged in the entire subsystems (task 1), performed an exergy analysis (task2) and computed the energy bill of the factory (task 3), it is now time to see where improvements can be achieved and to try some different approaches to optimize the system.
 
-First, in task 4, optimization of the minimum temperature difference ($\Delta T$) in heat exchangers, will be performed. The goal will be to see if in 2 processes (namely Pasteurization and Cleaning In Place), it is possible to optimize the $\Delta T_{min}$ of some of the HX to reduce the energy bill. 
+First, in task 4, an optimization of the minimum temperature difference ($\Delta T$) in the heat exchangers will be performed. The goal will be to see whether in 2 processes, namely Pasteurization and Cleaning In Place, it would be possible to optimize the $\Delta T_{min}$ of some of the HX to reduce the energy bill. 
 
-Then, in task 5, a first look at global optimization of the entire factory will be achieved by ploting the Hot and Cold Compiste curves as well as the Grand Composite Curve. This will then enable to determine a crucial Temperature, the pinch point, from which a further optimization can be achieved in task 7 with the HEN design.
+Then, in task 5, a first look at the global optimization of the entire factory will be achieved by plotting the Hot and Cold Composite Curves as well as the Grand Composite Curve. This will then allow us to determine a crucial temperature, the pinch point, from which a further optimization can be achieved in task 7 with the HEN design.
 
 ## Optimization of $\Delta T_{min}$
 
@@ -18,30 +18,31 @@ Then, in task 5, a first look at global optimization of the entire factory will 
 --->
 
 The goal of this part is to determine an optimized $\Delta T_{min}$ such that costs are minimized for the considered subsystems. 
-In all scenarios we will do the following:
 
-- Determine the area of the HX in term of the $\Delta T_{min}$
-- Determine the cost of the HX in term of the the Area
+In all scenarios the following will be done:
+
+- Determine the area of the HX depending on the $\Delta T_{min}$
+- Determine the cost of the HX depending on the Area
 
 The costs will be computed for both France and Germany and will be composed of CAPEX and OPEX.
 
-The idea is too be able to determine if this optimized $\Delta T_{min}$ enables costs reduction compared to the assumed ∆Tmin of 5K in the Mass/Energy Balances and Energy Bill.
+The idea is to be able to determine whether this optimized $\Delta T_{min}$ enables a cost reduction compared to the assumed ∆Tmin of 5K in the Mass and Energy Balances and Energy Bill.
 
 Four different scenarios will be considered:
 
 - Past 5 only
 - Past 1 + Past 5 combined
-- An addditional heat recovery for pasteurization
-- Heat Recovery in Cleaning In Place (CIP) process
+- An additional heat recovery for pasteurization
+- Heat Recovery in the Cleaning In Place (CIP) process
 
 The three first scenarios focus on the pasteurization process whereas the later is about the CIP process.
 
 ### General Method
 
 #### Initialisation
-First, the T-h diagram of the cold and hot streams is plotted to determined if the $\Delta T_{min}$ is on the left or right of the diagram (i.e. between $T_{hot,in}$ and $T_{cold,out}$ or between $T_{hot,out}$ and $T_{cold,in}$). This will influence in the following formulas of CAPEX.
+First, the T-h diagram of the cold and hot streams is plotted to determined whether the $\Delta T_{min}$ is on the left or right side of the diagram, i.e. between $T_{hot,in}$ and $T_{cold,out}$ or between $T_{hot,out}$ and $T_{cold,in}$. This will affect the following formulas for the CAPEX.
 
-In the case of $h_1 < h_2$. The equation of T-h diagram is:
+In the case of $h_1 < h_2$, the equation of the T-h diagram is:
 
 $$
 T_{cold}(h) = \frac{h}{m_1 c_{p,1}} + T_{1} - \frac{h_1}{m_1 c_{p,1}}
@@ -86,18 +87,18 @@ Q = m_{cold} \cdot c_{p,c} \cdot (T_{c,in}-T_{c,out})
   = m_{hot} \cdot c_{p,h} \cdot (T_{h,out}-T_{h,in})
 $${#eq-Q}
 
-- U, the total heat transfer coefficient, is assumed to be the half of the heat transfer coefficient of water ($1000 W/m^2K$) since the heat exchanger thickness is way smaller than 1 meter.
+- U, the total heat transfer coefficient, is assumed to be half of the heat transfer coefficient of water ($1000 W/m^2K$) since the heat exchanger's thickness is much smaller than 1 meter.
 $$
 U = \frac{\alpha}{2}
 $${#eq-U}
 
-- LMTD, the logarithmic mean temperature difference, is computed as follow:
+- LMTD, the logarithmic mean temperature difference, is computed as follows:
 
 $$
 LMTD = \frac{(T_{h,in}-T_{c,out})-(T_{c,in}-T_{h,out})}{\ln(\frac{T_{h,in}-T_{c,out}}{T_{c,in}-T_{h,out}})}
 $$
 
-Knowing the heat exchanger area, the CAPEX can be computed as follow:
+Knowing the heat exchanger area, the CAPEX can be computed as follows:
 
 $$
 CAPEX = F_{BM} \cdot C_p \cdot e \cdot a_n
@@ -107,37 +108,38 @@ where:
 
 - $F_{BM}$ is the bare module factor, which is assumed to be 4.74 since a fluid flows in the heat exchanger (Slide 10, T4.1)
 
-- $C_p$ is the cost of the heat exchanger, which is computed as follow: $$C_p = \frac{I_t}{I_{t,ref}} \cdot 10^{k_1+k_2 \cdot \log(A_{ex})}$${#eq-Cp}
+- $C_p$ is the cost of the heat exchanger, which is computed as follows: $$C_p = \frac{I_t}{I_{t,ref}} \cdot 10^{k_1+k_2 \cdot \log(A_{ex})}$${#eq-Cp}
     - $I_t = 603.1$ is the investment cost index of the year of interest (2019) @noauthor_fluid_nodate
     - $I_{t,ref} = 389.5$ is the investment cost index of the reference year (1998) @noauthor_fluid_nodate
     - $k_1 = 3.6788$ and $k_2 = 0.4412$ are the constants of the equation (Slide 12, T4.1) for a spiral plate heat exchanger. This type of heat exchanger is assumed because of the area range.
 
-- $e = 0.92 €/\$$ is the exchange rate between us dollar and euro.
+- $e = 0.92 €/\$$ is the exchange rate between U.S. dollars and euros.
 
-- $a_n$ is the annualization factor, which is computed as follow: $$a_n = \frac{i(1+i)^n}{(1+i)^n-1} $${#eq-a_n}
+- $a_n$ is the annualization factor, which is computed as follows: $$a_n = \frac{i(1+i)^n}{(1+i)^n-1} $${#eq-a_n}
     - $i = 0.05$ is the interest rate (Slide 8, T4.2)
     - $n = 20$ is the lifetime of the heat exchanger
 
 #### Operating cost (OPEX)
 
-Operating cost depends on three factors:
+The operating costs depend on three factors:
 
 - Natural gas consumption for heating: $$c_{heating} = c_{gas} \cdot Q_{HEX} \cdot t_{op}$${#eq-heating}
-    - $c_{gas} = 0.08 €/kWh$ is the price of natural gas in France and Germany
+    - $c_{gas} = 0.08 €/kWh$ is the price of natural gas in France and in Germany
     - $Q_{HEX}$ is the heat exchanged between the two streams
     - $t_{op} = 24 \cdot 0.95 \cdot 365 h/year$ is the operating time of the heat exchanger
     - Assumption: $\eta_{boiler} = 1$
 
 - Electricity consumption for cooling: $$c_{cooling} = c_{elec} \cdot \frac{Q_{HEX}}{COP} \cdot t_{op}$${#eq-cooling}
-    - $c_{elec} = 0.12 €/kWh$ is the price of electricity in France, $0.21 €/kWh$ in Germany
+    - $c_{elec} = 0.12 €/kWh$ is the price of electricity in France
+    - $c_{elec} = 0.21 €/kWh$ is the price of electrivity in Germany
     - $Q_{HEX}$ is the heat exchanged between the two streams
     - $COP = 3.5$ is the coefficient of performance of the heat pump
 
-- Water consumption: however, water is considered as being used in a closed loop. Therefore, the cost in not considered in operation cost. It is also neglected in CAPEX since the cost is small compared to the heat exchangers cost.
+- Water consumption: however, water is considered as being used in a closed loop. Therefore, the cost is not considered in the operation costs. It is also neglected in the CAPEX since the cost is small compared to the heat exchanger's cost.
 
 ### Past 5 only
 
-Here, Past 5 heat exchanger cost is optimized with respect to $\Delta T_{min}$. In the following code, 1 stands for cold stream, and 2 for hot stream. When there is a T_#number, it is related to the entrance of the stream and _prime relate to the exiting. The _Number stands for the past number. 
+Here, the Past 5 heat exchanger's cost is optimized with respect to $\Delta T_{min}$. In the following code, 1 stands for cold stream, and 2 for hot stream. When there is a T_#number, it is related to the entrance of the stream and _prime relate to the exiting. The _Number stands for the past number. 
 
 Example: T2_prime_2 stands for the $T_{hot,out}$ of the past2 HX, T1_5 stands for the $T_{cold,in}$ of the past5 HX.
 
@@ -426,16 +428,20 @@ Past5_opt_ger_sc1 = Past5_opt_ger_sc1.round(2)
 HTML(Past5_opt_ger_sc1.to_html(index=False))
 ```
 
-The T-h diagram shows that the $\Delta T_{min}$ is on the right of the curves. This determines the equations to use for the CAPEX.
+The T-h diagram shows that the $\Delta T_{min}$ is on the right of the curves. This determines the equations that will be used for the CAPEX.
 
 The minimum value of TOTEX is graphically determined and is reported in the previous tables. The first table is for France and the second one for Germany.
 
 ### Past 1 + Past 5
 
-This time only $T_{c,in}$ and $T_{c,out}$ are known but nothing about the hot streams is mentionned.
-The exact same method as for past5 can't be reused since there $T_{h,in}$ and $T_{c,in}$ were known.
-Then one first need to determine $T_{h,in}$ from the Past2 ∆T (assumed here at 5K for simplicity). This gives $T_{past,c} = 70°C$ which will be $T_{h,in}$ of past1.
-Another important assumption in this scenario is to assume for past1 that $T_{c,out}=T_{past-cent,out} \ne 60°C$. Indeed, this temperature will instead be determined from the ∆Tmin optimization of past1.
+This time only $T_{c,in}$ and $T_{c,out}$ are known but nothing about the hot streams is mentioned.
+
+The same method as for past5 cannot be reused since $T_{h,in}$ and $T_{c,in}$ are unknown in this scenario.
+
+Thus it is first needed to determine $T_{h,in}$ from the Past2 ∆T (assumed here at 5K for simplicity). This gives $T_{past,c} = 70°C$ which will be $T_{h,in}$ of past1.
+
+Another important assumption in this scenario is that for past1 $T_{c,out}=T_{past-cent,out} \ne 60°C$. Indeed, this temperature will instead be determined from the ∆Tmin optimization of past1.
+
 From this new $T_{c,out}$, and because both past1 and past5 are linked by this flow, the ∆Tmin optimization of past5 will be recomputed.
 
 #### Past 1 optimization
@@ -584,17 +590,21 @@ Past1_opt_ger_sc2 = Past1_opt_ger_sc2.round(2)
 HTML(Past1_opt_ger_sc2.to_html(index=False))
 ```
 
-The first graph show dT is on the left and thus the corresponding equation presented at the beginning of this section are used.
+The first graph shows that dT is on the left side, thus the corresponding equations presented at the beginning of this section are used.
 
 The optimisation gives a $\Delta T_{min}$ which varies between Germany and France. This leads to different CAPEX and OPEX for both countries.
 
-For the OPEX, the costs of past3 (heating) and past 4 (cooling) were to be inluded. 
-Past 3 equation becomes the following: $Q_{past3} = m_{hot}*cp_{hot}*(T_{past2,out}-348)$ where $m_{hot}$ is the flow coming out of past2. Past 4 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
-Of course the heating OPEX (past 3) will use gas costs whereas the cooling OPEX (past 4) will use electricity costs and consider a COP of 3 as in the energy bill section. Both processes again assume the same operating time as for Energy Bill.
+For the OPEX, the costs of past3 (heating) and past 4 (cooling) are to be included. 
+
+The Past 3 equation will be the following: $Q_{past3} = m_{hot}*cp_{hot}*(T_{past2,out}-348)$ where $m_{hot}$ is the flow coming out of past2. 
+
+The Past 4 equation will be the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$.
+
+Of course the heating OPEX (past 3) will use gas costs whereas the cooling OPEX (past 4) will use electricity costs and consider a COP of 3 as in the energy bill section. Both processes again assume the same operating time as for the Energy Bill.
 
 #### Past 5 optimization
 
-Now the same as above is reperformed but for past 5. This time because both past 1 and past 5 are connected it is assumed $T_{cold,in,past5}=T_{hot,out,past1}$
+Now the same as above is performed once again except for past 5. This time because both past 1 and past 5 are connected it is assumed that $T_{cold,in,past5}=T_{hot,out,past1}$
 
 
 ```{python past1+5_past5, echo = T, eval = T}
@@ -741,17 +751,23 @@ Past5_opt_ger_sc2 = Past5_opt_ger_sc2.round(2)
 HTML(Past5_opt_ger_sc2.to_html(index=False))
 ```
 
-The first graph show dT is on the right and thus the corresponding equation presented at the beginning of this section is used.
+The first graph shows that dT is on the right side, thus the corresponding equations presented at the beginning of this section will be used.
 
-For the OPEX the costs of past 6 (heating) and past 7 (cooling) were to be included. 
-Past 6 equation becomes the following: $Q_{past6} = m_{hot}*cp_{hot}*(T_{hot,in,past5}-T_{cold,out,past5})$ where $m_{hot}$ is the flow coming out of past5. Past 7 equation becomes the following: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
-Of course the heating OPEX (past 6) will use gas costs whereas the cooling OPEX (past 7) will use electricity costs and consider a COP of 3 as in energy bill. Both processes again assume the same operating time as for Energy Bill.
+For the OPEX the costs of past 6 (heating) and past 7 (cooling) must be included. 
 
-The optimisation gives a $\Delta T_{min}$ for past 5 of 6.3K leading to an area of 5.21$m^2$ and a larger TOTEX in Germany than France because of the higher price of electricity in Germany (both CAPEX are the same but OPEX vary). Compared to case where only past5 were optimized, it presents a higher $\Delta T_{min}$ but a lower Area and thus lower costs. Considering only the costs of past5, it may seem more interesting to optimize past1 and past5 simultaneously. However one have to look at the whole picture and don't forget that past1 was also optimized (thus consider total costs of both past1 and past5).
+The Past 6 equation will be the following: $Q_{past6} = m_{hot}*cp_{hot}*(T_{hot,in,past5}-T_{cold,out,past5})$ where $m_{hot}$ is the flow coming out of past5. 
+
+The Past 7 equation will be: $m_{hot}*cp_{hot}*(T_{hot,out,past1}-277)$
+
+Of course the heating OPEX (past 6) will use gas costs whereas the cooling OPEX (past 7) will use electricity costs and consider a COP of 3 as in energy bill. Both processes again assume the same operating time as for the Energy Bill.
+
+The optimisation gives a $\Delta T_{min}$ for past 5 of 6.3K leading to an area of 5.21$m^2$ and a larger TOTEX in Germany than France because of the higher price of electricity in Germany (both CAPEX are the same but the OPEX varies). 
+
+Compared to the case where only past5 was optimized, it presents a higher $\Delta T_{min}$ but a lower Area and thus lower costs. Considering only the costs of past5, it may seem more interesting to optimize past1 and past5 simultaneously. However one has to look at the whole picture and not forget that past1 was also optimized (thus mmust consider the total costs of both past1 and past5).
 
 #### Both costs combined 
 
-Finaly, let's combine both costs from past 1 and past 5 to get the overall CAPEX, OPEX, and TOTEX for the two pasteurizers. This total costs will then be comapred to the energy bill without optimization over $\Delta T_{min}$. 
+Finaly, let us combine both costs from past 1 and past 5 to get the overall CAPEX, OPEX, and TOTEX for the two pasteurizers. These total costs will then be compared to the energy bill without optimization over $\Delta T_{min}$. 
 
 ```{python past1+5_overall, echo = T, eval = T}
 ####################################
@@ -779,20 +795,26 @@ HTML(Overall_opt_ger_sc2.to_html(index=False))
 
 ### Pasteurization with Recovery HEX
 
-The only possibility to recover heat in the pasteurisation section is by adding a new heat exchanger to preheat the thickener with the ouput milk flow. The following figure illustrate the location of this new heat exchanger.
+The only possibility to recover heat in the pasteurisation section is by adding a new heat exchanger to preheat the thickener with the ouput milk flow. The following figure illustrates the location of this new heat exchanger.
 
 ![Pasteurisation](Figures/Recovery.jpg)
 
-Assumption: crpast_b is fixed to 75°C. This assumption allows that past5 does not need to be reoptimized.
+Assumption: crpast_b is fixed to 75°C. This assumption makes it so that a reoptimization of past5 is not necessary.
 
-Recall:
+Available information:
 
 - $m_{past,d1} = 7.52 kg/s$
 - $m_{thickener} = 0.07 kg/s$
 - $T_{past,d1} = 10.8°C$
 - $T_{thickener,in} = 4°C$
 
-The goal is to increase the thickener temperature entering in the mixer with the heat excess of the pasterized milk going out of the system. Considering the huge mass flow difference, it can be assumed that $T_{past,d1} \approx T_{past,d2} \approx T_{thickener,out} = 10.8°C$. To compute the cp of the thickener, the function mixture is used, assuming the thickener is composed of 100% fat. With all this information, the heat exchanged in the recovery HEX can be computed.
+The goal is to increase the thickener's temperature when entering the mixer thanks to the heat excess of the pasteurized milk going out of the system. 
+
+Considering the huge mass flow difference, it can be assumed that $T_{past,d1} \approx T_{past,d2} \approx T_{thickener,out} = 10.8°C$. 
+
+To compute the cp of the thickener, the function mixture is used, assuming the thickener is composed of 100% fat. 
+
+Thanks to this data, the heat exchanged in the recovery HEX can be computed.
 
 ```{python Qrecovery, echo = T, eval = T}
 from pyxosmose.state import State
@@ -810,13 +832,13 @@ Q = m_thickener * cp * (T_thickener_out - T_thickener_in)
 ```
 The heat exchanged is thus, of 1kW. 
 
-Now, let's compute the output temperature of the mixer.
+Now, let us compute the output temperature of the mixer.
 
 - $m_{crpast,x} = m_{thickener} + m_{crpast,a} = 0.07 + 0.48 = 0.55 kg/s$
 - $T_{crpast,a} = 65.9°C$
 - $T_{thickener} = 10.8°C$
 
-For this the same equations for non-isothermal mixer used in mass & energy balance section are reused.
+For these calculations the same equations as the ones used for non-isothermal mixers in the mass & energy balance section are reused.
 ```{python Tcrpastx, echo = T, eval = T}
 from pyxosmose.state import State
 from codes_01_energy_bill.coolprop_functions import mixture
@@ -834,7 +856,7 @@ T_cr_past_x = (m_thickener * cp_thickener * T_thickener + m_cr_past_a * cp_cr_pa
 #print('T_cr_past_x =', round(T_cr_past_x, 3), 'K')
 ```
 
-This leads to $T_{crpast,x}=65.9°C$. Compared to the original pasteurisation process, there is thus an increase of 12.40°C. This will reduced the heat require on the past6 process
+This leads to $T_{crpast,x}=65.9°C$. Compared to the original pasteurisation process, there is thus an increase of 12.40°C. This will reduce the heat required in the past6 process.
 ```{python TOTEX_Pastrecovery, echo = T, eval = T}
 Q=1006 #W
 alpha= 1000 #W/m^2°C, assumption based on alpha_H20
@@ -909,20 +931,23 @@ HTML(HX_opt_ger.to_html(index=False))
 
 ### Cleaning in Place
 
-Now let's only focus on another part of the process (the cleaning in place) and try to optimize the heat recovery. After looking for the heat exchanger in this process one can observe there is one used to heat thanks to use of steam between flows CIP2 and CIP3/10, and there is also one used to cool with glycolic water between flows CIP6 and CIP7.
-The second one (between CIP6 and CIP7) could be used to preheat the flow cip1 which is currently at 25°C and which need to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
+Now let us only focus on another part of the process, the cleaning in place, and try to optimize its heat recovery. After observing the heat exchangers in this process one can notice that there is one used to heat thanks to the use of steam between flows CIP2 and CIP3/10, and one heat exchanger used to cool down with glycolic water between flows CIP6 and CIP7.
 
-NB: The same could have been done by preheating the CIP2 for it to be closer to CIP3 temperature of 80°C. However the gap would have been lowered (only 20°C difference compared to 35°C for the chosen solution) and thus the heat recovery would have been less efficient.
+The last one could be used to preheat the flow cip1 which is currently at 25°C and which needs to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
+
+NB: The same could have been done by preheating the CIP2 to make it closer to CIP3's temperature of 80°C. However, the gap would have been lowered (only 20°C difference compared to 35°C for the chosen solution), thus making the heat recovery less efficient.
  
-In chapter 2 when determining heat and mass balances, the following relation had been determined between the flows temperatures:
+The following relation between the flow's temperatures had been determined in chapter 2:
 
 - $T_{cip6}=75°C > T_{cip1}=25°C$
 
-The new HX will placed such that CIP6 flow is first used to preheat CIP1 to CIP1' (with $T_{cip1'} > T_{cip1}$) and the exiting flows called CIP6' (such that $T_{cip6'}< T_{cip6}$) is then used to be cooled where CIP6 was previously. Hence, a system with less cooling is required since $T_{cip6'}< T_{cip6}$, as well as with also less heating required since $T_{cip1'} > T_{cip1}$.
+The new HX will be placed in such a way that CIP6's flow will first be used to preheat CIP1 to CIP1' (with $T_{cip1'} > T_{cip1}$) and the exiting flow named CIP6' (such that $T_{cip6'}< T_{cip6}$) will then be used to be cooled to where CIP6 previously was. 
+
+Thus, the system will require less cooling since $T_{cip6'}< T_{cip6}$, as well as also requiring less heating since $T_{cip1'} > T_{cip1}$.
 
 ![Optimized CIP](Figures/CIPoptimized.png)
 
-Let's try to apply the method used for the pasteurization:
+Let us try to apply the method used for the pasteurization:
 
 ```{python cip_heat_recovery, echo = T, eval = T}
 from pyxosmose.state import State
@@ -1075,18 +1100,22 @@ HTML(CIP_opt_ger.to_html(index=False))
 
 ```
 
-In this scenario the OPEX is dependent on the the cooling and heating HX of the CIP process. First  new flows are redetermined for m_cip1 and m_cip5 such that $m_{cip1} = m_{cip2}*\frac{T_{cip2}-T_{cip5}}{T_{cip1}-T_{cip5}}$ and $m_{cip5}=m_{cip2}-m_{cip1}$ where $T_{cip1}$=$T_{cip2}$=$T_{cold,out,newHX}$ is the new exiting temperature cip1' hotter than cip1 from the task2.
-From this, $Q_{steam} = m_{cip2} \cdot cp1 \cdot (353-T_{cip2})$ and $Q_{cooling} = m_{hot,newHX} \cdot cp_{hot,newHX} \cdot (T_{hot,out,newHX}-303)$ 
+In this scenario the OPEX is dependent on the the cooling and heating HX of the CIP process. 
+
+First, new flows are redetermined for m_cip1 and m_cip5 such that $m_{cip1} = m_{cip2}*\frac{T_{cip2}-T_{cip5}}{T_{cip1}-T_{cip5}}$ and $m_{cip5}=m_{cip2}-m_{cip1}$, where $T_{cip1}$=$T_{cip2}$=$T_{cold,out,newHX}$ is the new exiting temperature, and cip1' is hotter than cip1 from the task2.
+
+From this we will obtain that $Q_{steam} = m_{cip2} \cdot cp1 \cdot (353-T_{cip2})$ and $Q_{cooling} = m_{hot,newHX} \cdot cp_{hot,newHX} \cdot (T_{hot,out,newHX}-303)$ 
 
 
-It can be observed that the optimum dT is 24°C which brings CIP1' to ($75-24=51°C$) instead of 25°C. Thus compared to the case without optimization CIP2 will be cooler than 60°C and thus the heat exchanger between CIP2 and CIP3/10 will require more steam to heat up until 80°C. This doesn't seem to be efficient. This will be checked by comparing the costs with the Energy Bill.
+It can be observed that the optimum dT is 24°C, which brings CIP1' to ($75-24=51°C$) instead of 25°C. Thus compared to the case without optimization CIP2 will be cooler than 60°C and by consequence the heat exchanger between CIP2 and CIP3/10 will require more steam to heat up until 80°C. 
+
+This doesn't seem to be efficient. This will be verified by comparing the costs with the Energy Bill.
 
 ### Comparison with non-optimalized case:
 
-In each case presented above, optimized $\Delta T_{min}$ have been selected to reduce cost of the considered system. But then even by selecting this minimum cost, is this heat recovery optimization really worth it? To check this, comparison will now be made with the non-optimized cases from the Energy Bill.
+In each case presented above, an optimized $\Delta T_{min}$ has been selected to reduce the cost of the considered system. But even by selecting this minimum cost, is this heat recovery optimization really worth it? To verify this, a comparison will be made with the non-optimized cases from the Energy Bill.
 
-The following table sumarize the cost for the optimized (with heat recovery) and non-optimized (without heat recovery) OPEX for each process. The costs are given for both France and Germany. Only OPEX are considered since in the Energy Bill only OPEX were computed so it is not possible to compare CAPEX and TOTEX.
-
+The following table summarizes the cost for the optimized (with heat recovery) and non-optimized (without heat recovery) OPEX for each process. The costs are given for both France and Germany. Only the OPEX are considered since in the Energy Bill only the OPEX were computed, making it not possible to compare CAPEX and TOTEX.
 
 
 <style type="text/css">
