@@ -1,6 +1,6 @@
 # Processes description and analysis (Task 1)
 
-In this section, the task is to compute the thermodynamic properties as well as the mass flows and heat exchanged on each heat exchangers of all the streams within each subsystem of the dairy factory. The sections that are going to be analyzed are the following:
+In this section, the task is to compute the thermodynamic properties as well as the mass flows and heat exchanged at each heat exchanger of all the streams within each subsystem of the dairy factory. The sections that are going to be analyzed are the following:
 
 1. Pasteurization
 2. Evaporation
@@ -9,7 +9,7 @@ In this section, the task is to compute the thermodynamic properties as well as 
 5. Cold Storage & Hot Water
 6. Waste Water and Sludge Production
 
-In addition, in order to add value to the waste/outputs of some of the subsystems, 2 additionnal systems will be analysed:
+In addition, in order to add value to the waste and outputs of some of the subsystems, 2 additional systems will be analysed:
 
 7. Rivella Production
 8. Digester
@@ -23,8 +23,7 @@ In this section the mass and energy balances for each chemical operation of the 
 
 ### Mass Flows 
 
-Because of the mass flow conservation:
-
+All the mass flows of this section can be defined thanks to the coonservation of the mass flow:
 
 $$
 \begin{cases}
@@ -37,15 +36,14 @@ $$
 $$
 
 
-Consequently, all mass flows are defined.
 
 ### Heat Capacities
 
-The following heat capacities are already provided :
+The following heat capacities were already provided :
 
-- $c_{p,Raw~Milk} = 3.8 kJ/(kgK)$ (milk after centrifuge)
+- $c_{p,Raw~Milk} = 3.8 kJ/(kgK)$ (milk after the centrifuge)
 
-- $c_{p,Cream~ac} = 3.4 kJ/(kgK)$ (cream after centrifuge)
+- $c_{p,Cream~ac} = 3.4 kJ/(kgK)$ (cream after the centrifuge)
 
 According to @NAGHAVI201864, the thickener heat capacity is:
 
@@ -61,7 +59,7 @@ $$
 \end{align*}
 $$ 
 
-We also consider the centrifuge separes an ideal mix, therefore:
+We also consider the centrifuge separates an ideal mix, therefore:
 
 $$
 \begin{align*}
@@ -78,7 +76,11 @@ Finally:
 
 ### Equations of operations 
 
-In this subsection the heat flow equations for each element of the pasteurisation are indicated. All variables are defined on the pasteurization scheme or in the mass flow and heat capacities sections. The $\Delta T = 5K$ is applied on Past 2, between Milk_0 and Past_a and on Past 5, between crpast_c and cream. Regarding the glycolic water and the steam, the same temperatures and heat capacities as the one in the beer pasteurization process are used, and it is assumed the exact cooling or the heating are controlled by the mass flow of these elements. 
+In this subsection the heat flow equations for each element of the pasteurisation are indicated. All variables are defined on the pasteurization scheme or in the mass flow and heat capacities sections. 
+
+The $\Delta T = 5K$ is applied on Past 2, between Milk_0 and Past_a and on Past 5, between crpast_c and cream. 
+
+Regarding the glycolic water and the steam, the same temperatures and heat capacities as the one in the beer pasteurization process are used, and it is assumed that the exact cooling or heating are controlled by the mass flow of these elements. 
 
 #### Refrigeration
 
@@ -466,7 +468,9 @@ x = 42
 
 ![Evaporation](Figures/evap.png)
 
-The evaporator section receives milk from pasteurisation. This milk can be seen as a mixture of water and fat. The aim of this section is to increase the fat proportion from $11.7\% wt.$ to $50\% wt.$ by evaporating water. It is composed of heat-exchanger (HEX), 3 evaporators, 2 splitters and a processing module. 
+The evaporator section receives milk from pasteurisation, which can be seen as a mixture of water and fat. 
+
+The aim of this section is to increase the fat proportion from $11.7\% wt.$ to $50\% wt.$ by evaporating water. It is composed of heat-exchangers (HEX), 3 evaporators, 2 splitters and a processing module. 
 
 In order to compute the mass and energy balance at each point, the following method is used:
 
@@ -479,7 +483,7 @@ In order to compute the mass and energy balance at each point, the following met
 
 ### Mixture at each Evaporator
 
-The mass flow $m_1$ is a given data and the mass flows $m_{14}$, $m_{15}$ and $m_{16}$ are parameters that can be manually changed in order to get a reasonable system. Knowing those 4 mass flows and the target mixture, the fat content at each point can be computed by substracting water mass flows.
+The mass flow $m_1$ is a given information and the mass flows $m_{14}$, $m_{15}$ and $m_{16}$ are parameters that can be manually modified in order to get a reasonable system. Knowing these 4 mass flows and the target mixture, the fat content at each point can be computed by substracting water mass flows.
 
 Given data:
 
@@ -563,7 +567,7 @@ All the enthalpy, heat capacity and latent heat of vaporization are computed usi
 
 Given/Known data:
 
-- All the mixture mass flows, pressures and temperatures (either given or computed on previous section)
+- All the mixture mass flows, pressures and temperatures (either given or computed in the previous section)
 
 Assumptions:
 
@@ -754,7 +758,7 @@ HTML(df.to_html())
 
 ### Steam Flow to HEX
 
-From previous sections, $m_{14}$, $m_{15}$, $m_{16}$, $m_{17}$, and $m_{18}$ are known. The mass flow of steam going through the HEX4, HEX3 can be computed using the following equation, corresponding to the ideal splitter:
+From the previous sections, the values for $m_{14}$, $m_{15}$, $m_{16}$, $m_{17}$, and $m_{18}$ are known. The mass flows of steam going through the HEX4 and the HEX3 can be computed using the following equation, corresponding to the ideal splitter:
 
 $$
 m_{\text{steam,HEX}} = m_{\text{in}} - m_{\text{steam,evap}}
@@ -795,10 +799,10 @@ m20=m15-m_w3
 ### HEX Heat Demand and Temperature Steps
 
 [comment]: <> (Before doing any calculation, it is noticeable that $m_{19}$, i.e. the hot flow through HEX4, is very small. The heating capacity is therefore too small to ensure the required heating. In order to reduce the cost of the system, it is preferable to remove HEX4.)
-To compute the temperature steps and the heating capacity, the following method is used:
+It is now necessary to compute the temperature steps and the heating capacity. The following method is used:
 
 - Assume some temperature steps between the 4 HEX.
-- Compute the heating capacity of each HEX, by being aware that $T_{\text{hot,out}} \geq T_{\text{cold,in}}$ condition is satisfied.
+- Compute the heating capacity of each HEX, while making sure that the condition $T_{\text{hot,out}} \geq T_{\text{cold,in}}$ is satisfied.
 - Adapt the temperature steps with the heating capacity of each HEX, to satisfy the previous condition.
 
 The following function is used to know the heating capacity of each HEX:
@@ -816,10 +820,13 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
     return Q, Thotout
 ```
 
-$\textit{Note}$: However, after completing calculations, it appears the flows entering HX3 were not respecting the condition ($T_{cold,in}<T_{hot,out}$). This comes from the fact the hot inlet flow e20 was too low. 
-One solution could have been to reduce e18 mass flow. However, the problem was solved by first determining all mass and heat balance for the three evaporator before handling the HX. This decision (at first validated by some TAs) made it was impossible to change e18 without changing the whole system (it was discovered to late in the semester). 
-Therefore to solve in a - hopefully more original and-  convenient way this issue, it is assumed a steam flow can be added to make e20 reach a certain value such that $T_{cold,in}<T_{hot,out}$ in the HX3. 
-If it was to be reperformed the mass and heat balance of such system would be determined by starting with evap1, then HX4, then evap2, then HX3, etc, until HX1. This would let more flexibility to adapt the system to the temperature constraints. 
+$\textit{Note}$: Unfortunately, after completing calculations, it appears that the flows entering HEX3 were not respecting the condition ($T_{cold,in}<T_{hot,out}$). This comes from the fact that the hot inlet flow e20 was too low. 
+
+One solution could have been to reduce the mass flow e18. However, the problem was solved by first determining all mass and heat balance for the three evaporator before handling the HX. This decision (at first validated by some TAs) made it impossible to change e18 without changing the whole system , and it was discovered too late in the semester. 
+
+Therefore to solve this issue in a - hopefully more original and-  convenient way, it is assumed that a steam flow can be added to make e20 reach a certain value such that $T_{cold,in}<T_{hot,out}$ in the HX3. 
+
+If this subsection was to be redone the mass and heat balance of such system would be determined by starting with evap1, then HX4, then evap2, then HX3, etc, until HX1. This would allow for more flexibility to adapt the system to the temperature constraints. 
 
 ```{python HX, echo = T, eval = T}
 
@@ -936,7 +943,7 @@ $$
 m_{\text{glycol}} = \frac{Q_{\text{glycol}}}{cp_{{\text{glycol}}} \cdot (T_{\text{out,glycol}} - T_{\text{in,glycol}})}
 $${#eq-mglycol}
 
-Given/Known data:
+Known data:
 
 - $m_{12}$, $T_{12}$, $T_{13}$
 
@@ -944,7 +951,7 @@ Assumptions:
 
 - $T_{\text{in,glycol}}$ = 270 K
 - $T_{\text{out,glycol}}$ = 277 K
-- $cp_{\text{glycol}}$ = 2294 kJ/kg.K from heat capacity tables at 270 K 
+- $cp_{\text{glycol}}$ = 2294 kJ/kg.K from the heat capacity tables at 270 K 
 
 
 ```{python HXGlycolic, echo = T, eval = T}
@@ -975,7 +982,7 @@ The heat exchanged at HEX5 is thus: 55703.141 W for a mass flow of 3.469kg/s
 
 ### Whey Extraction
 
-Finally, in order to match the target fat content, it is possible to extract whey from the system. The mass flow of whey is computed using the following equation:
+Finally, in order to match the target fat content, it is possible to extract whey from the system. The mass flow of whey is computed using the following equations:
 
 **Processing**:
 
@@ -1231,7 +1238,7 @@ dfhx.to_csv('dfhx.csv')
 
 ![Drum Dryers](Figures/Drum_dryer_new.jpg)
 
-This section will present the mass and energy balances of the various steps involved in the process of drying the concentrated milk into milk powder. The concentrated milk is received by the evaporation section. As such the concentrated milk is considered to be a mixture of 50% water and 50% fat which will be transformed into a mixture of 96% fat and 4% water.
+This section will present the mass and energy balances of the various steps involved in the process of drying the concentrated milk into milk powder. The concentrated milk is received from the evaporation section. As such the concentrated milk is considered to be a mixture of 50% water and 50% fat which will be transformed into a mixture of 96% fat and 4% water.
 
 This section consists of multiple step:
 
@@ -1244,7 +1251,7 @@ This section consists of multiple step:
 
 ### Mixture at each dryer
 
-The parameters of the mixture at the position dd1 is known, since it is the same mixture exiting the evaporation process. Knowing that the second dryer evaporates 63% of the water it receives as input, it is possible to compute the proportions of water and fat content at each input and output of the dryers.
+The parameters of the mixture at the position dd1 is known, since it is the same mixture exiting the evaporation process. Knowing that the second dryer evaporates 63% of the water it receives as input, it is possible to compute the proportions of water and fat content at each input and output of each dryer.
 
 ```{python DrumDryersMass, echo = T, eval = T}
 mass_dd1 = 1.32
@@ -1272,7 +1279,8 @@ HTML(dfm.to_html())
 
 ### Heating demand of each dryer
 
-For this part of the calculations it is assumed that the temperature of the steam at the point dd9 is of 50°C, the temperature at dd10is 60°C and that the pressure of the steam at points dd8, dd9, dd10 and dd11 is of 70529 Pa.
+For this part of the calculations it is assumed that the temperature of the steam at the point dd9 is of 50°C, the temperature at dd10 is of 60°C and that the pressure of the steam at points dd8, dd9, dd10 and dd11 is of 70529 Pa.
+
 The same equations as the ones of section 2.2.2 are used here.
 
 
@@ -1380,7 +1388,7 @@ In this section the following equation is used:
     Q = m \cdot cp \cdot (T_{1} - T_{2})
 \end{align}
 
-The cp corresponding to the milk mixtures were calculated in the precedent section.
+The cp corresponding to the milk mixtures were calculated in the previous section and shown in the next table:
 
 ```{python cpDryers, echo = T, eval = T}
 data_cp = {'Position': ['5', '9', '14'],
@@ -1404,7 +1412,7 @@ dfqhex = dfqhex.round(2)
 HTML(dfqhex.to_html())
 ```
 
-### Water demand to cool down the milk powder
+### Water demand required to cool down the milk powder
 
 It is assumed that the water used to cool down the milk powder is saturated. As such, the following formula can be used:
 
@@ -1503,7 +1511,7 @@ Assumptions:
 
 - For safety purposes the glass needs to contact with water which is at least at 65°C. Each glass bottle weights 370 g and has 500 mL of capacity. 
 
-For this part of the process, the following data are used:
+For this part of the process, the following data is used:
 
 - Mass Flows
    $\dot{m}_2 = 4\,kg/s$
@@ -1544,7 +1552,7 @@ t_cipsteam = 373
 
 ### Mixer
 
-The first component is an adiabatic mixer (enthalpy stays constant over the mixing). There are three different flows assumed to be water flow (according to pressure and temperature flows). Two in flows and on out flow. We can obtain the mass and energy balance at the mixer as follows:
+The first component is an adiabatic mixer (enthalpy stays constant over the mixing). There are three different flows assumed to be water flows (according to pressure and temperature flows). Two in flows and one out flow. We can obtain the mass and energy balance at the mixer as follows:
 $$
 \dot{m}_{CIP,1}cp_{water}T_{CIP,1}+\dot{m}_{CIP,5}cp_{water}T_{CIP,5}=\dot{m}_{CIP,2}cp_{water}T_{CIP,2}
 $${#eq-mixer_m1}
@@ -1560,7 +1568,9 @@ Hence, $m_{CIP,1}$ is equal to `r m_cip1` $kg/s$ and $m_{CIP,5}$ is equal to `r 
 
 ### Heater
 
-The next step is to compute balances of the upper HX (between Steam and point 2 and 3). At this HX, there is mixed water at $60^\circ C$ which is heated to $80^\circ C$. The steam used to heat up the water is assumed to be at 1 bar (costs saving reason). Again we have the following equations to compute the heat exchanged and the mass flow of steam (NB: mass flow of water is constant over the HX).
+The next step is to compute balances of the upper HEX (between Steam and point 2 and 3). At this HX, there is mixed water at $60^\circ C$ which is heated to $80^\circ C$. The steam used to heat up the water is assumed to be at 1 bar to save costs. 
+
+Once again we have the following equations to compute the heat exchanged and the mass flow of steam (NB: mass flow of water is constant over the HX).
 $$
 Q_{CIPHX,steam}=\dot{m}_{CIP,2}Cp_{water}(T_{CIP,3}-T_{CIP,2})
 $${#eq-CIPHXsteam1}
@@ -1584,9 +1594,15 @@ There is `r q_cipsteam` $kW$ heat exchanged thanks to a `r round(m_cipsteam,1)` 
 
 ### Showers
 
-It has been assume for ease of calculation that both showers received the same exact mass flow of hot water. Thus, $\dot{m}_{3} = \dot{m}_{4} = \dot{m}_{10} = \dot{m}_{12}= \dot{m}_{shower}=\frac{\dot{m}_2}{2}$  Furthermore, it is assumed that there is no heat loss through radiation. It is also assumed the mass of the bottle will stay constant the entire process (from part 8 to part 11) and thus: $\dot{m}_8 = \dot{m}_9 = \dot{m}_{11} = \dot{m}_{glass}$. 
+It has been assumed for ease of calculation that both showers received the same exact mass flow of hot water. Thus,
 
-The heat balance for the first shower is as followed:
+ $\dot{m}_{3} = \dot{m}_{4} = \dot{m}_{10} = \dot{m}_{12}= \dot{m}_{shower}=\frac{\dot{m}_2}{2}$  
+
+ Furthermore, it is assumed that there is no heat loss through radiation. It is also assumed that the mass of the bottle will stay constant through the entire process (from part 8 to part 11) and thus: 
+ 
+ $\dot{m}_8 = \dot{m}_9 = \dot{m}_{11} = \dot{m}_{glass}$ 
+
+The heat balance for the first shower is as follows:
 $$ \dot{m}_{glass}c_{p,glass}(T_9-T_8)=\dot{m}_{shower}c_{p,water}(T_{3}-T_4)$$
 Then for shower 2:
 $$ \dot{m}_{glass}c_{p,glass}(T_{11}-T_9)=\dot{m}_{shower}c_{p,water}(T_{10}-T_{12})$$
@@ -1598,7 +1614,7 @@ m_cip8 = m_cipglass
 m_cip9 = m_cipglass
 m_cip11 = m_cipglass
 ```
-Thus, there is `r Q_shower` $kW$ of heat used at each shower and bottle flow rate is `r round(m_cipglass,1)` $kg/s$.
+Thus, `r Q_shower` $kW$ of heat are used at each shower and the bottle flow rate is of `r round(m_cipglass,1)` $kg/s$.
 
 ### Splitter
 
@@ -1608,8 +1624,8 @@ m_cip6 = 2*m_cip4-m_cip5
 m_cip12 = m_cip4
 ```
 
-No heat exchanged. Only mass flows such that $$ \dot{m}_{4}+\dot{m}_{12}=\dot{m}_{2}=\dot{m}_{5}+\dot{m}_{6}$$
-This gives $\dot{m}_6$ is equal to `r m_cip6` $kg/s$.
+No heat is exchanged in this component. Only the mass flows are modified such that $$ \dot{m}_{4}+\dot{m}_{12}=\dot{m}_{2}=\dot{m}_{5}+\dot{m}_{6}$$
+This results in $\dot{m}_6$ being equal to `r m_cip6` $kg/s$.
 
 ### Cooler
 
@@ -1621,8 +1637,9 @@ q_cipwater = m_cip6*(t_cip6-t_cip7)*cp_water
 m_cipwater = q_cipwater/((t_cwater_out-t_cwater_in)*cp_water)
 ```
 
-The final steps of this cleaning process is with the of a HX as a cooler. hot water will be cooled down to $30^\circ C$. 
-As showed above with calculations for the HX_Steam there is thus  `r round(q_cipwater,2)` $kW$ transferred thanks to a `r m_cipwater` $kg/s$ cooling water flow (which is itself going from $10^\circ C$ to $25^\circ C$).
+The final step of this cleaning process is the utilization of a HEX as a cooler. Hot water will be cooled down to $30^\circ C$. 
+
+By using the same formulas that were utilized earlier for the HEX_Steam it can be found that there are thus  `r round(q_cipwater,2)` $kW$ transferred thanks to a `r m_cipwater` $kg/s$ cooling water flow (which is itself going from $10^\circ C$ to $25^\circ C$).
 
 ### Summary for the Cleaning in Place section
 
@@ -1653,7 +1670,8 @@ datatable(CIP_heat)
 ![Hot water and cold storage](Figures/hotwatercoldstorage.png)
 
 These two little subsystems are quite simple. 
-By the use of an air mass flow, 500kW of heat are removed from a cold storage. Simple thermodynamic calculations, as reported in the previous subsytems, enable to get the air mass flow must be of 100kg/s.
+By using an air mass flow, 500kW of heat are removed from a cold storage. Simple thermodynamic calculations, as performed in the previous subsytems, allow to obtain the result that the air mass flow must be of 100kg/s.
+
 The hot water system will heat up 1kg/s of water from 15° to 55°C and thus produce 167.3kW of heat.
 
 ```{python Hot Water, echo=T}
@@ -1687,9 +1705,11 @@ m_air=Q_fridge/(Cp_air*(T_in-T_out))
 
 ![Wastewater](Figures/Wastewater.svg)
 
-This subsytem analyses how are treated the waste water from the evaporation process. No heat Exchanger are present so this system won't be really useful for further energy saving analyses.
+This subsytem treats the waste water from the evaporation process. No heat Exchanger is present so this system won't be really useful for further energy saving analyses.
 
-For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($dw_{tot}=dw_{dry}+dw_{liq}$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% dry matter and 86.7wt% water (@shiDairyProcessingSludge2021). From this paper, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
+For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($dw_{tot}=dw_{dry}+dw_{liq}$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% dry matter and 86.7wt% water (@shiDairyProcessingSludge2021).
+
+The following equations obtained from this paper enable the deduction of the waste water produced (WP) as well as the sludge produced (SP):
 
 $$
 WP = WRM \times RM
@@ -1703,17 +1723,21 @@ $$
 SW = \frac{\frac{ES}{RMa}}{WRM}
 $${#eq-SW}
 
-Where $WRM$ is the wastewater to raw milk ratio (-) and $RM$ is the Raw Milk processing volume ($m^3/s$), $SW$  is the sludge to wastewater ratio ($kg/m^3$), $ES$ is the estimated annual sludge produced ($kg$), $RMa$ is the annual milk production ($m^3$), $WP$ is the wastewater produced ($m^3/s$) and $SP$ is the amount of sludge produced ($kg/s$).
+Where $WRM$ is the wastewater to raw milk ratio (-), $RM$ is the Raw Milk processing volume ($m^3/s$), $SW$  is the sludge to wastewater ratio ($kg/m^3$), $ES$ is the estimated annual sludge produced ($kg$), $RMa$ is the annual milk production ($m^3$), $WP$ is the wastewater produced ($m^3/s$) and $SP$ is the amount of sludge produced ($kg/s$).
 
-From the data given we have that $RM=8kg/s$ and Asherruzzaman gives us that $WRM=2.71\pm 0.9$ in average. 
+From the data we were given we have that $RM=8kg/s$ and @shiDairyProcessingSludge2021 gives us that $WRM=2.71\pm 0.9$ in average. 
 Thus the produced waste water is $0.021 m^3/s$ given a milk density of $1035kg/m^3$.
 
-Then from 2017 data in Asherruzzaman we have that $ES=110000t$, $RMa=7163000m^3$ and thus $SW=\frac{\frac{110000000}{7163000}}{2.71}=5.59kg/m^3$. Thus the produced sludge is $SP = 5.59 \times 0.021 = 0.1174\text{kg/s}$.
+Then from the 2017 data in @shiDairyProcessingSludge2021 we have that $ES=110000t$, $RMa=7163000m^3$ and thus $SW=\frac{\frac{110000000}{7163000}}{2.71}=5.59kg/m^3$. Thus the produced sludge is $SP = 5.59 \times 0.021 = 0.1174\text{kg/s}$.
 
-There is also the assumption that dw3 is only sludge and dw4 only water ($dw_{tot2}=dw_{tot3}+dw_{tot4}$).
-In dw3, the quantity of dry matter is again assume to be 13.3wt% and thus the quantity of water is 86.7wt%.
-The total mass entering the system is WP and because of mass balance, the dry quantity exiting at dw3 must be the same that at dw2 and dw1 (because there is no dry matter in dw4).
-Finally, we assume that WP density is around that of water (1000kg/m3).
+An assumption was also made that dw3 is only sludge and dw4 only water ($dw_{tot2}=dw_{tot3}+dw_{tot4}$).
+
+In dw3, the quantity of dry matter is again assumed to be 13.3wt% and thus the quantity of water is 86.7wt%.
+
+The total mass entering the system is WP and because of the mass balance, the dry quantity exiting at dw3 must be the same that at dw2 and dw1 because there is no dry matter in dw4.
+
+Finally, it is assumed that the WP density is around that of water (1000kg/m3).
+
 Thus, we have the following table to sum up the results:
 
 | Stream | $\dot{m}_{dry}\,(kg/s)$ | $\dot{m}_{liquid}\,(kg/s)$ |$\dot{m}_{total}$  |
@@ -1729,8 +1753,7 @@ Table:Discharge water and sludge production streams mass composition
 
 ![Rivella Production](Figures/Rivella.svg)
 
-Having a better understanding of dairy process, it is now possible to evaluate the energy and mass balance of Rivella production to be able to compare later its costs with the digester.
-The process is described in the following figure:
+Having a better understanding of the dairy process, it is now possible to evaluate the energy and mass balance of the Rivella production to be able to later compare its costs with the digester's.
 
 The process will be divided in 3 main parts:
 
@@ -1740,28 +1763,33 @@ The process will be divided in 3 main parts:
 
 ### The concentration of the whey
 
-All the whey is assumed to come from the evaporator stage with the following characteristics:
+All of the whey is assumed to come from the evaporator stage with the following characteristics:
 
-* 14.46 % of dry matter, 
-* 85.54 % of water, 
-* T = 4°C, 
-* p = 1 bar,
-* mass flow rate of 1.52 kg/s.
+* 14.46 % of dry matter
+* 85.54 % of water
+* T = 4°C
+* p = 1 bar
+* Mass flow rate of 1.52 kg/s
 
 At the end of the concentration process the whey will have the following characteristics:
 
-* 50 % of dry matter, 
-* 50 % of water, 
-* T = 100°C, 
-* p = 1 bar,
-* mass flow rate to be determined.
+* 50 % of dry matter
+* 50 % of water
+* T = 100°C
+* p = 1 bar
+* Mass flow rate to be determined
 
-We assume, the following: in the fermentation we have heating from 4 to 25°C, the mixer is isothermal and the evaporator is adiabatic.
-Also the bacterias are added at T = 25°C and without disturbing the flow rate of the whey (m1 = m3, m4 = 0 $m/s$) and the aromas are added at T = 25°C with 2g aromas/100g of whey.
-Bacteria and aromas have the same heat capacity as water ($c_p=4184\,J/kgK$).
-The pressure stays constant at 1 bar.
+The following is assumed: 
 
-The heat exchanged during the evaporation is found to be of 579.4kW.
+* There is heating from 4°C to 25°Cduring the fermentation
+* The mixer is isothermal 
+* The evaporator is adiabatic
+* The bacterias are added at T = 25°C without disturbing the flow rate of the whey (m1 = m3, m4 = 0 $m/s$) 
+* The aromas are added at T = 25°C with 2g aromas/100g of whey
+* Bacteria and aromas have the same heat capacity as water ($c_p=4184\,J/kgK$)
+* The pressure stays constant at 1 bar
+
+The heat exchanged during the evaporation was found to be of 579.4kW.
 
 ```{python ConcentrationWhey, echo = T, eval = T}
 
@@ -1825,18 +1853,21 @@ msteam = Qevap/hfg #kg/s
 
 ### The production of Rivella Green 
 
-30% of the concentrated whey is used for the Rivella Green production
-The composition of the Rivella Green is the following: 
+30% of the concentrated whey is used for the Rivella Green production.
+
+The composition of the Rivella Green is as follows: 
 
 * 30% whey,
 * 50% water,
 * 20% sugar.
 
-Tea is added at T = 50°C, without disturbing the flow rate of the Rivella Green (m8 = m10, m9 = 0 m/s) 
-The sugar and water are added are added at T = 25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore.
-CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (the content of gas in each bottle is not known).
-The Rivella Green exits at T = 10°C.
-The pressure stays constant at 1 bar during the entire production.
+Some more assumptions were made:
+
+* Tea is added at T = 50°C, without disturbing the flow rate of the Rivella Green (m8 = m10, m9 = 0 m/s)
+* The sugar and water are added at T = 25°C and will thus cool the fluid down and reduce the requirement for a steep change through HX2, thus the mixer 3 is not isothermal
+* CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (the content of gas in each bottle is not known)
+* The Rivella Green exits the process at T = 10°C
+* The pressure stays constant at 1 bar during the entire production
 
 The heat exchanged in the HX1 is found to be 40.1kW, while the HXGreen between R13 and R14 exchanges 12.7kW.
 
@@ -1903,12 +1934,14 @@ The composition of the Rivella Red is the following:
 * 35% water,
 * 35% sugar.
 
-The sugar and water are added are added at T = 25°C (will thus cool the fluid and reduce the requirement for a steep change through HX2) and thus the mixer 3 is not isothermal anymore.
-CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (because the content of gas in each bottle is not known).
-The Rivella Red exits as Rivella Green at T = 10°C.
-The pressure stays constant at 1 bar during the entire production.
+This section also required some assumptions:
 
-The heat exchanged in the HXRed between flows 20 and 21 is 28.9kW.
+* The sugar and water are added are added at T = 25°C, cooling down the fluid and reducing the requirement for a steep change through HX2, meaning that the mixer 3 is not isothermal
+* CO2 is added without change of temperature and pressure (isothermal mixer) and without changing the mass flow (because the content of gas in each bottle is not known)
+* The Rivella Red exits the system like the Rivella Green at T = 10°C
+* The pressure stays constant at 1 bar during the entire production
+
+It was calculated that the heat exchanged in the HXRed between flows 20 and 21 is 28.9kW.
 ```{python RivellaRed, echo = T, eval = T}
 #Fixed Parameters
 m17=0.7*m7 #kg.s-1
@@ -2033,7 +2066,11 @@ HTML(HX.to_html())
 
 ![Digester](Figures/Digester.svg)
 
-The digester module aims to use sludge, consider as trash in milk production, to produce biogas and then make profits of it. In this project, all the whey and only whey is used for rivella production and all the sludge and only sludge is used for biogas production. This module is composed of a digestor to produce biogas, a rotary filter to eliminate some water, and a steam dryer to obtain as output dryed digestate. In order to compute the mass flow and energy balance of the digester module, the computation are split in three parts: the digestor, the rotary filter and the steam dryer. 
+The digester module aims to use sludge, considered as waste in the milk production, to produce biogas and then sell it to make some profit.
+
+In this project, all the whey and only the whey is used for rivella production and all the sludge and only the sludge is used for biogas production. 
+
+This module is composed of a digestor to produce biogas, a rotary filter to eliminate some water, and a steam dryer to obtain as output dryed digestate. In order to compute the mass flow and energy balance of the digester module, the computation are split in three parts: the digestor, the rotary filter and the steam dryer. 
 
 ### Digestor
 
@@ -2043,13 +2080,13 @@ $$
 \text{Biogas}(t) = \sum_{i=1}^{n} \text{Flow}(i) \cdot \text{BMP}(i) \cdot \text{TS}(i) \cdot \text{VS}(i) \cdot (1 - e^{-k_i t})
 $${#eq-biogas}
 
-From litterature @holligerMethaneProductionFullScale2017, in table 2, data for waste sludge are the following:
+The following data for the waste sludge was obtained from the table 2 found in @holligerMethaneProductionFullScale2017:
 
 - $\text{TS}_\text{sludge}$ = 0.037 
 - $\text{VS}_\text{sludge}$ = 0.742
 - $\text{BMP}_\text{sludge}$ = 0.407 $m^3_{CH4}/kg_{VS}$
 
-Considering 90 % conversion achieved for the given residence time and only sludge is used, the @eq-biogas can be rewrite as: 
+by assuming that a 90 % conversion for the given residence time and sludge is achieved, the @eq-biogas can be rewritten as: 
 
 $$
 \text{Biogas}(t) = \text{Flow}_\text{sludge} \cdot \text{BMP}_\text{sludge} \cdot \text{TS}_\text{sludge} \cdot \text{VS}_\text{sludge} \cdot 0.90
@@ -2077,7 +2114,7 @@ Assumptions:
 
 #### Mass Flow
 
-With those informations, the mass flow balance can be computed:
+With this information, the mass flow balance can be computed:
 
 ```{python Digester, echo = T, eval = T}
 import numpy as np
@@ -2166,7 +2203,7 @@ HTML(df.to_html())
 ```
 
 
-Knowing the surface area of the digester and the Heat transfer coefficient for well-insulated digester $U_\text{digester}$, the heat loss can be computed:
+Knowing the surface area of the digester and the Heat transfer coefficient for a well-insulated digester $U_\text{digester}$, the heat loss can be computed:
 
 $$
 Q_\text{digester} = U_\text{digester} \cdot A \cdot (T_\text{digester} - T_\text{in})
@@ -2224,7 +2261,7 @@ HTML(df.to_html())
 
 ### Steam dryer
 
-The steam dryer target is to reduced the water composition of the digestate from 50% to 5%. It is assumed that $h_\text{steam}$ = 2250000 J/kg at T = 100°C.
+The steam dryer's goal is to reduce the water composition of the digestate from 50% to 5%. It is assumed that $h_\text{steam}$ = 2250000 J/kg at T = 100°C.
 
 The energy required to evaporate the water is computed as follow:
 $$
@@ -2236,7 +2273,7 @@ Assumptions:
 - $T_7$ = 150°C
 - $T_8$ = 130°C
 
-Knowing this energy, the mass flow of the steam is computed as follow:
+Knowing this energy requirement, the mass flow of the steam is computed as follows:
 
 - 90% of the water in d5 is removed: $d_6 = d_5 - 0.9 \cdot d_{5,\text{liquid}}$
 - $d_7 = d_8 = \frac{Q_{sd}}{cp7 * (T_7 - T_8)}$
