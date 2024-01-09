@@ -794,10 +794,10 @@ m20=m15-m_w3
 
 ### HEX Heat Demand and Temperature Steps
 
-Before doing any calculation, it is noticeable that $m_{19}$, i.e. the hot flow through HEX4, is very small. The heating capacity is therefore too small to ensure the required heating. In order to reduce the cost of the system, it is preferable to remove HEX4. 
+[comment]: <> (Before doing any calculation, it is noticeable that $m_{19}$, i.e. the hot flow through HEX4, is very small. The heating capacity is therefore too small to ensure the required heating. In order to reduce the cost of the system, it is preferable to remove HEX4.)
 To compute the temperature steps and the heating capacity, the following method is used:
-fatincreasedef
-- Assume some temperature steps between the 3 HEX.
+
+- Assume some temperature steps between the 4 HEX.
 - Compute the heating capacity of each HEX, by being aware that $T_{\text{hot,out}} \geq T_{\text{cold,in}}$ condition is satisfied.
 - Adapt the temperature steps with the heating capacity of each HEX, to satisfy the previous condition.
 
@@ -808,10 +808,10 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
     Q = mcold * cpcold * (Tcoldout - Tcoldin)
     Qcond = mhot * abs(hhot)
     if Qcond < Q:
-        #print("Cold stream is completely condensed")
+        # Cold stream is completely condensed
         Thotout = (-Q + mhot * abs(hhot)) / (mhot * cphot) + Thotin
     else:
-        #print("Cold stream is not completely condensed")
+        # Cold stream is not completely condensed
         Thotout = Thotin
     return Q, Thotout
 ```
