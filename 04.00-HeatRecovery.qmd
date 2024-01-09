@@ -3,7 +3,7 @@ After having determined the energy and mass exchanged in the entire subsystems (
 
 First, in task 4, an optimization of the minimum temperature difference ($\Delta T$) in the heat exchangers will be performed. The goal will be to see whether in 2 processes, namely Pasteurization and Cleaning In Place, it would be possible to optimize the $\Delta T_{min}$ of some of the HX to reduce the energy bill. 
 
-Then, in task 5, a first look at the global optimization of the entire factory will be achieved by plotting the Hot and Cold Composite Curves as well as the Grand Composite Curve. This will then allow us to determine a crucial temperature, the pinch point, from which a further optimization can be achieved in task 7 with the HEN design.
+Then, in task 5, a first look at the global optimization of the entire factory will be achieved by plotting the Hot and Cold Composite Curves as well as the Grand Composite Curve. This will then allow to determine a crucial temperature, the pinch point, from which a further optimization can be achieved in task 7 with the HEN design.
 
 ## Optimization of $\Delta T_{min}$
 
@@ -17,7 +17,7 @@ Then, in task 5, a first look at the global optimization of the entire factory w
 >- Optimization Results: Present your optimization outcomes using graphical representations or tables. If possible, consider leveraging R and Python libraries to create figures and visualizations, as this may enhance your presentation. **You will receive bonus points if you meet to do so.**
 --->
 
-The goal of this part is to determine an optimized $\Delta T_{min}$ such that costs are minimized for the considered subsystems. 
+The goal of this part is to determine an optimized $\Delta T_{min}$ such that the economic costs are minimized for the considered subsystems. 
 
 In all scenarios the following will be done:
 
@@ -604,7 +604,7 @@ Of course the heating OPEX (past 3) will use gas costs whereas the cooling OPEX 
 
 #### Past 5 optimization
 
-Now the same as above is performed once again except for past 5. This time because both past 1 and past 5 are connected it is assumed that $T_{cold,in,past5}=T_{hot,out,past1}$
+Now the same as above is performed for past 5. This time because both past 1 and past 5 are connected it is assumed that $T_{cold,in,past5}=T_{hot,out,past1}$
 
 
 ```{python past1+5_past5, echo = T, eval = T}
@@ -795,7 +795,7 @@ HTML(Overall_opt_ger_sc2.to_html(index=False))
 
 ### Pasteurization with Recovery HEX
 
-The only possibility to recover heat in the pasteurisation section is by adding a new heat exchanger to preheat the thickener with the ouput milk flow. The following figure illustrates the location of this new heat exchanger.
+The only possibility to recover heat in the pasteurisation section is by adding a new heat exchanger to preheat the thickener with the ouput milk flow. The following Figure illustrates the location of this new heat exchanger.
 
 ![Pasteurisation](Figures/Recovery.jpg)
 
@@ -832,7 +832,7 @@ Q = m_thickener * cp * (T_thickener_out - T_thickener_in)
 ```
 The heat exchanged is thus, of 1kW. 
 
-Now, let us compute the output temperature of the mixer.
+The next step is to compute the output temperature of the mixer.
 
 - $m_{crpast,x} = m_{thickener} + m_{crpast,a} = 0.07 + 0.48 = 0.55 kg/s$
 - $T_{crpast,a} = 65.9°C$
@@ -931,7 +931,7 @@ HTML(HX_opt_ger.to_html(index=False))
 
 ### Cleaning in Place
 
-Now let us only focus on another part of the process, the cleaning in place, and try to optimize its heat recovery. After observing the heat exchangers in this process one can notice that there is one used to heat thanks to the use of steam between flows CIP2 and CIP3/10, and one heat exchanger used to cool down with glycolic water between flows CIP6 and CIP7.
+The next part focuses on optimizing the heat recovery of the cleaning in place process. After observing the heat exchangers in this process one can notice that there is one used to heat thanks to the use of steam between flows CIP2 and CIP3/10, and one heat exchanger used to cool down with glycolic water between flows CIP6 and CIP7.
 
 The last one could be used to preheat the flow cip1 which is currently at 25°C and which needs to be heated to 60°C before entering the HX between CIP2 and CIP3/10.
 
@@ -947,7 +947,6 @@ Thus, the system will require less cooling since $T_{cip6'}< T_{cip6}$, as well 
 
 ![Optimized CIP](Figures/CIPoptimized.png)
 
-Let us try to apply the method used for the pasteurization:
 
 ```{python cip_heat_recovery, echo = T, eval = T}
 from pyxosmose.state import State
@@ -1217,17 +1216,17 @@ The fundamental concept of pinch analysis is to optimize heat exchanges between 
 
 This analysis unfolds in three steps: first, hot and cold streams are defined; second, the minimum energy requirement is computed (the target step); and finally, the synthesis step is executed by enhancing the HEN.
 
-This methodology is thus known as the pinch point analysis, and we will show the results of this analysis in the next part of this report.
+This methodology is thus known as the pinch point analysis.
 
 ### Analysis Results
 
-In this section we will show the results of our pinch analysis. First we will show the Composite Curves (Fig. 1) and the Grand Composite Curve (Fig. 2). 
+In this section the results of pinch point analysis are presented. First the Composite Curves (Fig. 1) and the Grand Composite Curve (Fig. 2) are shown. 
 
-From the composite curves we are then able to extrapolate the energy requirements, the heat recovery and the utilities. By separating the graph in three portions with two green dotted lines we show the boundaries of the utilities and the heat recovery.
+From the composite curves it is then possible to extrapolate the energy requirements, the heat recovery and the utilities. By separating the graph in three portions, with two green dotted lines, the boundaries of the utilities and the heat recovery are shown.
 
-We can then use the graph of the grand composite curve to determine the temperature of the pinch points. These are the points where the heat load is equal to 0, meaning that the heats of the corrected cold and hot streams are the same in these points.
+The graph of the grand composite curve can then be used to determine the temperature of the pinch points. These are the points where the heat load is equal to 0, meaning that the heats of the corrected cold and hot streams are the same in these points.
 
-We will start by showing the composite curves first:
+The composite curves can be seen in the following Figure:
 
 ```{r}
 library(jsonlite)
@@ -1403,7 +1402,7 @@ for i in range(len(Q_hc)):
 #print("We find that the maximum heat recovery potential is equal to", np.round(upper_bound - lower_bound, 2), " W.")
 ```
 
-In the next tables we will show the temperature of the pinch point and the energy requirements and heat recovery:
+In the next Tables the temperature of the pinch point and the energy requirements and heat recovery are presented:
 
 
 
@@ -1437,7 +1436,7 @@ dfs = dfs.round(2)
 HTML(dfs.to_html())
 ```
 
-We can check that the heat load at this point is indeed 0 W by extracting its value at this points:
+It can be verified that the heat load at this point is indeed (approximately) 0 W by extracting its value at this points:
 
 ```{python, echo = T, eval = T}
 data_pinch_points = {'Pinch Points': ['Pinch Point 1'],
@@ -1448,9 +1447,8 @@ dfs = dfs.set_index('Pinch Points')
 HTML(dfs.to_html())
 ```
 
-This value can indeed be approximated to 0 W.
 
-We are also able to compute the energy requirements and maximum heat recovery:
+It is also possible to compute the energy requirements and maximum heat recovery:
 ```{python, echo = T, eval = T}
 data_heat_recovery = {'Information': ['Cold Utilities', 'Hot Utilities', 'Minimum Energy Requirements', 'Maximum Heat Recovery Potential'],
         'Heat (kW)': [cold_utilities, hot_utilities, cold_utilities+hot_utilities, np.round(upper_bound - lower_bound, 2)]}
