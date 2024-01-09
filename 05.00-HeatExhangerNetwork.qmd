@@ -1,24 +1,24 @@
 # Heat Exchanger Network design (Tasks 6 & 7)
 
-Now that pinch point has been determined (task 5) via the Grand Composite Curve it is possible to design the Heat Exchanger Network (HEN) for the plant. First the penalizing exchangers will be determined (task 6) and then the HEN will be designed and optimized (task 7). 
+Now that the pinch point has been determined (task 5) via the Grand Composite Curve it is possible to design the Heat Exchanger Network (HEN) for the plant. First the penalizing exchangers will be determined (task 6) and then the HEN will be designed and optimized (task 7). 
 
 ## Identification of Penalizing Heat Exchangers
 
 <!--Identify and list the heat exchangers that have the greatest impact on the energy penalty. Conversely, define a list of non-penalizing heat exchangers that require no modification. By removing the streams involved, establish subsets of hot and cold streams for which the heat exchanger network (interconnected heat exchangers) needs to be designed.-->
 Thanks to the pinch analysis done in the previous section (task 5) it is possible to identify penalizing heat exchangers.
+
 There are four types of penalizing heat exchangers:
 
 - A cold utility cooling down a hot stream above the pinch (Type 1)
 - A hot utility heating up a cold stream below the pinch (Type 2)
 - A heat exchanger heating up a cold stream under the pinch using a hot stream above the pinch (Type 3)
 - A mixer where the fluids it is mixing are not on the same side of the pinch point, i.e. the cooler fluid intake is below the pinch and the warmer fluid intake is above the pinch (Type 4)
- 
 
 Knowing that the pinch point is located at 67.5 °C, it is now easy to find the penalizing heat exchangers in each subsytem of the plant.
 
-Furthermore, it is possible to calculate the penalty caused by each penalizing heat exchanger, as the amount of heat utilized by the said exchanger.
+Furthermore, it is possible to calculate the penalty caused by each penalizing heat exchanger, as it is the amount of heat utilized by said exchanger.
 
-As a final note, wastewater and sludge production sections will be skipped as it does not utilize any heat exchangers.
+As a final note, the wastewater and sludge production section will not be considered for this section as it does not utilize any heat exchangers.
 
 ### Pasteurisation
 
@@ -38,8 +38,6 @@ HTML(df.to_html())
 ```
 
 ### Evaporation
-
-The evaporators are equivalent to mixers.
 
 ```{python EvapPen, echo = F, eval = F}
 
@@ -115,11 +113,16 @@ Implement the pinch design method to generate a network configuration. With each
 ### First Design of the Heat Exchanger Network
 
 To perform the HEN design, one first needs to identify the hot and cold streams. The hot streams are the streams that will be used to heat up the cold streams and vice versa. 
-In this design from the results of task 5 and 6, the pinch point is at 67.5 °C for a $\Delta T_{min}$ of 10K.
+
+In this design, from the results of task 5 and 6, the pinch point is at 67.5 °C for a $\Delta T_{min}$ of 5K.
+
 The flows will only be taken from the pasteurization, cleaning in place, hot water and cold storage processes.
-However, one constraints is that only penalizing flows will be considered. These are the ones where a cold utility is above the pinch point, a hot utility is below the pinch point or a flows which crosses or starts/ends at the pinch point.
+
+This said, a constraint will be that only penalizing flows will be considered. These are the ones where a cold utility is above the pinch point, a hot utility is below the pinch point or a flow crosses or starts/ends at the pinch point.
+
 In the HEN design all temperatures are considered in the corrected domain, i.e. $\Delta T_{min}/2$ is removed for Hot Flows Temperatures and added for Cold Flows Temperatures.
-From the list of the flow determine in task 5, the following flows are penalizing and will be considered for the HEN design:
+
+From the list of the flows determined in task 5, the following flows are penalizing and will be considered for the HEN design:
 
 |  Flow  | Above/Below/Cross Pinch | $T_{in}$ [K] | $T_{out}$ [K] | $T^{*}_{in}$ [K] | $T^{*}_{out}$ [K] | Mcp [kW/K] | $Q_{flow}$ [kW] |
 |:------:|:-----------------------:|:----------:|:-----------:|:-----------:|:------------:|:----------:|:-------------:|
@@ -132,11 +135,11 @@ From the list of the flow determine in task 5, the following flows are penalizin
 |  G-hot |          Cross          |     348    |     303     |    345.5    |     300.5    |     5.0    |     225.7     |
 |  H-hot |          Cross          |     348    |     333     |    345.5    |     330.5    |    11.7    |     175.5     |
 
-It may be noticed that in the pasteurization process, one didn't consider the flow crossing Past1 HX to heat up from 4°C to 60°C. It has been tried to performed the HEN design with this flow but it introduced a too big unbalanced in the $\sum mcp_{cold}$ vs $\sum mcp_{hot}$ below the pinch (the sum was higher for cold streams instead of hot streams). Thus, this flow has been removed from the HEN design. It is not a problem since this flow, located below the pinch, can be entirely heated up by the part of hot flow B below the pinch. Thus there is no need to cross the pinch point to heat up this flow and it is not penalizing.
+It may be noticed that in the pasteurization process the flow crossing Past1 HX to heat up from 4°C to 60°C was not considered. There was an attempt to perform the HEN design with this flow but it introduced a too large unbalance in the $\sum mcp_{cold}$ vs $\sum mcp_{hot}$ below the pinch (the sum was higher for cold streams instead of hot streams). Thus, this flow has been removed from the HEN design. This is not a problem since this flow, located below the pinch, can be entirely heated up by the part of hot flow B below the pinch. Thus there is no need to cross the pinch point to heat up this flow and it is not penalizing.
 
-Also for the CIP process, the design optimized from task4 with an additionnal HX to heat up the incoming CIP1 flow was used.
+Another thing that is important to be noted is that for the CIP process, the optimized design from task4 with an additionnal HX to heat up the incoming CIP1 flow was used.
 
-Finally, even if the hot flow from the cold storage process is supposed to be penalizing (hot utility below the pinch), it has not been considered in the design due to its extremely low Temperature which makes this hot flow temperatures always below any cold flow temperatures. Thus, it is not possible to create any HX with this kind of flow (recall $T_{hot flow}>T_{cold flow}$).
+Finally, even if the hot flow from the cold storage process is supposed to be penalizing (hot utility below the pinch), it has not been considered in the design due to its extremely low temperature which makes this hot flow temperatures always below any cold flow temperatures. Thus, it is not possible to create any HX with this kind of flow (recall $T_{hot flow}>T_{cold flow}$).
 
 The two following figures show the flows location on the pasteurization and CIP processes
 
@@ -144,100 +147,100 @@ The two following figures show the flows location on the pasteurization and CIP 
 ![CIP flows](Figures/cip_task7.jpg)
 
 
-Now the cold and hot flows are defined, the design can be determine. 
-The rules are taken from the ex3 of the course and are the following:
+Now that the cold and hot flows are defined, the design can be determined. 
+
 
 ![HEN before design](Figures/HENflowsbef.jpg)
 
-Here are the steps to follow to design the HEN:
+The rules are taken from the ex3 of the course and are the following:
 
 1. Feasibility Rules
 
-- Number of streams rules: above pinch: $N_{cold} \geq N_{hot}$, below pinch: $N_{cold} \leq N_{hot}$,
-- Cp rules: above pinch: $mcp_{cold} \geq mcp_{hot}$ and $\sum mcp_{cold, remaining} \geq \sum mcp_{hot, remaining}$, below pinch: $mcp_{cold} \leq mcp_{hot}$ and $\sum mcp_{cold, remaining} \leq \sum mcp_{hot, remaining}$.
+- Number of streams rules: above pinch: $N_{cold} \geq N_{hot}$, below pinch: $N_{cold} \leq N_{hot}$
+- Cp rules: above pinch: $mcp_{cold} \geq mcp_{hot}$ and $\sum mcp_{cold, remaining} \geq \sum mcp_{hot, remaining}$, below pinch: $mcp_{cold} \leq mcp_{hot}$ and $\sum mcp_{cold, remaining} \leq \sum mcp_{hot, remaining}$
 
 2. Heuristic Rules
 
-- Choose the biggest mcp flow from the remaining flows to select where to place the HX, 
-- If Feasibility rules are not respected, splitting must be done,
-- When all flows have been connected with HX, add Cold Utilities and Hot Utilities to reach the target temperatures of respective hot and cold flows.
+- Choose the biggest mcp flow from the remaining flows to select where to place the HX
+- If Feasibility rules are not respected, splitting must be done
+- When all flows have been connected with HX, add Cold Utilities and Hot Utilities to reach the target temperatures of the respective hot and cold flows
 
-Let's start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
+Let us start with the design above the pinch point (recall $T_{pinch}=67.5°C$).
 
 1. Step 1:
 
-- $N_{cold} = 3$ and $N_{hot} = 4$ thus splitting needed to respect 1st feasibility rule.
+- $N_{cold} = 3$ and $N_{hot} = 4$ thus a splitting is needed to respect the 1st feasibility rule.
 - Splitting of flow A into A1 and A2 such that: $mcp_{A1} =  11.9 kW/K$ and $mcp_{A2} = 16.7 kW/K$. This splitting will be useful for E2 HX.
-- Two biggest mcp flows are F and B. BUT $mcp_{cold} \leq mcp_{hot}$ 
-- Splitting of flow B into B1 and B2 such that: $mcp_{B1} =  16.7 kW/K$ and $mcp_{B2} = 11.9 kW/K$. 
-- Now 2nd feasibility rule is respected.
+- Two biggest mcp flows are F and B. However $mcp_{cold} \leq mcp_{hot}$ 
+- Splitting of flow B into B1 and B2 such that $mcp_{B1} =  16.7 kW/K$ and $mcp_{B2} = 11.9 kW/K$. 
+- Now the 2nd feasibility rule is respected.
 - E1 is placed between F and B1 and $Q_{E1} = mcp_{B1} \cdot (T_{in,B}-T_{pinch}) = 83.5 kW$
 
 2. Step 2:
 
-- $N_{cold} = 3$ and $N_{hot} = 4$ thus splitting needed to respect 1st feasibility rule.
-- Splitting A2 into 2 streams A2a and A2b such that: $mcp_{A2a} =  11.7 kW/K$ and $mcp_{A2b} = 5 kW/K$. This splitting will be useful for E3 HX.
-- Two biggest mcp flows are A1 and B2 and 2nd feasibility rule is respected.
+- $N_{cold} = 3$ and $N_{hot} = 4$ thus a splitting is needed to respect the 1st feasibility rule.
+- Splitting A2 into 2 streams A2a and A2b such that $mcp_{A2a} =  11.7 kW/K$ and $mcp_{A2b} = 5 kW/K$. This splitting will be useful for E3 HX.
+- The two biggest mcp flows are A1 and B2 and the 2nd feasibility rule is respected.
 - E2 is placed between A1 and B2 and $Q_{E2} = mcp_{B2} \cdot (T_{in,B}-T_{pinch}) = 59.5 kW$
 
 3. Step 3:
 
-- $N_{cold} = 3$ and $N_{hot} = 3$ thus no splitting needed.
-- Two biggest mcp flows are A2a and H and 2nd feasibility rule is respected.
+- $N_{cold} = 3$ and $N_{hot} = 3$ thus no splitting is needed.
+- The two biggest mcp flows are A2a and H and the 2nd feasibility rule is respected.
 - E3 is placed between A2a and H and $Q_{E3} = Q_{H} = 58.5 kW$
 
 4. Step 4:
 
-- $N_{cold} = 2$ and $N_{hot} = 2$ thus no splitting needed.
-- Two biggest mcp flows are A2b and G and 2nd feasibility rule is respected.
+- $N_{cold} = 2$ and $N_{hot} = 2$ thus no splitting is needed.
+- The two biggest mcp flows are A2b and G and the 2nd feasibility rule is respected.
 - E4 is placed between A2b and G and $Q_{E4} = Q_{G} = 25.1 kW$
 
 5. Step 5:
 
-- $N_{cold} = 1$ and $N_{hot} = 1$ thus no splitting needed.
-- Two biggest mcp flows are D and E and 2nd feasibility rule is respected.
+- $N_{cold} = 1$ and $N_{hot} = 1$ thus no splitting is needed.
+- The two biggest mcp flows are D and E and the 2nd feasibility rule is respected.
 - E5 is placed between D and E and $Q_{E5} = Q_{D} = 9.6 kW$
 
 6. Step 6:
 
 - Place the Hot Utilities to reach the target temperatures of the cold flows.
-- HU1 is placed after all splitting of A and $Q_{HU1} = Q_{A} - Q_{E2} -  Q_{E3} - Q_{E4} = 142.6 kW$
+- HU1 is placed after the splitting of A and $Q_{HU1} = Q_{A} - Q_{E2} -  Q_{E3} - Q_{E4} = 142.6 kW$
 - HU2 is placed after E5 on flow D and $Q_{HU2} = Q_{D} - Q_{E5} = 9.7 kW$
 - HU3 is placed after E1 on flow F and $Q_{HU3} = Q_{F} - Q_{E1} = 167.5 kW$
 
-Let's now continue with the design below the pinch point (recall $T_{pinch}=67.5°C$).
+We will now continue with the design below the pinch point ($T_{pinch}=67.5°C$).
 
 1. Step 1:
 
-- First it can be noticed that $\sum mcp_{hot} \leq \sum mcp_{cold}$. This is only due to the 1.6 kW/K of the flow C. Thus no matter how we connect the flows the 2nd feasibility rule  will never be respected. 
-So let's remove the flow C below the pinch from all the following calculations at first, and then handle it at the end.
-- $N_{hot} = 4$ and $N_{cold} = 3$ (w/o flow C) thus no splitting needed.
-- Two biggest mcp flows are A and B and 2nd feasibility rule is respected.
+- First it can be noticed that $\sum mcp_{hot} \leq \sum mcp_{cold}$. This is due to the 1.6 kW/K of the flow C, thus no matter how we connect the flows the 2nd feasibility rule will never be respected. 
+We will thus remove the flow C below the pinch from all of the following calculations at first, and then handle it at the end.
+- $N_{hot} = 4$ and $N_{cold} = 3$ (w/o flow C) thus no splitting is needed.
+- The two biggest mcp flows are A and B and the 2nd feasibility rule is respected.
 - E6 is placed between A and B and $Q_{E6} = Q_{A} = 142.9 kW$
 
 2. Step 2:
 
-- $N_{hot} = 3$ and $N_{cold} = 2$ (w/o flow C) thus no splitting needed.
-- Two biggest mcp flows are F and H BUT 2nd feasibility rule is respected (i.e., $mcp_{hot} \leq mcp_{cold}$).
-- Splitting of flow F into F1 and F2 such that: $mcp_{F1} = 11.7 kW/K$ and $mcp_{F2} = 5.0 kW/K$.
-- Now 2nd feasibility rule is respected.
+- $N_{hot} = 3$ and $N_{cold} = 2$ (w/o flow C) thus no splitting is needed.
+- The two biggest mcp flows are F and H and the 2nd feasibility rule is not respected (i.e., $mcp_{hot} \leq mcp_{cold}$).
+- Splitting of flow F into F1 and F2 such that $mcp_{F1} = 11.7 kW/K$ and $mcp_{F2} = 5.0 kW/K$.
+- Now the 2nd feasibility rule is respected.
 - E7 is placed between F1 and H and $Q_{E7} = mcp_{F1} \cdot (T_{pinch} - T_{in,F}) = 58.5 kW$
 
 3. Step 3:
 
-- $N_{hot} = 2$ and $N_{cold} = 2$ (w/o flow C) thus no splitting needed.
-- Two biggest mcp flows are F2 and G and 2nd feasibility rule is respected.
+- $N_{hot} = 2$ and $N_{cold} = 2$ (w/o flow C) thus no splitting is needed.
+- The two biggest mcp flows are F2 and G and the 2nd feasibility rule is respected.
 - E8 is placed between F2 and G and $Q_{E8} = mcp_{F2} \cdot (T_{pinch} - T_{in,F}) = 25 kW$
 
 4. Step 4:
 
-- $N_{hot} = 1$ and $N_{cold} = 1$ (w/o flow C) thus no splitting needed.
-- Two biggest mcp flows are D and E and 2nd feasibility rule is respected.
+- $N_{hot} = 1$ and $N_{cold} = 1$ (w/o flow C) thus no splitting is needed.
+- The two biggest mcp flows are D and E and the 2nd feasibility rule is respected.
 - E9 is placed between D and E and $Q_{E9} = Q_{D} = 16.36 kW$
 
 5. Step 5:
 
-- Let's now handle flow C. It is possible to use the rest of heat from flow B to heat up flow C. 
+- We will now handle flow C. It is possible to use the rest of heat from flow B to heat up flow C. 
 - Feasibility rules are respected.
 - $Q_{E10} = Q_{C} = 17.52 kW$
 
@@ -250,17 +253,19 @@ So let's remove the flow C below the pinch from all the following calculations a
 - CU4 is placed after E7 on flow F1 and $Q_{CU4} = Q_{H} - Q_{E7} = 58.5 kW$
 
 
-Here is the final HEN design (note that additionnal temperatures where indicated on flows to help understand what temperature gap the utilities have to fill):
+Here is the final HEN design (note that additionnal temperatures were indicated on some flows to help understand what temperature gap the utilities have to fill):
 
 ![HEN after design](Figures/HENflowsaft.jpg)
 
-It appears that the method used here doesn't prevent from impossible HX. Indeed, it is possible to see that E9 and E10 are impossible as the temperature of the cold flow is higher than the temperature of the hot flow. 
-Because of this infeasibility E9 and E10 will be removed from the following economic analysis. Further on the report, with the help of loop method, it will be possible to remove E9 from the design.
+It appears that the method used here doesn't prevent impossible HX. Indeed, it is possible to see that E9 and E10 are impossible as the temperature of the cold flow is higher than the temperature of the hot flow. 
+
+Because of this infeasibility E9 and E10 will be removed from the following economic analysis. Further on in the report, with the help of the loop method, it will be possible to remove E9 from the design.
 
 ### Economic Analysis of the First Heat Exchanger Network
 
-The economic analysis of the heat exchanger network is done by calculating both the capital cost and the operating cost. The capital cost is calculated by using the following equation (similar to what used in task 4):
-The equations for Investment Cost and Annualized Investment Cost can be find in task 4 where $\Delta T_{min}$ optimization was done. All parameters and assumptions remain the same. Only the temperatures are different and come from the HEN design above.
+The economic analysis of the heat exchanger network is done by calculating both the capital cost and the operating cost.
+
+The equations for the Investment Cost and Annualized Investment Cost can be found in task 4 where the $\Delta T_{min}$ optimization was done. All parameters and assumptions remain the same, only the temperatures are different and come from the HEN design above.
 
 The following values for the capital costs of all the 10 HX used are compiled in the table below:
 
@@ -311,12 +316,12 @@ for i in range(len(Q)):
 |  E8 | 340.5 - 335.5 | 335.5 - 340.5 |    5    |   25   |    10   |              26.8             |
 | TOTAL |  |  |     |   |     |              504.6             |
 
-The operating cost of the added Cold and Hot Utility is calculated by using the following equation:
+The operating cost of the added Cold and Hot Utility is calculated by using the following equations:
 
 $$OP_{Cold Utility} = \frac{Q_{CU}}{COP} \cdot t_{ope} \cdot \text{Cost}_{Electricity}$$
 $$OP_{Hot Utility} = \frac{Q_{HU}}{\epsilon} \cdot t_{ope} \cdot \text{Cost}_{NatGas}$$
 
-The table below recaps the operating cost of the added utilities:
+The table below shows the operating costs of the added utilities:
 
 ```{python OpeCostHEN, echo = F, eval = F}
 top = 24*0.95*365 #h/year
@@ -350,25 +355,27 @@ for i in range(len(HUtil)):
 |  CU4  |  58.5  |    16.7    |
 | TOTAL |       |    753.2  |
 
-$*$ the little difference between the CU1 on the graph and the CU1 on the table is due to the removal of E10 HX from the design while doing the table for the reasons exposed above.
+The small difference between the CU1 on the graph and the CU1 on the table is due to the removal of E10 HX from the design while creating the table for the reasons explained above.
 
 In order to assess the economic feasibility of the HEN, the total annualized investment cost and the total operating cost are calculated and compared to the old cost by determining the payback time.
 
 The old cost for the HX involved in this HEN design is: 789.3 k€/yr
-Thus the payback time is computed with the following equation:
+
+The payback time is computed with the following equation:
 $$t_{payback} = \frac{INV_{tot,new}}{(a)(OC_{old}-OC_{new})} = 174 \text{ years}$$
 
 where $a$ is the annualization factor of 0.08, $OC_{old}$ is the old operating cost and $OC_{new}$ is the new operating cost.
 
-The system is not economically feasible as the payback time is too long. The choice of $\Delta_{min}$ is not optimal are the HEN design cotains some flaws. 
+The system is not economically feasible as the payback time is too long. The choice of $\Delta_{min}$ is not optimal and the HEN design contains some flaws. 
 Let's see if we have better results with a different HEN design method.
 
 ### Path following methods
 
 ![Path Method](Figures/PATHtask7.jpg)
 
-Different paths can be followed to remove HX from the original HEN design.
-However, only one will be detailed here. The considered path starts from the HU1 on flow A and ends on the CU4 on flow H after successively passing through E4, E8 and E7. The goal is to remove E4 which exchange 25.1kW between A2b and G. By doing so, one have to also change the rest of the HEN design to compensate the loss of heat exchanger:
+Different paths can be followed to remove HX from the original HEN design, however, only one will be detailed here. 
+
+The considered path starts from the HU1 on flow A and ends on the CU4 on flow H after successively passing through E4, E8 and E7. The goal is to remove E4 which exchange 25.1kW between A2b and G. By doing so, one has to also change the rest of the HEN design to compensate the loss of the heat exchanger:
 
 - HU1 will gain 25.1 kW
 - E8 will gain 25.1 kW and exchange 50.1 kW 
@@ -377,7 +384,7 @@ However, only one will be detailed here. The considered path starts from the HU1
 
 The new design Operating price will then be: 776.9k€/yr (compared to 753.2k€/yr after HEN design) but the new Investment price will decrease to 477.8 k€/yr (compared to 504.6k€/yr after HEN design).
 
-Overall the path method enable to gain 3.1k€/yr compared to after the HEN design. However the payback time would be way too high (because to reduce it, the Operating Costs should be decreased instead of increased).
+Overall the path method allows to gain 3.1k€/yr compared to after the HEN design. However the payback time would still be way too high because of the increase in Operating Costs.
 
 ```{python CapCostPath, echo = F, eval = F}
 dt_A = [0, 0, 0,  0, 0, 0, 0]
@@ -438,20 +445,20 @@ for i in range(len(HUtil)):
 ![Loop Method](Figures/LOOPtask7.jpg)
 
 In this design, two loops are possible. The first one is between A and B and the second one is between D and E.
-Because we said E9 were unfeasible let's see if we can remove it from the design by using the loop method and thus let's focus on loop between D and E.
+Since it was said that E9 was unfeasible we will try to find out whether we can remove it from the design by using the loop method, thus we will focus on the loop between D and E.
 
-The loop will pass through E5 and E9. The goal is to remove E9 which exchange 16.36 kW between D and E. By doing so, one have to also change the rest of the HEN design to compensate the loss of heat exchanger:
+The loop will pass through E5 and E9. The goal is to remove E9 which exchanges 16.36 kW between D and E. By doing so, one also has to change the rest of the HEN design to compensate the loss of the heat exchanger:
 
 - E5 will gain 16.36 kW and exchange 25.96 kW.
 
-This will to an increase of $T_{cold,E5,out}$ on the flow D which then become 354 instead of 350.5. 
+This will lead to an increase of $T_{cold,E5,out}$ on the flow D which then becomes 354 K instead of 350.5 K. 
 
-- HU2 will be remove since the maximum temperature of the flow D, now 354°C, is reached.
+- HU2 will be removed since the maximum temperature of the flow D, now 354°C, is reached.
 
 
 The new design Operating price will then be: 746.7k€/yr (compared to 753.2k€/yr after HEN design) but the new Investment price will increase to 522.6 k€/yr (compared to 504.6k€/yr after HEN design).
 
-Compared to path method, loop enables to reduce operating costs and thus reduce the payback time by more than 20 years (even though the payback time is still high for the reasons explained above).
+Compared to the path method, the loop method allows to reduce the operating costs and thus reduce the payback time by more than 20 years. This said, the payback time is still very high .
 
 ```{python CapCostLoop, echo = F, eval = F}
 dt_A = [0, 0, 0, 0, 0, 0, 0, 0]
