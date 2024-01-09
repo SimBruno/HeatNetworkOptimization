@@ -1194,6 +1194,9 @@ The following table summarizes the cost for the optimized (with heat recovery) a
 </table>
 
 
+From this table it appears optimizing $\Delta T_{min}$ for past5 HX only is a good initiative since it reduces the OPEX by 25% in France and 21% in Germany. 
+On top of that, an additional HX could be placed to heat up the thickener before the past6 HX and lead to a 50% reduction of the OPEX in France and Germany.
+Finally, in the CIP process a HX could be added but only in Germany to preheat the incoming flow and reduce the OPEX by 7%.
 
 ## Minimum energy requirement
 
