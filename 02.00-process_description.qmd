@@ -1,6 +1,6 @@
 # Processes description and analysis (Task 1)
 
-In this section, the task is to compute the thermodynamic properties as well as the mass flows and heat exchanged at each heat exchanger of all the streams within each subsystem of the dairy factory. The sections that are going to be analyzed are the following:
+In this section, the task is to compute the thermodynamic properties as well as the mass flows and heat exchanged at each heat exchanger of all the streams within each subsystem of the dairy factory. The results will be critical for the further analysis of the factory in the next chapters. The sections that are going to be analyzed are the following:
 
 1. Pasteurization
 2. Evaporation
@@ -18,7 +18,7 @@ In addition, in order to add value to the waste and outputs of some of the subsy
 
 ![Pasteurization](Figures/pasteurisation.svg)
 
-In this section the mass and energy balances for each chemical operation of the milk pasteurisation are computed. The pasteurisation aims to produce cream and milk from fresh milk with the intergation of a thickener.
+In this section the mass and energy balances for each chemical operation of the milk pasteurization are computed. The pasteurisation aims to produce cream and milk from fresh milk with the intergation of a thickener.
 
 
 ### Mass Flows 
@@ -59,7 +59,7 @@ $$
 \end{align*}
 $$ 
 
-We also consider the centrifuge separates an ideal mix, therefore:
+It was considered that the centrifuge separates an ideal mix, therefore:
 
 $$
 \begin{align*}
@@ -76,7 +76,7 @@ Finally:
 
 ### Equations of operations 
 
-In this subsection the heat flow equations for each element of the pasteurisation are indicated. All variables are defined on the pasteurization scheme or in the mass flow and heat capacities sections. 
+In this subsection the heat flow equations for each element of the pasteurization are indicated. All variables are defined on the pasteurization scheme or in the mass flow and heat capacities sections. 
 
 The $\Delta T = 5K$ is applied on Past 2, between Milk_0 and Past_a and on Past 5, between crpast_c and cream. 
 
@@ -342,6 +342,7 @@ df_pasteurization_enthalpy = pd.DataFrame(data = {'Specific Enthalpy': Variables
 
 #### Results
  
+ A summary of the obtained results is shown in the following Tables:
 
 ```{python pasteurisation_csv, echo = T, eval = T}
 
@@ -470,7 +471,7 @@ x = 42
 
 The evaporator section receives milk from pasteurisation, which can be seen as a mixture of water and fat. 
 
-The aim of this section is to increase the fat proportion from $11.7\% wt.$ to $50\% wt.$ by evaporating water. It is composed of heat-exchangers (HEX), 3 evaporators, 2 splitters and a processing module. 
+The aim of this section is to increase the fat proportion from $11.7\% wt.$ to $50\% wt.$ by evaporating water. It is composed of 5 heat-exchangers (HEX), 3 evaporators, 2 splitters and a processing module. 
 
 In order to compute the mass and energy balance at each point, the following method is used:
 
@@ -822,7 +823,7 @@ def HeatExchanger(mcold, cpcold, Tcoldin, Tcoldout, Thotin, cphot, mhot, hhot):
 
 $\textit{Note}$: Unfortunately, after completing calculations, it appears that the flows entering HEX3 were not respecting the condition ($T_{cold,in}<T_{hot,out}$). This comes from the fact that the hot inlet flow e20 was too low. 
 
-One solution could have been to reduce the mass flow e18. However, the problem was solved by first determining all mass and heat balance for the three evaporator before handling the HX. This decision (at first validated by some TAs) made it impossible to change e18 without changing the whole system , and it was discovered too late in the semester. 
+One solution could have been to reduce the mass flow e18. However, the problem was solved by first determining all mass and heat balance for the three evaporator before handling the HX. This decision (at first validated by the TAs) made it impossible to change e18 without changing the whole system , and it was discovered too late in the semester. 
 
 Therefore to solve this issue in a - hopefully more original and-  convenient way, it is assumed that a steam flow can be added to make e20 reach a certain value such that $T_{cold,in}<T_{hot,out}$ in the HX3. 
 
@@ -1072,7 +1073,7 @@ HTML(dfwhey.to_html())
 ```
 
 ### Summary for the evaporator section
-
+ A summary of the obtained results is shown in the following Tables:
 
 ```{python recap, echo = T, eval = T}
 #Entropy
@@ -1469,7 +1470,7 @@ HTML(dfwe.to_html())
 
 ### Summary for the Drum Dryers section
 
-This table is a summary of the characteristics of each point of this section:
+ A summary of the obtained results is shown in the following Table:
 
 ```{python dryer_summary, echo = T, eval = T}
 
@@ -1507,7 +1508,9 @@ The Cleaning in Place subsystem is composed of 5 main parts:
 - Splitter
 - Cooler
 
-Assumptions: 
+It is used for cleaning the interior surfaces of pipes, vessels, process equipment, filters, and associated fittings, without disassembly.
+
+The following assumption was taken into account: 
 
 - For safety purposes the glass needs to contact with water which is at least at 65°C. Each glass bottle weights 370 g and has 500 mL of capacity. 
 
@@ -1642,6 +1645,7 @@ The final step of this cleaning process is the utilization of a HEX as a cooler.
 By using the same formulas that were utilized earlier for the HEX_Steam it can be found that there are thus  `r round(q_cipwater,2)` $kW$ transferred thanks to a `r m_cipwater` $kg/s$ cooling water flow (which is itself going from $10^\circ C$ to $25^\circ C$).
 
 ### Summary for the Cleaning in Place section
+ A summary of the obtained results is shown in the following Table:
 
 ```{r CIPrecap, echo=F}
 # Remaining data
@@ -1669,7 +1673,7 @@ datatable(CIP_heat)
 ## Cold Storage & Hot Water
 ![Hot water and cold storage](Figures/hotwatercoldstorage.png)
 
-These two little subsystems are quite simple. 
+Another section that is analyzed it the Cold Storage & Hot Water section used for temperature control.
 By using an air mass flow, 500kW of heat are removed from a cold storage. Simple thermodynamic calculations, as performed in the previous subsytems, allow to obtain the result that the air mass flow must be of 100kg/s.
 
 The hot water system will heat up 1kg/s of water from 15° to 55°C and thus produce 167.3kW of heat.
@@ -1705,7 +1709,7 @@ m_air=Q_fridge/(Cp_air*(T_in-T_out))
 
 ![Wastewater](Figures/Wastewater.svg)
 
-This subsytem treats the waste water from the evaporation process. No heat Exchanger is present so this system won't be really useful for further energy saving analyses.
+This subsytem treats the waste water from the evaporation process. No heat Exchanger is present so this system will not be really useful for further energy saving analyses.
 
 For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($dw_{tot}=dw_{dry}+dw_{liq}$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% dry matter and 86.7wt% water (@shiDairyProcessingSludge2021).
 
@@ -1988,6 +1992,7 @@ QHX3=-m20*cp20*(T21-T20) #J/s
 ```
 
 ### Summary for the Rivella production section
+A summary of the results is presented in the following Table:
 
 ```{python SummaryData, echo = T, eval = T}
 #Put everything in a dataframe
@@ -2309,6 +2314,7 @@ HTML(df.to_html())
 
 ### Summary for the digester section
 
+A summary of the results is presented in the following Table:
 ```{python recap_digester, echo = T, eval = T}
 #Create a dataframe with all the parameters
 
