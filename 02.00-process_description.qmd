@@ -1494,16 +1494,10 @@ HTML(dfsd.to_html())
 The Cleaning in Place subsystem is composed of 5 main parts:
 
 - Mixer
-
 - Heater
-
 - Showers
-
 - Splitter
-
 - Cooler
-
-
 
 Assumptions: 
 
@@ -1695,7 +1689,7 @@ m_air=Q_fridge/(Cp_air*(T_in-T_out))
 
 This subsytem analyses how are treated the waste water from the evaporation process. No heat Exchanger are present so this system won't be really useful for further energy saving analyses.
 
-For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($dw_{tot}=dw_{dry}+dw_{liq}$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% fry matter and 86.7wt% water (@shiDairyProcessingSludge2021). From this paper, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
+For this process we just have to focus on computing liquid and dry matter mass flows for each of the 4 flows ($dw_{tot}=dw_{dry}+dw_{liq}$). The discharge will only contains liquid water whereas the sludge is a mixture of 13.3wt% dry matter and 86.7wt% water (@shiDairyProcessingSludge2021). From this paper, the following equations enables to deduce the waste water produced (WP) as well as the sludge produced (SP):
 
 $$
 WP = WRM \times RM
