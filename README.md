@@ -6,3 +6,5 @@ lina
 
 More information about quarto can be found [here](https://quarto.org/docs/get-started/)
 
+# AdvancedEnergetics
+Industrial Energy System Optimization of a Dairy Factory
